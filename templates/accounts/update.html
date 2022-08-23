@@ -1,0 +1,83 @@
+{% extends "accounts/base.html" %}
+{% load widget_tweaks %}
+{% load django_bootstrap_breadcrumbs %}
+{% load static %}
+
+{% block customcss %}
+{% endblock customcss %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "ユーザー情報更新" "accounts:update" %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    {% include 'components/messages.html' %}
+    <p>
+        ユーザー名や姓名の変更を希望する場合は、プラットフォーム担当にお知らせください。
+    </p>
+    <form class="row g-3" method="POST"> {% csrf_token %}
+        <div class="col-md-12">
+            <div class="form-floating mb-3">
+                {% render_field profile_form.sex class="form-select" %}
+                <label for="selectSex">性別</label>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="form-floating mb-3">
+                {% render_field profile_form.email class="form-control" placeholder="メールアドレス" required="required" aria-describedby="emailHelp" %}
+                <label for="inputEmail">メールアドレス</label>
+                <div id="id_email" class="form-text">FairWindのメールアドレス</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-floating mb-3">
+                {% render_field profile_form.course class="form-select" aria-describedby="courseHelp"%}
+                <label for="id_course">科類</label>
+                <div id="courseHelp" class="form-text">後期課程所属の場合は出身科類</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-floating mb-3">
+                {% render_field profile_form.enrolled_year class="form-select" id="id_enrolled_year" %}
+                <label for="selectEnrolledYear">入学年度</label>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-floating mb-3">
+                {% render_field profile_form.grade class="form-select" %}
+                <label for="id_grade">期</label>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-floating mb-3">
+                {% render_field profile_form.faculty class="form-select" %}
+                <label for="id_faculty">学部</label>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="form-floating mb-3">
+                {% render_field profile_form.department class="form-control" placeholder="学科" %}
+                <label for="id_department">学科</label>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-floating mb-3">
+                {% render_field profile_form.group class="form-select" %}
+                <label for="id_group">班</label>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-floating mb-3">
+                {% render_field profile_form.division class="form-select" %}
+                <label for="id_division">担当</label>
+            </div>
+        </div>
+
+        <div class="col-12 mb-3">
+            <button type="submit" class="btn btn-primary">更新</button>
+        </div>
+    </form>
+</div>
+{% endblock content%}

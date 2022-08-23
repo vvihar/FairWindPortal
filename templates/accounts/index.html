@@ -1,0 +1,46 @@
+{% extends "accounts/base.html" %}
+{% load static %}
+
+{% block customcss %}
+{% endblock customcss %}
+
+{% block content %}
+<div class="container">
+    {% include 'components/messages.html' %}
+    <div class="row">
+        <div class="col-sm-6">
+            <a href="{% url 'accounts:update' %}" class="btn btn-outline-dark d-flex flex-column py-3 mb-3">
+                <div>ユーザー情報更新</div>
+            </a>
+        </div>
+        <div class="col-sm-6">
+            <a href="{% url 'accounts:password_change' %}" class="btn btn-outline-dark d-flex flex-column py-3 mb-3">
+                <div>パスワード変更</div>
+            </a>
+        </div>
+        {% if user.is_staff %}
+        <div class="h4">管理者</div>
+        <div class="col-sm-6">
+            <a href="{% url 'accounts:signup' %}" class="btn btn-outline-dark d-flex flex-column py-3 mb-3">
+                <div>ユーザー新規登録</div>
+            </a>
+        </div>
+        <div class="col-sm-6">
+            <a href="{% url 'accounts:users' %}" class="btn btn-outline-dark d-flex flex-column py-3 mb-3">
+                <div>ユーザー一覧</div>
+            </a>
+        </div>
+        <div class="col-sm-6">
+            <a href="{% url 'accounts:group' %}" class="btn btn-outline-dark d-flex flex-column py-3 mb-3">
+                <div>班の編集</div>
+            </a>
+        </div>
+        <div class="col-sm-6">
+            <a href="{% url 'accounts:division' %}" class="btn btn-outline-dark d-flex flex-column py-3 mb-3">
+                <div>担当の編集</div>
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock content%}

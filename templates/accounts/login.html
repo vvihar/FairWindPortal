@@ -1,0 +1,57 @@
+{% extends 'accounts/base.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% load django_bootstrap_breadcrumbs %}
+
+{% block customcss %}
+<link rel="stylesheet" href="{% static 'login.css' %}">
+{% endblock customcss %}
+
+{% block breadcrumbs %}
+{% clear_breadcrumbs %}
+{% breadcrumb "ログイン" "accounts:login" %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <main class="form-signin">
+        {{ context }}
+        <form method="POST"> {% csrf_token %}
+            <h1 class="h3 mb-3 fw-normal">ログイン</h1>
+
+            {% if next %}
+                <p>このページにアクセスするにはログインしてください。</p>
+            {% endif %}
+
+            {% if form.errors %}
+                <p>正しいユーザー名とパスワードを入力してください。</p>
+            {% endif %}
+
+            <div class="form-floating">
+                {% render_field form.username class="form-control" id="floatingInput" name="username" placeholder="ユーザー名" %}
+                <label for="floatingInput">ユーザー名</label>
+            </div>
+            <div class="form-floating">
+                {% render_field form.password class="form-control" id="floatingPassword" name="password" placeholder="パスワード" %}
+                <label for="floatingPassword">パスワード</label>
+            </div>
+            {% if form.username.errors or form.password.errors %}
+            {% for error in form.username.errors %}
+                <div class="invalid-feedback">
+                    {{ error }}
+                </div>
+            {% endfor %}
+            {% for error in form.password.errors %}
+                <div class="invalid-feedback">
+                    {{ error }}
+                </div>
+            {% endfor %}
+            {% endif %}
+            <input type="hidden" name="next" value="{{next}}">
+            <button class="w-100 btn btn-lg btn-primary" type="submit">
+                ログイン
+            </button>
+        </form>
+    </main>
+</div>
+{% endblock content %}

@@ -1,0 +1,114 @@
+{% extends "accounts/base.html" %}
+{% load widget_tweaks %}
+{% load django_bootstrap_breadcrumbs %}
+{% load static %}
+
+{% block customcss %}
+{% endblock customcss %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "ユーザー新規登録" "accounts:signup" %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    {{ context }}
+    <form class="row g-3" method="POST"> {% csrf_token %}
+        <div class="col-md-12">
+            <div class="form-floating mb-3">
+                {% if user_form.username.errors %}
+                    {% render_field user_form.username class="form-control is-invalid" placeholder="ユーザー名" required="required" %}
+                    <label for="inputUsername">ユーザー名</label>
+                    {% for error in user_form.username.errors %}
+                        <div class="invalid-feedback">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    {% render_field user_form.username class="form-control" placeholder="ユーザー名" required="required" %}
+                    <label for="id_username">ユーザー名</label>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="form-floating mb-3">
+                {% render_field user_form.last_name class="form-control" placeholder="姓" required="required" %}
+                <label for="id_last_name">姓</label>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="form-floating mb-3">
+                {% render_field user_form.first_name class="form-control" placeholder="名" required="required" %}
+                <label for="id_first_name">名</label>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-floating mb-3">
+                {% render_field profile_form.sex class="form-select" %}
+                <label for="id_sex">性別</label>
+            </div>
+        </div>
+        <div class="form-floating mb-3">
+            {% render_field profile_form.email class="form-control" placeholder="メールアドレス" required="required" aria-describedby="emailHelp" %}
+            <label for="id_email">メールアドレス</label>
+            <div id="emailHelp" class="form-text">FairWindのメールアドレス</div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-floating mb-3">
+                {% if user_form.password1.errors %}
+                    {% render_field user_form.password1 class="form-control is-invalid" placeholder="パスワード" %}
+                    <label for="id_password1">パスワード</label>
+                    {% for error in user_form.password1.errors %}
+                        <div class="invalid-feedback">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    {% render_field user_form.password1 class="form-control" placeholder="パスワード" %}
+                    <label for="id_password1">パスワード</label>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-floating mb-3">
+                {% if user_form.password2.errors %}
+                    {% render_field user_form.password2 class="form-control is-invalid" placeholder="パスワード（確認）" %}
+                    <label for="id_password2">パスワード（確認）</label>
+                    {% for error in user_form.password2.errors %}
+                        <div class="invalid-feedback">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    {% render_field user_form.password2 class="form-control" placeholder="パスワード（確認）" %}
+                    <label for="id_password2">パスワード（確認）</label>
+                {% endif %}
+
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-floating mb-3">
+                {% render_field profile_form.course class="form-select" aria-describedby="courseHelp"%}
+                <label for="id_course">科類</label>
+                <div id="courseHelp" class="form-text">後期課程所属の場合は出身科類</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-floating mb-3">
+                {% render_field profile_form.enrolled_year class="form-select" id="selectEnrolledYear" %}
+                <label for="id_enrolled_year">入学年度</label>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-floating mb-3">
+                {% render_field profile_form.grade class="form-select" %}
+                <label for="id_grade">期</label>
+            </div>
+        </div>
+        <div class="col-12 mb-3">
+            <button type="submit" class="btn btn-primary">登録</button>
+        </div>
+    </form>
+</div>
+{% endblock content%}

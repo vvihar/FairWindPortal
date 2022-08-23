@@ -1,0 +1,39 @@
+{% extends "accounts/base.html" %}
+{% load django_bootstrap_breadcrumbs %}
+{% load static %}
+
+{% block customcss %}
+{% endblock customcss %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "ユーザー一覧" "accounts:users" %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    {% if user.is_staff %}
+        <a href="{% url 'accounts:users_import' %}" class="btn btn-primary mb-2">一括登録</a>
+    {% endif %}
+    <table class="table">
+        <thead>
+            <tr>
+                <!--<th scope="col">ID</th>-->
+                <th scope="col">ユーザー名</th>
+                <th scope="col">姓</th>
+                <th scope="col">名</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for user in object_list %}
+            <tr>
+                <!--<td scope="row">{{ user.id }}</td>-->
+                <td>{{ user.username }}</td>
+                <td>{{ user.last_name }}</td>
+                <td>{{ user.first_name }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock content%}

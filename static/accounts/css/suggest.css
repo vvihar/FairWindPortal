@@ -1,0 +1,18 @@
+ul.dropdown {
+    display: none;
+    position: absolute;
+    z-index: 1;
+}
+
+ul.dropdown li {
+    cursor: pointer;
+}
+
+.suggest-item {
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.suggest-item:hover {
+    opacity: 0.5;
+}
