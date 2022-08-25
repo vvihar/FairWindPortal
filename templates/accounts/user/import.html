@@ -3,8 +3,7 @@
 {% load django_bootstrap_breadcrumbs %}
 {% load static %}
 
-{% block customcss %}
-{% endblock customcss %}
+{% block customcss %}{% endblock customcss %}
 
 {% block breadcrumbs %}
     {{ block.super }}
@@ -13,11 +12,11 @@
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    {% include 'components/messages.html' %}
-    <form action="" method="POST" class="row g-3 mb-3" enctype="multipart/form-data"> {% csrf_token %}
+    <form action="" method="POST" class="row g-3 mb-3" enctype="multipart/form-data">
+        {% csrf_token %}
         {% if imported_users %}
-            <div class="alert alert-primary mb-0">{{ imported_users }} 件のデータの登録に成功しました。</div>
+            <div class="alert alert-primary mb-0">{{ imported_users }}
+                件のデータの登録に成功しました。</div>
         {% endif %}
         {% for error in errors %}
             <div class="alert alert-danger mb-0">{{ error }}</div>
@@ -38,9 +37,7 @@
         </div>
         <div class="card-body">
             <p>CSVファイルは、次の形式で作成してください。班と担当のみ空白にすることができます。</p>
-            <pre><code>user-name, 姓, 名, lastname.firstname.fw@gmail.com, 科類（理科一類など）, 入学年度（YYYY）, 期（nn）, 男／女／未回答, 〇〇班, ××担当, password</code></pre>
+            <pre><code>user-name, 姓, 名, lastname.firstname.fw@gmail.com, 科類（理科一類など）, 入学年度（yyyy）, 期（nn）, 男／女／未回答, 〇〇班, ××担当, password</code></pre>
         </div>
     </div>
-
-</div>
 {% endblock content%}

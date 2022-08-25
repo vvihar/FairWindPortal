@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "widget_tweaks",
     "django_bootstrap_breadcrumbs",
     "utils.apps.UtilsConfig",
+    "accounts.apps.AccountsConfig",
 ]
 
 MIDDLEWARE = [
@@ -136,9 +137,10 @@ MEDIA_ROOT = BASE_DIR / "media"  # 画像を保存するフォルダ（開発環
 MEDIA_URL = "media/"  # 画像へアクセスする際のURL（開発環境のみ？）
 
 # 認証機能関係
-# LOGIN_URL = "accounts:login"  # urls.py の name を書く
-# LOGIN_REDIRECT_URL = "home"  # ログイン後に遷移するURL
-# LOGOUT_REDIRECT_URL = "home"  # ログアウト後に遷移するURL
+AUTH_USER_MODEL = "accounts.User"
+LOGIN_URL = "accounts:login"  # urls.py の name を書く
+LOGIN_REDIRECT_URL = "home"  # ログイン後に遷移するURL
+LOGOUT_REDIRECT_URL = "home"  # ログアウト後に遷移するURL
 
 MESSAGE_TAGS = {
     messages.INFO: "alert alert-info",
