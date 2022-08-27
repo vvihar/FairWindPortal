@@ -27,7 +27,7 @@ class UserCreateForm(UserCreationForm):
         )  # 学部学科、所属班・担当は求めない
 
 
-class UpdateUserForm(forms.ModelForm):
+class UserUpdateForm(forms.ModelForm):
     """ユーザー編集用フォーム"""
 
     class Meta:

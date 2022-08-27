@@ -15,7 +15,7 @@ from django.urls import reverse, reverse_lazy
 from django.views import generic
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
-from .forms import CSVUploadForm, UpdateUserForm, UserCreateForm
+from .forms import CSVUploadForm, UserCreateForm, UserUpdateForm
 from .models import Division, Group, User
 
 
@@ -85,7 +85,7 @@ class UserUpdate(LoginRequiredMixin, UpdateView):
     """ユーザー編集画面"""
 
     model = User
-    form_class = UpdateUserForm
+    form_class = UserUpdateForm
     template_name = "accounts/update.html"
     success_url = reverse_lazy("accounts:")
 
