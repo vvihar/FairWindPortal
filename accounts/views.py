@@ -12,8 +12,14 @@ from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
-from django.views import generic
-from django.views.generic import CreateView, DeleteView, ListView, UpdateView
+from django.views.generic import (
+    CreateView,
+    DeleteView,
+    FormView,
+    ListView,
+    TemplateView,
+    UpdateView,
+)
 
 from .forms import CSVUploadForm, UserCreateForm, UserUpdateForm
 from .models import Division, Group, User
@@ -29,7 +35,7 @@ class StaffRequiredMixin(UserPassesTestMixin):
         return redirect(f"{reverse(settings.LOGIN_URL)}?next={self.request.path}")
 
 
-class Home(LoginRequiredMixin, generic.TemplateView):
+class Home(LoginRequiredMixin, TemplateView):
     """ホーム画面"""
 
     template_name = "accounts/index.html"
@@ -196,7 +202,7 @@ class UserList(StaffRequiredMixin, ListView):
     model = User
 
 
-class UserImport(StaffRequiredMixin, generic.FormView):
+class UserImport(StaffRequiredMixin, FormView):
     """ユーザー一括登録"""
 
     template_name = "accounts/user/import.html"
