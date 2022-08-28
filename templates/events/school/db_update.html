@@ -1,0 +1,36 @@
+{% extends "events/base.html" %}
+{% load widget_tweaks %}
+{% load django_bootstrap_breadcrumbs %}
+{% load static %}
+{% block head %}
+{% endblock head %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "学校" "events:school_list" %}
+    {% breadcrumb "学校データベース更新" "events:db_update" %}
+{% endblock breadcrumbs %}
+{% block content %}
+    <p>
+        文部科学省が定めている「学校コード」のデータをもとにデータベースを更新します。
+        文部科学省のウェブサイト上にある2つのCSVファイルのURLを入力してください。
+    </p>
+    <form action="" method="post" class="row g-3 mb-3">
+        {% csrf_token %}
+        {% for error in errors %}<div class="alert alert-danger mb-0">{{ error }}</div>{% endfor %}
+        <div class="col-md-6">
+            <div class="form-floating mb-3">
+                {% render_field form.file_url_east class="form-control" placeholder="東日本" %}
+                <label for="id_file_url_east">東日本</label>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-floating mb-3">
+                {% render_field form.file_url_west class="form-control" placeholder="西日本" %}
+                <label for="id_file_url_west">西日本</label>
+            </div>
+        </div>
+        <div class="col-12 mb-3">
+            <button type="submit" class="btn btn-primary">登録</button>
+        </div>
+    </form>
+{% endblock content %}

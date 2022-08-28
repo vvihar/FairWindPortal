@@ -1,0 +1,14 @@
+{% extends "events/base.html" %}
+{% load static %}
+{% block customcss %}
+{% endblock customcss %}
+{% block content %}
+    <div class="row">
+        <div class="col-sm-6">
+            <a href="{% url 'events:school_list' %}"
+               class="btn btn-outline-dark d-flex flex-column py-3 mb-3">
+                <div>学校</div>
+            </a>
+        </div>
+    </div>
+{% endblock content %}

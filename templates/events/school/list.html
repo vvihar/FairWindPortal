@@ -1,0 +1,51 @@
+{% extends "events/base.html" %}
+{% load widget_tweaks %}
+{% load django_bootstrap_breadcrumbs %}
+{% load static %}
+{% block head %}
+{% endblock head %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "学校" "events:school_list" %}
+{% endblock breadcrumbs %}
+{% block content %}
+    {% if user.is_staff %}
+        <a href="{% url 'events:db_update' %}" class="btn btn-danger mb-3">学校データベース更新</a>
+    {% endif %}
+    <form action="" method="get">
+        <div class="input-group mb-3">
+            <input type="search"
+                   class="form-control"
+                   placeholder="キーワードを入力"
+                   aria-label="検索ワード"
+                   value="{{ request.GET.search }}"
+                   name="search">
+            <button class="btn btn-primary" type="button" id="btn-search">検索</button>
+        </div>
+    </form>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">都道府県</th>
+                <th scope="col">設置区分</th>
+                <th scope="col">学校種</th>
+                <th scope="col">学校名</th>
+                <th scope="col">詳細</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for school in object_list %}
+                <tr>
+                    <td>{{ school.prefecture }}</td>
+                    <td>{{ school.establisher }}</td>
+                    <td>{{ school.type }}</td>
+                    <td>{{ school.name }}</td>
+                    <td>
+                        <a href="{% url 'events:school_detail' school.code %}">詳細</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% include 'components/pagination.html' %}
+{% endblock content %}

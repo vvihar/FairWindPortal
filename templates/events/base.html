@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load django_bootstrap_breadcrumbs %}
+{% block customcss %}
+{% endblock customcss %}
+{% block title %}
+    FairWind Portal
+{% endblock title %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "企画" "events:" %}
+{% endblock %}
+{% block content %}
+{% endblock content %}

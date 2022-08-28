@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "django_bootstrap_breadcrumbs",
     "utils.apps.UtilsConfig",
     "accounts.apps.AccountsConfig",
+    "events.apps.EventsConfig",
 ]
 
 MIDDLEWARE = [

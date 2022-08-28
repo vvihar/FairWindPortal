@@ -165,3 +165,5 @@ class User(AbstractUser):
         "grade",
         "sex",
     ]  # createsuperuser のときに尋ねる項目
+
+    # TODO: 出身校のSchoolモデルにOne to Many
