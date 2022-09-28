@@ -2,10 +2,19 @@ ul.dropdown {
     display: none;
     position: absolute;
     z-index: 1;
+    max-height: 240px;
+    overflow-y: scroll;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    background: #fff;
 }
 
 ul.dropdown li {
     cursor: pointer;
+    border: none;
+}
+
+ul.dropdown li:not(:last-child) {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
 }
 
 .suggest-item {

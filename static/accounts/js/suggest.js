@@ -58,8 +58,18 @@ document.addEventListener("DOMContentLoaded", (e) => {
             `${targetName}-list`
         );
 
+        const inputText = document.getElementById(
+            `${element.dataset.target}-input`
+        );
+        inputText.required = false;
+
         // 全てのサジェスト入力欄に対しイベントを設定
-        element.addEventListener("keyup", () => {
+        element.addEventListener("keyup", (event) => {
+            // IME変換中は処理をしない
+            // https://developer.mozilla.org/ja/docs/Web/API/Element/keyup_event
+            if (event.isComposing || event.keyCode === 229) {
+                return;
+            }
             const keyword = element.value;
             const url = `${element.dataset.url}?keyword=${keyword}`;
             if (keyword) {

@@ -1,3 +1,4 @@
+from accounts.models import Group, User
 from django.db import models
 
 # Create your models here.
@@ -113,11 +114,20 @@ class SchoolDetail(models.Model):
         verbose_name_plural = "学校詳細"
 
     def __str__(self):
-        return f"{self.school.prefecture}　{self.school.name}"
+        return f"{self.school.prefecture} {self.school.name}"
 
 
-"""
 class Event(models.Model):
+    name = models.CharField(
+        max_length=50,
+        verbose_name="企画名",
+        unique=True,
+        blank=True,
+        null=True,
+        default=None,
+        help_text="空欄の場合は、対象校名と種別を組み合わせて表示します",
+    )
+
     TYPE_CHOICES = (
         ("オンライン", "オンライン"),
         ("ハイブリッド", "ハイブリッド"),
@@ -131,6 +141,40 @@ class Event(models.Model):
         choices=TYPE_CHOICES,
     )
 
+    start_datetime = models.DateTimeField(verbose_name="開始日時")
+    end_datetime = models.DateTimeField(verbose_name="終了日時")
+
+    person_in_charge = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        verbose_name="統括",
+        null=True,
+        related_name="event_in_charge",
+    )
+
+    admin = models.ManyToManyField(
+        User, verbose_name="管理者", related_name="event_admin", blank=True
+    )
+
+    participants = models.ManyToManyField(
+        User, verbose_name="参加者", related_name="event_participate_in"
+    )
+
+    school = models.ManyToManyField(School, verbose_name="対象校", related_name="event")
+
+    group_in_charge = models.ForeignKey(
+        Group, on_delete=models.SET_NULL, verbose_name="担当班", null=True, blank=True
+    )
+
+    class Meta:
+        verbose_name = "イベント"
+        verbose_name_plural = "イベント"
+
     def __str__(self):
-        return
-"""
+        if self.name:
+            return self.name
+        else:
+            event_name = ""
+            for school in self.school.all():
+                event_name += school.name + " "
+            return f"{event_name}{self.type}"

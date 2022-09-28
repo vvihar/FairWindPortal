@@ -9,6 +9,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.views import LoginView, PasswordChangeView
+from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
@@ -308,7 +309,14 @@ def api_members_get(request):
     if keyword:
         member_list = [
             {"pk": user.pk, "name": str(user.last_name + " " + user.first_name)}
-            for user in User.objects.filter(username__icontains=keyword).all()
+            for user in User.objects.filter(
+                (
+                    Q(username__icontains=keyword)
+                    | Q(last_name__icontains=keyword)
+                    | Q(first_name__icontains=keyword)
+                ),
+                Q(is_active=True),
+            ).all()
         ]
     else:
         member_list = []

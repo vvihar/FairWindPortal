@@ -1,29 +1,23 @@
-<input
-    type="text"
-    id="{{ widget.name }}-input"
-    data-target="{{ widget.name }}"
-    autocomplete="off"
-    {% include "django/forms/widgets/attrs.html" %}
->
-
-<ul id="{{ widget.name }}-list" class="dropdown list-group"></ul>
-
+<input type="text"
+       id="{{ widget.name }}-input"
+       data-target="{{ widget.name }}"
+       autocomplete="off"
+       {% include "django/forms/widgets/attrs.html" %}>
+<ul id="{{ widget.name }}-list" class="dropdown list-group">
+</ul>
 <div class="card-text">
     <ul id="{{ widget.name }}-display" class="my-2">
         {% for group, options, index in widget.optgroups %}
-        {% for option in options %}
-        {% if option.selected %}
-            <li class="suggest-item" data-target="{{ widget.name }}" data-pk="{{ option.value }}">
-                {{ option.label }}
-            </li>
-        {% endif %}
-        {% endfor %}
+            {% for option in options %}
+                {% if option.selected %}
+                    <li class="suggest-item"
+                        data-target="{{ widget.name }}"
+                        data-pk="{{ option.value }}">{{ option.label }}</li>
+                {% endif %}
+            {% endfor %}
         {% endfor %}
     </ul>
 </div>
-
 <div id="{{ widget.name }}-values" style="display:hidden">
-    {% for value in widget.value %}
-        <input type="hidden" name="{{ widget.name }}" value="{{ value }}">
-    {% endfor %}
+    {% for value in widget.value %}<input type="hidden" name="{{ widget.name }}" value="{{ value }}">{% endfor %}
 </div>

@@ -1,0 +1,25 @@
+{% extends "events/base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load django_bootstrap_breadcrumbs %}
+{% block head %}
+    <link rel="stylesheet" href="{% static 'accounts/css/suggest.css' %}" />
+    <script src="{% static 'accounts/js/suggest.js' %}"></script>
+{% endblock head %}
+{% block breadcrumbs %}
+    {{ block.super }}
+{% endblock breadcrumbs %}
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+            <div>
+                {% for error in forms.non_field_errors %}<div class="alert alert-danger">{{ error }}</div>{% endfor %}
+            </div>
+        {% endif %}
+        {% include 'events/event_form.html' %}
+        <div class="col-12 mb-3">
+            <button type="submit" class="btn btn-primary">登録</button>
+        </div>
+    </form>
+{% endblock content %}

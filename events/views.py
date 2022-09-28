@@ -3,12 +3,21 @@ import io
 from urllib import request
 
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.http import JsonResponse
 from django.urls import reverse_lazy
-from django.views.generic import DetailView, FormView, ListView, TemplateView
+from django.views.generic import (
+    CreateView,
+    DetailView,
+    FormView,
+    ListView,
+    TemplateView,
+    UpdateView,
+)
 
-from .forms import MakeSchoolDBForm
-from .models import School
+from .forms import EventCreateForm, MakeSchoolDBForm
+from .models import Event, School
 
 # Create your views here.
 
@@ -181,3 +190,40 @@ class MakeSchoolDB(FormView):
         School.objects.bulk_create(schools)
         messages.success(self.request, "学校データを更新しました")
         return super().form_valid(form)
+
+
+class EventCreate(CreateView):
+    """企画作成"""
+
+    template_name = "events/new.html"
+    model = Event
+    form_class = EventCreateForm
+    success_url = reverse_lazy("events:")
+
+
+class EventUpdate(UpdateView):
+    """企画閲覧"""
+
+    template_name = "events/new.html"
+    model = Event
+    form_class = EventCreateForm
+    success_url = reverse_lazy("events:")
+
+
+@login_required
+def api_schools_get(request):
+    """サジェスト候補の学校を JSON で返す。"""
+    keyword = request.GET.get("keyword")
+    if keyword:
+        school_list = [
+            {"pk": school.pk, "name": f"{school.name}（{school.prefecture}）"}
+            for school in School.objects.filter(
+                Q(name__icontains=keyword)
+                | Q(prefecture__icontains=keyword)
+                | Q(type__icontains=keyword)
+                | Q(establisher__icontains=keyword)
+            ).all()
+        ]
+    else:
+        school_list = []
+    return JsonResponse({"object_list": school_list})
