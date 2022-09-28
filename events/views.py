@@ -214,6 +214,7 @@ class EventUpdate(UpdateView):
 def api_schools_get(request):
     """サジェスト候補の学校を JSON で返す。"""
     keyword = request.GET.get("keyword")
+    keyword = keyword.replace("高校", "高等学校")
     if keyword:
         school_list = [
             {"pk": school.pk, "name": f"{school.name}（{school.prefecture}）"}

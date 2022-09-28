@@ -1,5 +1,7 @@
 """Eventsのウィジェットを管理"""
 
+from datetime import datetime
+
 from django import forms, template
 from django.forms import widgets
 
@@ -8,11 +10,6 @@ class SplitDateTimeWidget(widgets.SplitDateTimeWidget):
     """SplitDateTimeWidgetのカスタマイズ"""
 
     template_name = "widgets/splitdatetime.html"
-
-    def decompress(self, value):
-        if value:
-            return [value.start, value.stop]
-        return [None, None]
 
     def get_context(self, name, value, attrs):
         context = super().get_context(name, value, attrs)

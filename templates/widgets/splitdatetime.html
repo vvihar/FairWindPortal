@@ -12,7 +12,7 @@
         </span>
         <input type="{{ widget.date.type }}"
                name="{{ widget.date.name }}"
-               class="form-control"
+               class="form-control vTextField"
                {% if widget.date.value != None %} value="{{ widget.date.value|stringformat:'s' }}"{% endif %}
                {% include "django/forms/widgets/attrs.html" %}>
         <span class="input-group-text">
@@ -28,7 +28,8 @@
         </span>
         <input type="{{ widget.time.type }}"
                name="{{ widget.time.name }}"
-               class="form-control"
+               class="form-control vTextField"
+               step="60"
                {% if widget.time.value != None %} value="{{ widget.time.value|stringformat:'s' }}"{% endif %}
                {% include "django/forms/widgets/attrs.html" %}>
     </div>

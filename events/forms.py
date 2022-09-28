@@ -38,6 +38,6 @@ class EventCreateForm(forms.ModelForm):
             "school": SuggestWidget(
                 attrs={"data-url": reverse_lazy("events:api_schools_get")}
             ),  # TODO: requestを減らすために、widget.pyのテンプレの中でモーダルを作成
-            "start_datetime": SplitDateTimeWidget(),
-            "end_datetime": SplitDateTimeWidget(),
+            "start_datetime": SplitDateTimeWidget(time_format="%H:%M"),
+            "end_datetime": SplitDateTimeWidget(time_format="%H:%M"),
         }
