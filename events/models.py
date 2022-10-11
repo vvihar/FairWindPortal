@@ -90,7 +90,7 @@ class School(models.Model):
         verbose_name_plural = "学校"
 
     def __str__(self):
-        return f"{self.prefecture}　{self.name}"
+        return self.name
 
 
 class SchoolDetail(models.Model):

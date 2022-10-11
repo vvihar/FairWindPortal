@@ -199,6 +199,7 @@ class EventCreate(CreateView):
     model = Event
     form_class = EventCreateForm
     success_url = reverse_lazy("events:")
+    # FIXME: 正常に登録できるように
 
 
 class EventUpdate(UpdateView):
@@ -208,6 +209,12 @@ class EventUpdate(UpdateView):
     model = Event
     form_class = EventCreateForm
     success_url = reverse_lazy("events:")
+
+    def form_valid(self, form):
+        event = form.save(commit=False)
+        event.save()
+        print(event)
+        return super().form_valid(form)
 
 
 @login_required
