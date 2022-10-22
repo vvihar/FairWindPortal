@@ -133,7 +133,7 @@ class MakeSchoolDB(FormView):
             http_response = request.urlopen(url)
             csvfile = io.TextIOWrapper(http_response, encoding="utf-8")
             reader = csv.reader(csvfile)
-            header = next(reader)
+            next(reader)
             for row in reader:
                 school_data = {
                     "学校コード": row[0],
@@ -199,7 +199,6 @@ class EventCreate(CreateView):
     model = Event
     form_class = EventCreateForm
     success_url = reverse_lazy("events:")
-    # FIXME: 正常に登録できるように
 
 
 class EventUpdate(UpdateView):
