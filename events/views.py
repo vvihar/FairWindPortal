@@ -205,7 +205,7 @@ class EventCreate(CreateView):
 class EventUpdate(UpdateView):
     """企画閲覧"""
 
-    template_name = "events/new.html"
+    template_name = "events/edit.html"
     model = Event
     form_class = EventCreateForm
     success_url = reverse_lazy("events:")

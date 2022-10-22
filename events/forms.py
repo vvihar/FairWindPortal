@@ -1,11 +1,9 @@
 """Eventsのフォームを管理する"""
 from accounts.widgets import SuggestWidget
 from django import forms
-from django.forms import ModelForm, widgets
 from django.urls import reverse_lazy
 
 from .models import Event
-from .widgets import SplitDateTimeWidget
 
 
 class MakeSchoolDBForm(forms.Form):
@@ -37,7 +35,5 @@ class EventCreateForm(forms.ModelForm):
             ),
             "school": SuggestWidget(
                 attrs={"data-url": reverse_lazy("events:api_schools_get")}
-            ),  # TODO: requestを減らすために、widget.pyのテンプレの中でモーダルを作成
-            "start_datetime": SplitDateTimeWidget(time_format="%H:%M"),
-            "end_datetime": SplitDateTimeWidget(time_format="%H:%M"),
+            ),
         }

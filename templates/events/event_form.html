@@ -1,4 +1,5 @@
 {% load widget_tweaks %}
+
 <div class="col-md-12">
     <div class="form-floating mb-3">
         {% render_field form.name class="form-control" placeholder="企画名" %}
@@ -12,20 +13,16 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-6 mb-3">
-        <div class="card">
-            <div class="card-body">
-                <div class="card-title">開始日時</div>
-                {{ form.start_datetime }}
-            </div>
+    <div class="col-md-6">
+        <div class="form-floating mb-3">
+            {% render_field form.start_datetime class="form-control" placeholder="開始日時" %}
+            <label for="id_start_datetime">開始日時</label>
         </div>
     </div>
-    <div class="col-md-6 mb-3">
-        <div class="card">
-            <div class="card-body">
-                <div class="card-title">終了日時</div>
-                {{ form.end_datetime }}
-            </div>
+    <div class="col-md-6">
+        <div class="form-floating mb-3">
+            {% render_field form.end_datetime class="form-control" placeholder="終了日時" %}
+            <label for="id_end_datetime">終了日時</label>
         </div>
     </div>
 </div>
@@ -48,7 +45,8 @@
         <div class="card-body">
             <div class="card-title">対象校</div>
             {% render_field form.school class="form-control suggest" placeholder="参加者を検索" aria-describedby="participantsHelp" %}
-            <div id="participantsHelp" class="form-text">
+            <div id="participantsHelp"
+                 class="form-text">
                 学校名を入力すると、候補を表示します。
                 候補をクリックすることで確定します。
                 確定した学校をクリックすることで削除します。
@@ -61,7 +59,8 @@
         <div class="card-body">
             <div class="card-title">管理者</div>
             {% render_field form.admin class="form-control suggest" placeholder="参加者を検索" aria-describedby="participantsHelp" %}
-            <div id="participantsHelp" class="form-text">
+            <div id="participantsHelp"
+                 class="form-text">
                 姓のローマ字表記から始まるユーザー名を入力すると、候補を表示します。
                 候補をクリックすることで確定します。
                 確定した管理者をクリックすることで削除します。
@@ -74,7 +73,8 @@
         <div class="card-body">
             <div class="card-title">参加者</div>
             {% render_field form.participants class="form-control suggest" placeholder="参加者を検索" aria-describedby="participantsHelp" %}
-            <div id="participantsHelp" class="form-text">
+            <div id="participantsHelp"
+                 class="form-text">
                 姓のローマ字表記から始まるユーザー名を入力すると、候補を表示します。
                 候補をクリックすることで確定します。
                 確定した参加者をクリックすることで削除します。
