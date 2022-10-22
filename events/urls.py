@@ -19,6 +19,6 @@ urlpatterns = [
     path("school/", SchoolList.as_view(), name="school_list"),
     path("school/<str:pk>/", SchoolDetail.as_view(), name="school_detail"),
     path("new/", EventCreate.as_view(), name="event_create"),
-    path("edit/<int:pk>/", EventUpdate.as_view(), name="event_update"),
+    path("update/<int:pk>/", EventUpdate.as_view(), name="event_update"),
     path("api/schools_get/", api_schools_get, name="api_schools_get"),
 ]

@@ -1,8 +1,27 @@
 {% extends "events/base.html" %}
+
 {% load static %}
+
 {% block customcss %}
 {% endblock customcss %}
 {% block content %}
+    <a href="{% url 'events:event_create' %}"
+       class="btn btn-primary mb-3">新規登録</a>
+    {% for event in object_list %}
+        <div class="col-sm-12 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ event.name }}</h5>
+                    <a href="{% url 'events:event_update' event.pk %}"
+                       class="btn btn-secondary"
+                       tabindex="-1"
+                       role="button"
+                       aria-disabled="true">編集</a>
+                    <!--TODO: 削除機能は必要？-->
+                </div>
+            </div>
+        </div>
+    {% endfor %}
     <div class="row">
         <div class="col-sm-6">
             <a href="{% url 'events:school_list' %}"

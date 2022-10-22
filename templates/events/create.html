@@ -12,6 +12,7 @@
 {% endblock head %}
 {% block breadcrumbs %}
     {{ block.super }}
+    {% breadcrumb "登録" "events:event_create" %}
 {% endblock breadcrumbs %}
 {% block content %}
     <form method="post">

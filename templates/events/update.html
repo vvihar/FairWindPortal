@@ -12,6 +12,7 @@
 {% endblock head %}
 {% block breadcrumbs %}
     {{ block.super }}
+    {% breadcrumb object.name "events:event_list" object.id %}
 {% endblock breadcrumbs %}
 {% block content %}
     <form method="post">

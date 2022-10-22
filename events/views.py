@@ -22,9 +22,10 @@ from .models import Event, School
 # Create your views here.
 
 
-class Home(TemplateView):
+class Home(ListView):
     """ホーム画面"""
 
+    model = Event
     template_name = "events/index.html"
 
 
@@ -195,7 +196,7 @@ class MakeSchoolDB(FormView):
 class EventCreate(CreateView):
     """企画作成"""
 
-    template_name = "events/new.html"
+    template_name = "events/create.html"
     model = Event
     form_class = EventCreateForm
     success_url = reverse_lazy("events:")
@@ -204,7 +205,7 @@ class EventCreate(CreateView):
 class EventUpdate(UpdateView):
     """企画閲覧"""
 
-    template_name = "events/edit.html"
+    template_name = "events/update.html"
     model = Event
     form_class = EventCreateForm
     success_url = reverse_lazy("events:")

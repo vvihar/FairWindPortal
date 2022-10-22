@@ -5,6 +5,8 @@ from django.db import models
 
 
 class School(models.Model):
+    """文科省のデータに基づく学校の公式な情報を管理する"""
+
     code = models.CharField(max_length=13, primary_key=True, verbose_name="学校コード")
 
     number = models.IntegerField(verbose_name="管理用連番", default=0)
@@ -94,13 +96,15 @@ class School(models.Model):
 
 
 class SchoolDetail(models.Model):
+    """学校についてのメモやFWが活動を通して得た情報を蓄積する"""
+
     school = models.OneToOneField(
         School,
         on_delete=models.DO_NOTHING,
         verbose_name="学校",
         related_name="detail",
         primary_key=True,
-        db_constraint=False,
+        db_constraint=False,  # 学校DBの更新時に強引にエラーを回避する
     )
 
     memo = models.TextField(verbose_name="備考", blank=True, null=True)
@@ -118,6 +122,8 @@ class SchoolDetail(models.Model):
 
 
 class Event(models.Model):
+    """企画情報を管理する"""
+
     name = models.CharField(
         max_length=50,
         verbose_name="企画名",
