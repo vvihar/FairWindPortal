@@ -187,6 +187,8 @@ class Event(models.Model):
         max_length=10,
         choices=STATUS_CHOICES,
         default="参加者募集中",
+        blank=False,
+        null=False,
     )
 
     class Meta:
