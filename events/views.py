@@ -214,7 +214,7 @@ class EventCreate(CreateView):
                 school_joined += school.name + " "
             event.name = school_joined + event.type
         event.save()
-        messages.success(self.request, "企画を更新しました")
+        messages.success(self.request, "企画を登録しました")
         return super().form_valid(form)
 
 
