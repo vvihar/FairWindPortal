@@ -8,14 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import JsonResponse
 from django.urls import reverse_lazy
-from django.views.generic import (
-    CreateView,
-    DetailView,
-    FormView,
-    ListView,
-    TemplateView,
-    UpdateView,
-)
+from django.views.generic import CreateView, DetailView, FormView, ListView, UpdateView
 
 from .forms import EventCreateForm, MakeSchoolDBForm
 from .models import Event, School
