@@ -214,7 +214,7 @@ class EventCreate(CreateView):
 
 
 class EventUpdate(UpdateView):
-    """企画閲覧"""
+    """企画更新"""
 
     template_name = "events/update.html"
     model = Event
@@ -223,8 +223,14 @@ class EventUpdate(UpdateView):
 
     def form_valid(self, form):
         event = form.save(commit=False)
+        if event.name is None:
+            schools = form.cleaned_data["school"]
+            school_joined = ""
+            for school in schools:
+                school_joined += school.name + " "
+            event.name = school_joined + event.type
         event.save()
-        print(event)
+        messages.success(self.request, "企画を更新しました")
         return super().form_valid(form)
 
 
