@@ -212,6 +212,18 @@ class EventCreate(CreateView):
     form_class = EventCreateForm
     success_url = reverse_lazy("events:")
 
+    def form_valid(self, form):
+        event = form.save(commit=False)
+        if event.name is None:
+            schools = form.cleaned_data["school"]
+            school_joined = ""
+            for school in schools:
+                school_joined += school.name + " "
+            event.name = school_joined + event.type
+        event.save()
+        messages.success(self.request, "企画を更新しました")
+        return super().form_valid(form)
+
 
 class EventUpdate(UpdateView):
     """企画更新"""
