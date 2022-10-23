@@ -1,5 +1,6 @@
 import csv
 import io
+import re
 from urllib import request
 
 from django.contrib import messages
@@ -73,6 +74,8 @@ class MakeSchoolDB(FormView):
         url_west = form.cleaned_data["file_url_west"]
         urls = [url_east, url_west]
 
+        encoding = form.cleaned_data["encoding"]
+
         valid_school_type_code = ("C1", "C2", "D1", "D2")
         # C1:中学校, C2:義務教育学校, D1:高等学校, D2:中等教育学校
 
@@ -132,10 +135,18 @@ class MakeSchoolDB(FormView):
 
         for url in urls:
             http_response = request.urlopen(url)
-            csvfile = io.TextIOWrapper(http_response, encoding="utf-8")
+            csvfile = io.TextIOWrapper(http_response, encoding=encoding)
             reader = csv.reader(csvfile)
-            next(reader)
-            for row in reader:
+            try:
+                next(reader)
+            except UnicodeDecodeError:
+                messages.error(self.request, "ファイルのエンコードが不正です。")
+                return super().form_invalid(form)
+            for row_raw in reader:
+                row = []
+                for col in row_raw:
+                    col = re.sub("\(.+?\)", "", col)
+                    row.append(col)
                 school_data = {
                     "学校コード": row[0],
                     "学校種": row[1],
