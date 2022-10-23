@@ -1,3 +1,6 @@
+from email.policy import default
+from secrets import choice
+
 from accounts.models import Group, User
 from django.db import models
 
@@ -170,6 +173,20 @@ class Event(models.Model):
 
     group_in_charge = models.ForeignKey(
         Group, on_delete=models.SET_NULL, verbose_name="担当班", null=True, blank=True
+    )
+
+    STATUS_CHOICES = (
+        ("参加者募集中", "参加者募集中"),
+        ("参加者打診中", "参加者打診中"),
+        ("参加者決定済み", "参加者決定済み"),
+        ("企画終了", "企画終了"),
+        ("アーカイブ", "アーカイブ"),
+    )
+    status = models.CharField(
+        verbose_name="状態",
+        max_length=10,
+        choices=STATUS_CHOICES,
+        default="参加者募集中",
     )
 
     class Meta:
