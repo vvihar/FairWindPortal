@@ -145,7 +145,7 @@ class MakeSchoolDB(FormView):
             for row_raw in reader:
                 row = []
                 for col in row_raw:
-                    col = re.sub("\(.+?\)", "", col)
+                    col = re.sub(r"\(.+?\)", "", col)
                     row.append(col)
                 school_data = {
                     "学校コード": row[0],
