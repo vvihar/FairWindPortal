@@ -141,7 +141,7 @@ class MakeSchoolDB(FormView):
             try:
                 next(reader)
             except UnicodeDecodeError:
-                messages.error(self.request, "ファイルのエンコードが不正です。")
+                messages.error(self.request, "ファイルの文字コードが不正です。")
                 return super().form_invalid(form)
             for row_raw in reader:
                 row = []
