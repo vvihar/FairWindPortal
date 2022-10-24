@@ -180,24 +180,6 @@ class Event(models.Model):
         help_text="プラットフォーム上において、企画ページの編集権限を持つユーザーです",
     )
 
-    participants = models.ManyToManyField(
-        User, verbose_name="参加者", related_name="event_participate_in"
-    )
-
-    participants_invited = models.ManyToManyField(
-        User,
-        verbose_name="打診中の参加者",
-        related_name="event_invited",
-        blank=True,
-    )
-
-    participants_declined = models.ManyToManyField(
-        User,
-        verbose_name="打診の辞退者",
-        related_name="event_declined",
-        blank=True,
-    )
-
     school = models.ManyToManyField(School, verbose_name="対象校", related_name="event")
 
     STATUS_CHOICES = (
@@ -228,3 +210,59 @@ class Event(models.Model):
             for school in self.school.all():
                 event_name += school.name + " "
             return f"{event_name}{self.type}"
+
+
+class EventParticipation(models.Model):
+    """イベントへの参加者の情報を管理する"""
+
+    event = models.ForeignKey(
+        Event,
+        on_delete=models.CASCADE,
+        verbose_name="イベント",
+        related_name="participation",
+    )
+
+    participant = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        verbose_name="参加者",
+        related_name="participation",
+    )
+
+    message_from_participant = models.TextField(
+        verbose_name="参加者からのメッセージ",
+        help_text="作成メンバーに伝えたいことを入力してください",
+        max_length=1000,
+        null=True,
+        blank=True,
+    )
+
+    message_from_admin = models.TextField(
+        verbose_name="作成の打診担当者からのメッセージ",
+        help_text="参加者に伝えたいことを入力してください",
+        max_length=1000,
+        null=True,
+        blank=True,
+    )
+
+    STATUS_CHOICES = (
+        ("回答待ち", "回答待ち"),
+        ("参加", "参加"),
+        ("辞退", "辞退"),
+    )
+
+    status = models.CharField(
+        verbose_name="打診の状態",
+        max_length=4,
+        choices=STATUS_CHOICES,
+        default="回答待ち",
+        blank=False,
+        null=False,
+    )
+
+    class Meta:
+        verbose_name = "イベント参加者"
+        verbose_name_plural = "イベント参加者"
+
+    def __str__(self):
+        return f"{self.event} - {self.participant}"

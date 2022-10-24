@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from .forms import EventCreateForm
-from .models import Event, School, SchoolDetail
+from .models import Event, EventParticipation, School, SchoolDetail
 
 
 # Register your models here.
@@ -16,3 +16,4 @@ class EventAdmin(admin.ModelAdmin):
 admin.site.register(School, SchoolAdmin)
 admin.site.register(SchoolDetail)
 admin.site.register(Event, EventAdmin)
+admin.site.register(EventParticipation)

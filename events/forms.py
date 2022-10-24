@@ -1,9 +1,11 @@
 """Eventsのフォームを管理する"""
+from accounts.models import User
 from accounts.widgets import SuggestWidget
 from django import forms
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 
-from .models import Event
+from .models import Event, EventParticipation
 
 
 class MakeSchoolDBForm(forms.Form):
@@ -43,3 +45,15 @@ class EventCreateForm(forms.ModelForm):
                 attrs={"data-url": reverse_lazy("events:api_schools_get")}
             ),
         }
+
+
+class EventMakeInvitationForm(forms.Form):
+    """招待状を作成するフォーム"""
+
+    participants = forms.ModelMultipleChoiceField(
+        label="参加者",
+        queryset=User.objects.all(),
+        widget=SuggestWidget(
+            attrs={"data-url": reverse_lazy("accounts:api_members_get")}
+        ),
+    )

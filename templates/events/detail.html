@@ -21,117 +21,13 @@
 {% endblock head %}
 {% block breadcrumbs %}
     {{ block.super }}
-    {% breadcrumb object.name "events:event_list" object.id %}
+    {% breadcrumb event.name "events:event_detail" event.id %}
 {% endblock breadcrumbs %}
 {% block content %}
-    <h4 class="mb-3">{{ object.name }}</h4>
+    <h4 class="mb-3">{{ event.name }}</h4>
     <div class="mb-3">
-        <span class="badge rounded-pill bg-dark px-3 py-2 fw-normal">{{ object.type }}</span>
-        <span class="badge rounded-pill bg-dark px-3 py-2 fw-normal">{{ object.status }}</span>
+        <span class="badge rounded-pill bg-dark px-3 py-2 fw-normal">{{ event.type }}</span>
+        <span class="badge rounded-pill bg-dark px-3 py-2 fw-normal">{{ event.status }}</span>
     </div>
-    <!--参加者-->
-    <div class="card border mt-4">
-        <div class="card-header border-bottom d-flex align-items-center justify-content-between">
-            <h2 class="fs-5 fw-bold mb-0">参加者</h2>
-            <div class="col text-end">
-                <a href="{% url 'events:event_update' object.pk %}"
-                   class="btn btn-sm btn-primary">追加打診</a>
-            </div>
-        </div>
-        <div class="card-body py-0">
-            <table class="table mb-0">
-                <tbody>
-                    {% if object.participants.all %}
-                        <!--参加決定者-->
-                        {% for participant in object.participants.all %}
-                            <tr>
-                                <td class="align-middle">
-                                    <span class="h6 mb-1">{{ participant }}</span>
-                                    <div class="align-items-center">
-                                        <span class="badge rounded-pill bg-light text-dark d-inline-flex border border-success">
-                                            <span class="bg-success dot rounded-circle me-1"></span>
-                                            <small>参加</small>
-                                        </span>
-                                    </div>
-                                </td>
-                                <td class="align-middle">
-                                    {{ participant.grade }}期
-                                    <span class="text-muted">／</span>
-                                    {{ participant.course }}
-                                    {% if participant.faculty %}→ {{ participant.faculty }}{{ participant.department }}{% endif %}
-                                </td>
-                                <td></td>
-                            </tr>
-                        {% endfor %}
-                    {% endif %}
-                    {% if user in object.admin.all or user.is_staff %}
-                        {% if object.participants_invited.all %}
-                            <!--参加打診者-->
-                            {% for participant in object.participants_invited.all %}
-                                <tr>
-                                    <td class="align-middle">
-                                        <span class="h6 mb-1">{{ participant }}</span>
-                                        <div class="align-items-center">
-                                            <span class="badge rounded-pill bg-light text-dark d-inline-flex border border-warning">
-                                                <span class="bg-warning dot rounded-circle me-1"></span>
-                                                <small>打診中</small>
-                                            </span>
-                                        </div>
-                                    </td>
-                                    <td class="align-middle">
-                                        {{ participant.grade }}期
-                                        <span class="text-muted">／</span>
-                                        {{ participant.course }}
-                                        {% if participant.faculty %}→ {{ participant.faculty }}{{ participant.department }}{% endif %}
-                                    </td>
-                                    <td class="align-middle text-end">
-                                        <a href="#"
-                                           class="btn btn-sm btn-danger d-inline-flex align-items-center">打診取り消し</a>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        {% else %}
-                            <li class="list-group-item px-0 mt-2">打診した参加者候補は、全員打診に回答しました。</li>
-                        {% endif %}
-                    {% endif %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-    {% if user in object.admin.all or user.is_staff %}
-        <div class="card border mt-4">
-            <div class="card-header border-bottom d-flex align-items-center justify-content-between">
-                <h2 class="fs-5 fw-bold mb-0">参加辞退者</h2>
-            </div>
-            <div class="card-body py-0">
-                <table class="table mb-0">
-                    <tbody>
-                        {% if object.participants_declined.all %}
-                            <!--参加辞退者-->
-                            {% for participant in object.participants_declined.all %}
-                                <tr>
-                                    <td class="align-middle">
-                                        <span class="h6 mb-1">{{ participant }}</span>
-                                        <div class="align-items-center">
-                                            <span class="badge rounded-pill bg-light text-dark d-inline-flex border border-danger">
-                                                <span class="bg-danger dot rounded-circle me-1"></span>
-                                                <small>辞退</small>
-                                            </span>
-                                        </div>
-                                    </td>
-                                    <td class="align-middle">
-                                        {{ participant.grade }}期
-                                        <span class="text-muted">／</span>
-                                        {{ participant.course }}
-                                        {% if participant.faculty %}→ {{ participant.faculty }}{{ participant.department }}{% endif %}
-                                    </td>
-                                    <td class="align-middle"></td>
-                                </tr>
-                            {% endfor %}
-                        {% endif %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    {% endif %}
+    <a href="{% url 'events:event_participants' event.pk %}">参加者</a>
 {% endblock content %}

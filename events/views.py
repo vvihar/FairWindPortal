@@ -7,11 +7,19 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DetailView, FormView, ListView, UpdateView
+from django.views.generic import (
+    CreateView,
+    DeleteView,
+    DetailView,
+    FormView,
+    ListView,
+    UpdateView,
+)
 
-from .forms import EventCreateForm, MakeSchoolDBForm
-from .models import Event, School
+from .forms import EventCreateForm, EventMakeInvitationForm, MakeSchoolDBForm
+from .models import Event, EventParticipation, School
 
 # Create your views here.
 
@@ -244,6 +252,74 @@ class EventDetail(DetailView):
 
     template_name = "events/detail.html"
     model = Event
+
+
+class EventParticipants(ListView):
+    template_name = "events/participants.html"
+    model = EventParticipation
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["event"] = Event.objects.get(id=self.kwargs["pk"])
+        return context
+
+
+class EventMakeInvitation(FormView):
+    """企画へ打診する"""
+
+    # FIXME: adminのみが打診できるようにする
+
+    template_name = "events/make_invitation.html"
+    form_class = EventMakeInvitationForm
+
+    def get_success_url(self):
+        return reverse_lazy(
+            "events:event_participants", kwargs={"pk": self.kwargs["pk"]}
+        )
+
+    def get_context_data(self):
+        event = get_object_or_404(Event, pk=self.kwargs["pk"])
+        context = super().get_context_data()
+        context["event"] = event
+        return context
+
+    def form_valid(self, form):
+        participants = form.cleaned_data["participants"]
+        event = get_object_or_404(Event, pk=self.kwargs["pk"])
+        invitations = []
+        for participant in participants:
+            invitation = EventParticipation(
+                event=event, participant=participant, status="回答待ち"
+            )
+            if not participant.pk in event.participation.all().values_list(
+                "participant", flat=True
+            ):
+                invitations.append(invitation)
+            else:
+                messages.warning(
+                    self.request,
+                    str(participant).replace(" ", "") + "さんは既にこの企画に打診されています",
+                )
+        EventParticipation.objects.bulk_create(invitations)
+        return super().form_valid(form)
+
+
+class EventCancelInvitation(DeleteView):
+    """企画への打診を取り消す"""
+
+    # FIXME: adminだけが打診を取り消せるようにする
+
+    template_name = "events/cancel_invitation.html"
+    model = EventParticipation
+
+    def get_success_url(self):
+        return reverse_lazy(
+            "events:event_participants", kwargs={"pk": self.kwargs["id"]}
+        )
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, "打診を取り消しました")
+        return super().delete(request, *args, **kwargs)
 
 
 @login_required

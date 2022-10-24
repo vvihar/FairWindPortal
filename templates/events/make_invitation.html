@@ -2,7 +2,6 @@
 
 {% load static %}
 
-{% load widget_tweaks %}
 {% load django_bootstrap_breadcrumbs %}
 {% load django_bootstrap5 %}
 
@@ -13,18 +12,13 @@
 {% endblock head %}
 {% block breadcrumbs %}
     {{ block.super }}
-    {% breadcrumb object.name "events:event_detail" object.id %}
-    {% breadcrumb "編集" "events:event_invite" %}
+    {% breadcrumb event.name "events:event_detail" event.id %}
+    {% breadcrumb "打診" "events:event_invite" %}
 {% endblock breadcrumbs %}
 {% block content %}
     <form method="post">
         {% csrf_token %}
-        {% if form.non_field_errors %}
-            <div>
-                {% for error in forms.non_field_errors %}<div class="alert alert-danger">{{ error }}</div>{% endfor %}
-            </div>
-        {% endif %}
         {% bootstrap_form form layout="floating" %}
-        {% bootstrap_button "更新" button_type="submit" %}
+        {% bootstrap_button "打診" button_type="submit" %}
     </form>
 {% endblock content %}

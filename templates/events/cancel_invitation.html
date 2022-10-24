@@ -1,0 +1,30 @@
+{% extends "events/base.html" %}
+
+{% load widget_tweaks %}
+
+{% load static %}
+{% load django_bootstrap_breadcrumbs %}
+{% load django_bootstrap5 %}
+
+{% block customcss %}
+{% endblock customcss %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb object.event "events:event_detail" object.event.id %}
+    {% breadcrumb "打診取り消し" "events:event_cancel_invitation" %}
+{% endblock %}
+{% block content %}
+    <div class="mb-3">
+        <p>
+            <strong>{{ object.participant }}</strong>への打診を取り消しますか？
+        </p>
+        <p>打診を取り消したメンバーには、もう一度打診することができます。</p>
+    </div>
+    <form method="POST">
+        {% csrf_token %}
+        {% bootstrap_button "削除" button_type="submit" button_class="btn-danger" %}
+
+        {% include 'components/cancel.html' %}
+
+    </form>
+{% endblock content %}
