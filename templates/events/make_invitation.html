@@ -20,5 +20,8 @@
         {% csrf_token %}
         {% bootstrap_form form layout="floating" %}
         {% bootstrap_button "打診" button_type="submit" %}
+
+        {% include 'components/cancel.html' %}
+
     </form>
 {% endblock content %}
