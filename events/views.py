@@ -255,6 +255,8 @@ class EventDetail(DetailView):
 
 
 class EventParticipants(ListView):
+    """企画の参加者・打診状況一覧"""
+
     template_name = "events/participants.html"
     model = EventParticipation
 

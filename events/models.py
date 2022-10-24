@@ -1,6 +1,3 @@
-from email.policy import default
-from secrets import choice
-
 from accounts.models import Group, User
 from django.db import models
 
@@ -199,6 +196,8 @@ class Event(models.Model):
     )
 
     class Meta:
+        """メタ情報"""
+
         verbose_name = "イベント"
         verbose_name_plural = "イベント"
 
@@ -261,6 +260,8 @@ class EventParticipation(models.Model):
     )
 
     class Meta:
+        """メタ情報"""
+
         verbose_name = "イベント参加者"
         verbose_name_plural = "イベント参加者"
 
