@@ -1,14 +1,10 @@
 {% extends "events/base.html" %}
+
 {% load widget_tweaks %}
+
 {% load django_bootstrap_breadcrumbs %}
 {% load static %}
-{% block head %}
-    <style>
-    span.badge {
-        font-size: 0.9rem;
-    }
-    </style>
-{% endblock head %}
+
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb "学校" "events:school_list" %}

@@ -1,3 +1,6 @@
 input::-webkit-date-and-time-value {
     text-align: left;
 }
+span.badge {
+    font-size: 0.9rem;
+}

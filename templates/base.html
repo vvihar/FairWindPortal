@@ -108,6 +108,7 @@
                         {% if user.is_authenticated %}
                             <a href="{% url 'accounts:' %}"
                                class="text-white text-decoration-none navbar-text">
+                                {% if user.is_staff %}<span class="badge rounded-pill bg-danger fw-normal me-2">管理者</span>{% endif %}
                                 {% if user.last_name and user.first_name %}
                                     {{ user.last_name }}
                                     {{ user.first_name }}
@@ -148,8 +149,6 @@
             {% block content %}
             {% endblock content %}
         </div>
-
-        {% include 'toast.html' %}
-
+        <!--{% include 'toast.html' %}-->
     </body>
 </html>

@@ -239,6 +239,13 @@ class EventUpdate(UpdateView):
         return super().form_valid(form)
 
 
+class EventDetail(DetailView):
+    """企画詳細"""
+
+    template_name = "events/detail.html"
+    model = Event
+
+
 @login_required
 def api_schools_get(request):
     """サジェスト候補の学校を JSON で返す。"""

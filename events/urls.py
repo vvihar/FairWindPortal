@@ -3,6 +3,7 @@ from django.urls import path
 
 from .views import (
     EventCreate,
+    EventDetail,
     EventUpdate,
     Home,
     MakeSchoolDB,
@@ -20,5 +21,6 @@ urlpatterns = [
     path("school/<str:pk>/", SchoolDetail.as_view(), name="school_detail"),
     path("new/", EventCreate.as_view(), name="event_create"),
     path("update/<int:pk>/", EventUpdate.as_view(), name="event_update"),
+    path("detail/<int:pk>/", EventDetail.as_view(), name="event_detail"),
     path("api/schools_get/", api_schools_get, name="api_schools_get"),
 ]

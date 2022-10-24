@@ -153,6 +153,17 @@ class Event(models.Model):
     start_datetime = models.DateTimeField(verbose_name="開始日時")
     end_datetime = models.DateTimeField(verbose_name="終了日時")
 
+    venue = models.CharField(
+        verbose_name="場所",
+        max_length=80,
+        null=True,
+        blank=True,
+    )
+
+    group_in_charge = models.ForeignKey(
+        Group, on_delete=models.SET_NULL, verbose_name="担当班", null=True, blank=True
+    )
+
     person_in_charge = models.ForeignKey(
         User,
         on_delete=models.SET_NULL,
@@ -162,18 +173,32 @@ class Event(models.Model):
     )
 
     admin = models.ManyToManyField(
-        User, verbose_name="管理者", related_name="event_admin", blank=True
+        User,
+        verbose_name="管理者",
+        related_name="event_admin",
+        blank=True,
+        help_text="プラットフォーム上において、企画ページの編集権限を持つユーザーです",
     )
 
     participants = models.ManyToManyField(
         User, verbose_name="参加者", related_name="event_participate_in"
     )
 
-    school = models.ManyToManyField(School, verbose_name="対象校", related_name="event")
-
-    group_in_charge = models.ForeignKey(
-        Group, on_delete=models.SET_NULL, verbose_name="担当班", null=True, blank=True
+    participants_invited = models.ManyToManyField(
+        User,
+        verbose_name="打診中の参加者",
+        related_name="event_invited",
+        blank=True,
     )
+
+    participants_declined = models.ManyToManyField(
+        User,
+        verbose_name="打診の辞退者",
+        related_name="event_declined",
+        blank=True,
+    )
+
+    school = models.ManyToManyField(School, verbose_name="対象校", related_name="event")
 
     STATUS_CHOICES = (
         ("参加者募集中", "参加者募集中"),
