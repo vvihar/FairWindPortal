@@ -1,24 +1,30 @@
 {% extends "accounts/base.html" %}
+
 {% load widget_tweaks %}
+
 {% load static %}
 {% load django_bootstrap_breadcrumbs %}
+{% load django_bootstrap5 %}
 
-{% block customcss %}{% endblock customcss %}
-
+{% block customcss %}
+{% endblock customcss %}
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb "班" "accounts:group" %}
     {% breadcrumb object.name "accounts:group_delete" object.id %}
 {% endblock %}
-
 {% block content %}
     <div class="mb-3">
         <p>
-            <strong>{{object.name}}</strong>を削除しますか？</p>
+            <strong>{{ object.name }}</strong>を削除しますか？
+        </p>
         <p>削除すると、この班に所属するユーザーの班は空欄になります。</p>
     </div>
-    <form action="" method="POST">{% csrf_token %}
-        <input type="submit" value="削除" class="btn btn-danger">
-        <a href="{% url 'accounts:group' %}" class="btn btn-secondary" tabindex="-1" role="button" aria-disabled="true">キャンセル</a>
+    <form method="POST">
+        {% csrf_token %}
+        {% bootstrap_button "削除" button_type="submit" button_class="btn-danger" %}
+
+        {% include 'components/cancel.html' %}
+
     </form>
-{% endblock content%}
+{% endblock content %}

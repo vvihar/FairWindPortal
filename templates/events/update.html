@@ -4,6 +4,7 @@
 
 {% load widget_tweaks %}
 {% load django_bootstrap_breadcrumbs %}
+{% load django_bootstrap5 %}
 
 {% block head %}
     <link rel="stylesheet"
@@ -22,12 +23,7 @@
                 {% for error in forms.non_field_errors %}<div class="alert alert-danger">{{ error }}</div>{% endfor %}
             </div>
         {% endif %}
-
-        {% include 'events/event_form.html' %}
-
-        <div class="col-12 mb-3">
-            <button type="submit"
-                    class="btn btn-primary">更新</button>
-        </div>
+        {% bootstrap_form form layout="floating" %}
+        {% bootstrap_button "更新" button_type="submit" %}
     </form>
 {% endblock content %}

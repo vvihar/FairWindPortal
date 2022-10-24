@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.forms",
     "widget_tweaks",
+    "django_bootstrap5",
     "django_bootstrap_breadcrumbs",
     "utils.apps.UtilsConfig",
     "accounts.apps.AccountsConfig",
@@ -151,6 +152,11 @@ MESSAGE_TAGS = {
 }
 
 FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
+
+BOOTSTRAP5 = {
+    "error_css_class": "is-invalid",
+    "success_css_class": "is-valid",
+}
 
 # 最後に書く
 try:

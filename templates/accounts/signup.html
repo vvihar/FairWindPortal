@@ -1,112 +1,24 @@
 {% extends "accounts/base.html" %}
+
 {% load widget_tweaks %}
+
 {% load django_bootstrap_breadcrumbs %}
+{% load django_bootstrap5 %}
 {% load static %}
 
-{% block customcss %}{% endblock customcss %}
-
+{% block customcss %}
+{% endblock customcss %}
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb "ユーザー新規登録" "accounts:signup" %}
 {% endblock %}
-
 {% block content %}
     {{ context }}
-    <form class="row g-3" method="POST">
+    <form method="POST">
         {% csrf_token %}
-        <div class="col-md-12">
-            <div class="form-floating mb-3">
-                {% if form.username.errors %}
-                    {% render_field form.username class="form-control is-invalid" placeholder="ユーザー名" required="required" %}
-                    <label for="inputUsername">ユーザー名</label>
-                    {% for error in form.username.errors %}
-                        <div class="invalid-feedback">
-                            {{ error }}
-                        </div>
-                    {% endfor %}
-                {% else %}
-                    {% render_field form.username class="form-control" placeholder="ユーザー名" required="required" %}
-                    <label for="id_username">ユーザー名</label>
-                {% endif %}
-            </div>
-        </div>
-        <div class="col-md-5">
-            <div class="form-floating mb-3">
-                {% render_field form.last_name class="form-control" placeholder="姓" required="required" %}
-                <label for="id_last_name">姓</label>
-            </div>
-        </div>
-        <div class="col-md-5">
-            <div class="form-floating mb-3">
-                {% render_field form.first_name class="form-control" placeholder="名" required="required" %}
-                <label for="id_first_name">名</label>
-            </div>
-        </div>
-        <div class="col-md-2">
-            <div class="form-floating mb-3">
-                {% render_field form.sex class="form-select" %}
-                <label for="id_sex">性別</label>
-            </div>
-        </div>
-        <div class="form-floating mb-3">
-            {% render_field form.email class="form-control" placeholder="メールアドレス" required="required" aria-describedby="emailHelp" %}
-            <label for="id_email">メールアドレス</label>
-            <div id="emailHelp" class="form-text">FairWindのメールアドレス</div>
-        </div>
-        <div class="col-md-6">
-            <div class="form-floating mb-3">
-                {% if form.password1.errors %}
-                    {% render_field form.password1 class="form-control is-invalid" placeholder="パスワード" %}
-                    <label for="id_password1">パスワード</label>
-                    {% for error in form.password1.errors %}
-                        <div class="invalid-feedback">
-                            {{ error }}
-                        </div>
-                    {% endfor %}
-                {% else %}
-                    {% render_field form.password1 class="form-control" placeholder="パスワード" %}
-                    <label for="id_password1">パスワード</label>
-                {% endif %}
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="form-floating mb-3">
-                {% if form.password2.errors %}
-                    {% render_field form.password2 class="form-control is-invalid" placeholder="パスワード（確認）" %}
-                    <label for="id_password2">パスワード（確認）</label>
-                    {% for error in form.password2.errors %}
-                        <div class="invalid-feedback">
-                            {{ error }}
-                        </div>
-                    {% endfor %}
-                {% else %}
-                    {% render_field form.password2 class="form-control" placeholder="パスワード（確認）" %}
-                    <label for="id_password2">パスワード（確認）</label>
-                {% endif %}
-
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="form-floating mb-3">
-                {% render_field form.course class="form-select" aria-describedby="courseHelp"%}
-                <label for="id_course">科類</label>
-                <div id="courseHelp" class="form-text">後期課程所属の場合は出身科類</div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="form-floating mb-3">
-                {% render_field form.enrolled_year class="form-select" id="selectEnrolledYear" %}
-                <label for="id_enrolled_year">入学年度</label>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="form-floating mb-3">
-                {% render_field form.grade class="form-select" %}
-                <label for="id_grade">期</label>
-            </div>
-        </div>
-        <div class="col-12 mb-3">
-            <button type="submit" class="btn btn-primary">登録</button>
-        </div>
+        {% bootstrap_form form layout="floating" %}
+        {% bootstrap_button "登録" button_type="submit" %}
+        <!--# TODO: 注釈を過去のデータを参考に復元する-->
+        <!--# TODO: widget-tweaksは必要？-->
     </form>
-{% endblock content%}
+{% endblock content %}
