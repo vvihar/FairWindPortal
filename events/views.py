@@ -293,7 +293,7 @@ class EventMakeInvitation(FormView):
             )
             if not participant.pk in event.participation.all().values_list(
                 "participant", flat=True
-            ):
+            ):  # 既に打診された人には打診しない
                 invitations.append(invitation)
             else:
                 messages.warning(
