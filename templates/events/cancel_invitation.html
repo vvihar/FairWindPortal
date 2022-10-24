@@ -16,11 +16,11 @@
 {% block content %}
     <div class="mb-3">
         <p>
-            <strong>{{ object.participant }}</strong>への打診を取り消しますか？
+            <strong>{{ object.participant|cut:" " }}</strong>さんへの打診を取り消しますか？
         </p>
         <p>打診を取り消したメンバーには、もう一度打診することができます。</p>
     </div>
-    <form method="POST">
+    <form method="post">
         {% csrf_token %}
         {% bootstrap_button "削除" button_type="submit" button_class="btn-danger" %}
 
