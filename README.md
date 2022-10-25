@@ -10,6 +10,12 @@ Django を使用した FairWind の団体内ウェブアプリ。
 git clone https://github.com/vvihar/FairWindPortal
 ```
 
+ディレクトリを移動する。
+
+```zsh
+cd FairWindPortal
+```
+
 仮想環境を構築する。
 
 ```zsh
