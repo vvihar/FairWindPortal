@@ -87,8 +87,10 @@
                                         {% endif %}
                                     </td>
                                     <td class="align-middle text-end">
-                                        <a href="{% url 'events:event_reply_invitation' event.pk participation.pk %}"
-                                           class="btn btn-sm btn-secondary d-inline-flex align-items-cente my-1">打診回答</a>
+                                        {% if participation.participant|stringformat:"s" == user|stringformat:"s" %}
+                                            <a href="{% url 'events:event_reply_invitation' event.pk participation.pk %}"
+                                               class="btn btn-sm btn-secondary d-inline-flex align-items-cente my-1">打診回答</a>
+                                        {% endif %}
                                         <a href="{% url 'events:event_cancel_invitation' event.pk participation.pk %}"
                                            class="btn btn-sm btn-danger d-inline-flex align-items-center my-1">打診取り消し</a>
                                     </td>
