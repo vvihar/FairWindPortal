@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.db.models import Q
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_list_or_404, get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import (
     CreateView,
@@ -36,6 +36,16 @@ class Home(ListView):
 
     model = Event
     template_name = "events/index.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        events = Event.objects.exclude(status="アーカイブ").order_by("-start_datetime")
+        for event in events:
+            if self.request.user.pk in event.participation.filter(
+                status="回答待ち"
+            ).values_list("participant", flat=True):
+                messages.info(self.request, f"{event}に打診されています")
+        return context
 
 
 class SchoolList(ListView):
