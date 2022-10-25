@@ -281,7 +281,7 @@ class EventMakeInvitation(FormView):
             "events:event_participants", kwargs={"pk": self.kwargs["pk"]}
         )
 
-    def get_context_data(self):
+    def get_context_data(self, **kwargs):
         event = get_object_or_404(Event, pk=self.kwargs["pk"])
         context = super().get_context_data()
         context["event"] = event
