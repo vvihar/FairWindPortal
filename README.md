@@ -40,6 +40,12 @@ Python のパッケージを一括でインストールする。
 pip install -r requirements.txt
 ```
 
+`local_settings.py`を生成する。
+
+```zsh
+python generate_local_settings.py
+```
+
 最後に、以下を実行する。
 
 ```zsh
