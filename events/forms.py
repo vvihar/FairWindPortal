@@ -2,6 +2,7 @@
 from accounts.models import User
 from accounts.widgets import SuggestWidget
 from django import forms
+from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 
@@ -57,3 +58,25 @@ class EventMakeInvitationForm(forms.Form):
             attrs={"data-url": reverse_lazy("accounts:api_members_get")}
         ),
     )
+
+
+class EventReplyInvitationForm(forms.ModelForm):
+    """打診に対する回答フォーム"""
+
+    def clean_status(self):
+        """statusのバリデーション"""
+        status = self.cleaned_data["status"]
+        if status == "回答待ち":
+            raise ValidationError("参加か辞退を選択してください")
+        return status
+
+    class Meta:
+        """Metaクラス"""
+
+        model = EventParticipation
+        fields = ("status", "message_from_participant")
+
+        widgets = {
+            "status": forms.RadioSelect(),
+            "message_from_participant": forms.TextInput(),
+        }

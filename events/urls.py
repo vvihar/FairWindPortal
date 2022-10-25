@@ -7,6 +7,7 @@ from .views import (
     EventDetail,
     EventMakeInvitation,
     EventParticipants,
+    EventReplyInvitation,
     EventUpdate,
     Home,
     MakeSchoolDB,
@@ -37,6 +38,11 @@ urlpatterns = [
         "<int:id>/invite/<int:pk>/cancel",
         EventCancelInvitation.as_view(),
         name="event_cancel_invitation",
+    ),
+    path(
+        "<int:id>/invite/<int:pk>/reply",
+        EventReplyInvitation.as_view(),
+        name="event_reply_invitation",
     ),
     path("api/schools_get/", api_schools_get, name="api_schools_get"),
 ]

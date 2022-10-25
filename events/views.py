@@ -3,12 +3,14 @@ import io
 import re
 from urllib import request
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.db.models import Q
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
-from django.urls import reverse_lazy
+from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse, reverse_lazy
 from django.views.generic import (
     CreateView,
     DeleteView,
@@ -18,7 +20,12 @@ from django.views.generic import (
     UpdateView,
 )
 
-from .forms import EventCreateForm, EventMakeInvitationForm, MakeSchoolDBForm
+from .forms import (
+    EventCreateForm,
+    EventMakeInvitationForm,
+    EventReplyInvitationForm,
+    MakeSchoolDBForm,
+)
 from .models import Event, EventParticipation, School
 
 # Create your views here.
@@ -253,6 +260,13 @@ class EventDetail(DetailView):
     template_name = "events/detail.html"
     model = Event
 
+    def get(self, request, *args, **kwargs):
+        if request.user.pk in self.get_object().participation.filter(
+            status="回答待ち"
+        ).values_list("participant", flat=True):
+            messages.info(request, "この企画に打診されています")
+        return super().get(request, *args, **kwargs)
+
 
 class EventParticipants(ListView):
     """企画の参加者・打診状況一覧"""
@@ -324,6 +338,42 @@ class EventCancelInvitation(DeleteView):
     def delete(self, request, *args, **kwargs):
         messages.success(self.request, "打診を取り消しました")
         return super().delete(request, *args, **kwargs)
+
+
+class OnlyInvitedMixin(UserPassesTestMixin):
+    """打診された人と管理者のみがアクセスできるMixin"""
+
+    raise_exception = True
+
+    def test_func(self):
+        user = self.request.user
+        participation = get_object_or_404(EventParticipation, pk=self.kwargs["pk"])
+        if user == participation.participant:
+            return True
+        # FIXME: 企画の管理者用の編集ページを作る
+        elif user.is_staff:
+            messages.error(self.request, "打診対象者ではなく、管理者としてこのページにアクセスしています")
+            return True
+        else:
+            return False
+
+    def handle_no_permission(self):
+        return redirect(f"{reverse(settings.LOGIN_URL)}?next={self.request.path}")
+
+
+class EventReplyInvitation(OnlyInvitedMixin, UpdateView):
+    """企画への打診を回答する"""
+
+    # TODO: 打診を受けた人だけが回答可能にする・URLにEventParticipationのpkは含めない
+
+    template_name = "events/reply_invitation.html"
+    model = EventParticipation
+    form_class = EventReplyInvitationForm
+
+    def get_success_url(self):
+        return reverse_lazy(
+            "events:event_participants", kwargs={"pk": self.kwargs["id"]}
+        )
 
 
 @login_required

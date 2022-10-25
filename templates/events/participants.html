@@ -64,10 +64,10 @@
                             </tr>
                         {% endif %}
                     {% endfor %}
-                    {% if user in event.admin.all or user.is_staff %}
-                        <!--参加打診者-->
-                        {% for participation in object_list %}
-                            {% if participation.status|stringformat:"s" == "回答待ち" %}
+                    <!--参加打診者-->
+                    {% for participation in object_list %}
+                        {% if participation.status|stringformat:"s" == "回答待ち" %}
+                            {% if user in event.admin.all or user.is_staff or participation.participant|stringformat:"s" == user|stringformat:"s" %}
                                 <tr>
                                     <td class="align-middle">
                                         <span class="h6 mb-1">{{ participation.participant }}</span>
@@ -87,13 +87,15 @@
                                         {% endif %}
                                     </td>
                                     <td class="align-middle text-end">
+                                        <a href="{% url 'events:event_reply_invitation' event.pk participation.pk %}"
+                                           class="btn btn-sm btn-secondary d-inline-flex align-items-cente my-1">打診回答</a>
                                         <a href="{% url 'events:event_cancel_invitation' event.pk participation.pk %}"
-                                           class="btn btn-sm btn-danger d-inline-flex align-items-center">打診取り消し</a>
+                                           class="btn btn-sm btn-danger d-inline-flex align-items-center my-1">打診取り消し</a>
                                     </td>
                                 </tr>
                             {% endif %}
-                        {% endfor %}
-                    {% endif %}
+                        {% endif %}
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
