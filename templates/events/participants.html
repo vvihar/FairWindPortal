@@ -30,14 +30,16 @@
         <div class="card-header border-bottom d-flex align-items-center justify-content-between">
             <h2 class="fs-5 fw-bold mb-0">参加者</h2>
             <div class="col text-end">
-                <a href="{% url 'events:event_invite' event.id %}"
-                   class="btn btn-sm btn-primary">打診</a>
+                {% if user in event.participants.all or user in event.admin.all %}
+                    <a href="{% url 'events:event_invite' event.id %}"
+                       class="btn btn-sm btn-primary">打診</a>
+                {% endif %}
                 <!--TODO: 参加者募集中時以外は打診できないようにする-->
             </div>
             <!--TODO: 参加者数を表示する-->
         </div>
         <div class="card-body py-0">
-            <table class="table mb-0">
+            <table class="table caption-top mb-0">
                 <tbody>
                     <!--参加決定者-->
                     {% for participation in object_list %}
@@ -91,8 +93,10 @@
                                             <a href="{% url 'events:event_reply_invitation' event.pk participation.pk %}"
                                                class="btn btn-sm btn-secondary d-inline-flex align-items-cente my-1">打診回答</a>
                                         {% endif %}
-                                        <a href="{% url 'events:event_cancel_invitation' event.pk participation.pk %}"
-                                           class="btn btn-sm btn-danger d-inline-flex align-items-center my-1">打診取り消し</a>
+                                        {% if user in event.admin.all or user.is_staff %}
+                                            <a href="{% url 'events:event_cancel_invitation' event.pk participation.pk %}"
+                                               class="btn btn-sm btn-danger d-inline-flex align-items-center my-1">打診取り消し</a>
+                                        {% endif %}
                                     </td>
                                 </tr>
                             {% endif %}

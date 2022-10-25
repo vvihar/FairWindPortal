@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.db.models import Q
 from django.http import JsonResponse
-from django.shortcuts import get_list_or_404, get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import (
     CreateView,
@@ -29,6 +29,51 @@ from .forms import (
 from .models import Event, EventParticipation, School
 
 # Create your views here.
+
+
+class OnlyInvitedMixin(UserPassesTestMixin):
+    """打診された人と管理者のみがアクセスできるMixin"""
+
+    raise_exception = True
+
+    def test_func(self):
+        user = self.request.user
+        participation = get_object_or_404(EventParticipation, pk=self.kwargs["pk"])
+        if user == participation.participant:
+            return True
+        # FIXME: 企画の管理者用の編集ページを作る
+        elif user.is_staff:
+            messages.error(self.request, "打診対象者ではなく、サイトの管理者としてこのページにアクセスしています")
+            return True
+        else:
+            return False
+
+    def handle_no_permission(self):
+        return redirect(f"{reverse(settings.LOGIN_URL)}?next={self.request.path}")
+
+
+class OnlyEventAdminMixin(UserPassesTestMixin):
+    """
+    企画の管理者と管理者のみがアクセスできるMixin
+    eventは <int:id> で指定する
+    """
+
+    raise_exception = True
+
+    def test_func(self):
+        user = self.request.user
+        event = get_object_or_404(Event, pk=self.kwargs["id"])
+        event_admin = event.admin.all()
+        if user in event_admin:
+            return True
+        elif user.is_staff:
+            messages.error(self.request, "企画の管理者ではなく、サイトの管理者としてこのページにアクセスしています")
+            return True
+        else:
+            return False
+
+    def handle_no_permission(self):
+        return redirect(f"{reverse(settings.LOGIN_URL)}?next={self.request.path}")
 
 
 class Home(ListView):
@@ -243,7 +288,7 @@ class EventCreate(CreateView):
         return super().form_valid(form)
 
 
-class EventUpdate(UpdateView):
+class EventUpdate(UserPassesTestMixin, UpdateView):
     """企画更新"""
 
     template_name = "events/update.html"
@@ -262,6 +307,20 @@ class EventUpdate(UpdateView):
         event.save()
         messages.success(self.request, "企画を更新しました")
         return super().form_valid(form)
+
+    def test_func(self):
+        user = self.request.user
+        event = self.get_object()
+        if user in event.admin.all():
+            return True
+        elif user.is_staff:
+            messages.error(self.request, "企画の管理者ではなく、サイトの管理者としてこのページにアクセスしています")
+            return True
+        else:
+            return False
+
+    def handle_no_permission(self):
+        return redirect(f"{reverse(settings.LOGIN_URL)}?next={self.request.path}")
 
 
 class EventDetail(DetailView):
@@ -292,7 +351,7 @@ class EventParticipants(ListView):
         return context
 
 
-class EventMakeInvitation(FormView):
+class EventMakeInvitation(OnlyEventAdminMixin, FormView):
     """企画へ打診する"""
 
     # FIXME: adminのみが打診できるようにする
@@ -302,18 +361,18 @@ class EventMakeInvitation(FormView):
 
     def get_success_url(self):
         return reverse_lazy(
-            "events:event_participants", kwargs={"pk": self.kwargs["pk"]}
+            "events:event_participants", kwargs={"pk": self.kwargs["id"]}
         )
 
     def get_context_data(self, **kwargs):
-        event = get_object_or_404(Event, pk=self.kwargs["pk"])
+        event = get_object_or_404(Event, pk=self.kwargs["id"])
         context = super().get_context_data()
         context["event"] = event
         return context
 
     def form_valid(self, form):
         participants = form.cleaned_data["participants"]
-        event = get_object_or_404(Event, pk=self.kwargs["pk"])
+        event = get_object_or_404(Event, pk=self.kwargs["id"])
         invitations = []
         for participant in participants:
             invitation = EventParticipation(
@@ -332,55 +391,8 @@ class EventMakeInvitation(FormView):
         return super().form_valid(form)
 
 
-class OnlyInvitedMixin(UserPassesTestMixin):
-    """打診された人と管理者のみがアクセスできるMixin"""
-
-    raise_exception = True
-
-    def test_func(self):
-        user = self.request.user
-        participation = get_object_or_404(EventParticipation, pk=self.kwargs["pk"])
-        if user == participation.participant:
-            return True
-        # FIXME: 企画の管理者用の編集ページを作る
-        elif user.is_staff:
-            messages.error(self.request, "打診対象者ではなく、サイトの管理者としてこのページにアクセスしています")
-            return True
-        else:
-            return False
-
-    def handle_no_permission(self):
-        return redirect(f"{reverse(settings.LOGIN_URL)}?next={self.request.path}")
-
-
-class OnlyEventAdminMixin(UserPassesTestMixin):
-    """
-    企画の管理者と管理者のみがアクセスできるMixin
-    eventは <int:id> で指定する
-    """
-
-    raise_exception = True
-
-    def test_func(self):
-        user = self.request.user
-        event = get_object_or_404(Event, pk=self.kwargs["id"])
-        event_admin = event.admin.all()
-        if user in event_admin:
-            return True
-        elif user.is_staff:
-            messages.error(self.request, "企画の管理者ではなく、サイトの管理者としてこのページにアクセスしています")
-            return True
-        else:
-            return False
-
-    def handle_no_permission(self):
-        return redirect(f"{reverse(settings.LOGIN_URL)}?next={self.request.path}")
-
-
 class EventReplyInvitation(OnlyInvitedMixin, UpdateView):
     """企画への打診を回答する"""
-
-    # TODO: 打診を受けた人だけが回答可能にする・URLにEventParticipationのpkは含めない
 
     template_name = "events/reply_invitation.html"
     model = EventParticipation
@@ -390,6 +402,11 @@ class EventReplyInvitation(OnlyInvitedMixin, UpdateView):
         return reverse_lazy(
             "events:event_participants", kwargs={"pk": self.kwargs["id"]}
         )
+
+    def form_valid(self, form):
+        status = form.cleaned_data["status"]
+        messages.success(self.request, f"「{status}」で登録しました")
+        return super().form_valid(form)
 
 
 class EventCancelInvitation(OnlyEventAdminMixin, DeleteView):

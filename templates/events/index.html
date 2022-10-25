@@ -8,16 +8,18 @@
     <a href="{% url 'events:event_create' %}"
        class="btn btn-primary mb-3">新規登録</a>
     {% for event in object_list %}
-        {% if user in event.participants.all or user in event.admin.all %}
+        {% if event.status|stringformat:"s" != "アーカイブ" %}
             <div class="col-sm-12 mb-3">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">{{ event.name }}</h5>
-                        <a href="{% url 'events:event_update' event.pk %}"
-                           class="btn btn-secondary"
-                           tabindex="-1"
-                           role="button"
-                           aria-disabled="true">編集</a>
+                        {% if user in event.admin.all or user.is_staff %}
+                            <a href="{% url 'events:event_update' event.pk %}"
+                               class="btn btn-secondary"
+                               tabindex="-1"
+                               role="button"
+                               aria-disabled="true">編集</a>
+                        {% endif %}
                         <a href="{% url 'events:event_detail' event.pk %}"
                            class="btn btn-secondary"
                            tabindex="-1"

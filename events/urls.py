@@ -30,7 +30,7 @@ urlpatterns = [
         "<int:pk>/participants/", EventParticipants.as_view(), name="event_participants"
     ),
     path(
-        "<int:pk>/invite/",
+        "<int:id>/invite/",
         EventMakeInvitation.as_view(),
         name="event_invite",
     ),
