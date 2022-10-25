@@ -332,24 +332,6 @@ class EventMakeInvitation(FormView):
         return super().form_valid(form)
 
 
-class EventCancelInvitation(DeleteView):
-    """企画への打診を取り消す"""
-
-    # FIXME: adminだけが打診を取り消せるようにする
-
-    template_name = "events/cancel_invitation.html"
-    model = EventParticipation
-
-    def get_success_url(self):
-        return reverse_lazy(
-            "events:event_participants", kwargs={"pk": self.kwargs["id"]}
-        )
-
-    def delete(self, request, *args, **kwargs):
-        messages.success(self.request, "打診を取り消しました")
-        return super().delete(request, *args, **kwargs)
-
-
 class OnlyInvitedMixin(UserPassesTestMixin):
     """打診された人と管理者のみがアクセスできるMixin"""
 
@@ -362,7 +344,31 @@ class OnlyInvitedMixin(UserPassesTestMixin):
             return True
         # FIXME: 企画の管理者用の編集ページを作る
         elif user.is_staff:
-            messages.error(self.request, "打診対象者ではなく、管理者としてこのページにアクセスしています")
+            messages.error(self.request, "打診対象者ではなく、サイトの管理者としてこのページにアクセスしています")
+            return True
+        else:
+            return False
+
+    def handle_no_permission(self):
+        return redirect(f"{reverse(settings.LOGIN_URL)}?next={self.request.path}")
+
+
+class OnlyEventAdminMixin(UserPassesTestMixin):
+    """
+    企画の管理者と管理者のみがアクセスできるMixin
+    eventは <int:id> で指定する
+    """
+
+    raise_exception = True
+
+    def test_func(self):
+        user = self.request.user
+        event = get_object_or_404(Event, pk=self.kwargs["id"])
+        event_admin = event.admin.all()
+        if user in event_admin:
+            return True
+        elif user.is_staff:
+            messages.error(self.request, "企画の管理者ではなく、サイトの管理者としてこのページにアクセスしています")
             return True
         else:
             return False
@@ -384,6 +390,24 @@ class EventReplyInvitation(OnlyInvitedMixin, UpdateView):
         return reverse_lazy(
             "events:event_participants", kwargs={"pk": self.kwargs["id"]}
         )
+
+
+class EventCancelInvitation(OnlyEventAdminMixin, DeleteView):
+    """企画への打診を取り消す"""
+
+    # FIXME: adminだけが打診を取り消せるようにする
+
+    template_name = "events/cancel_invitation.html"
+    model = EventParticipation
+
+    def get_success_url(self):
+        return reverse_lazy(
+            "events:event_participants", kwargs={"pk": self.kwargs["id"]}
+        )
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, "打診を取り消しました")
+        return super().delete(request, *args, **kwargs)
 
 
 @login_required
