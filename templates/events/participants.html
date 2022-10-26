@@ -29,16 +29,9 @@
 {% block content %}
     <!--参加者-->
     <div class="card border mt-4">
-        <div class="card-header border-bottom d-flex align-items-center justify-content-between">
+        <div class="card-header border-bottom d-flex align-items-center">
             <h2 class="fs-5 fw-bold mb-0">参加者</h2>
-            <div class="col text-end">
-                {% if user.is_staff or user in event.admin.all %}
-                    <a href="{% url 'events:event_invite' event.id %}"
-                       class="btn btn-sm btn-primary">打診</a>
-                {% endif %}
-                <!--TODO: 参加者募集中時以外は打診できないようにする-->
-            </div>
-            <!--TODO: 参加者数を表示する-->
+            <span class="badge rounded-pill bg-dark ms-2">{{ counter_participate }}</span>
         </div>
         <div class="card-body py-0">
             <table class="table caption-top mb-0">
@@ -68,6 +61,25 @@
                             </tr>
                         {% endif %}
                     {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card border mt-4">
+        <div class="card-header border-bottom d-flex align-items-center">
+            <h2 class="fs-5 fw-bold mb-0">参加打診中</h2>
+            <span class="badge rounded-pill bg-dark ms-2">{{ counter_waiting }}</span>
+            <div class="col text-end">
+                {% if user.is_staff or user in event.admin.all %}
+                    <a href="{% url 'events:event_invite' event.id %}"
+                       class="btn btn-sm btn-primary">打診</a>
+                {% endif %}
+                <!--TODO: 参加者募集中時以外は打診できないようにする-->
+            </div>
+        </div>
+        <div class="card-body py-0">
+            <table class="table caption-top mb-0">
+                <tbody>
                     <!--参加打診者-->
                     {% for participation in object_list %}
                         {% if participation.status|stringformat:"s" == "回答待ち" %}
