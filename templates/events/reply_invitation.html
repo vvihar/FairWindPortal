@@ -11,7 +11,7 @@
     {{ block.super }}
     {% breadcrumb object.event "events:event_detail" object.event.id %}
     {% breadcrumb "打診に回答" "events:event_reply_invitation" %}
-{% endblock %}
+{% endblock breadcrumbs %}
 {% block content %}
     <div class="mb-3">
         <p>「参加」か「辞退」を選択してください。</p>

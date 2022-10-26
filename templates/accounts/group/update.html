@@ -11,9 +11,9 @@
     {{ block.super }}
     {% breadcrumb "班" "accounts:group" %}
     {% breadcrumb object.name "accounts:group_delete" object.id %}
-{% endblock %}
+{% endblock breadcrumbs %}
 {% block content %}
-    <form method="POST">
+    <form method="post">
         {% csrf_token %}
         {% bootstrap_form form layout="floating" %}
         {% bootstrap_button "更新" button_type="submit" %}

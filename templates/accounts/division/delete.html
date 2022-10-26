@@ -1,17 +1,14 @@
 {% extends "accounts/base.html" %}
-
 {% load static %}
-
 {% load django_bootstrap_breadcrumbs %}
 {% load django_bootstrap5 %}
-
 {% block customcss %}
 {% endblock customcss %}
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb "担当" "accounts:division" %}
     {% breadcrumb object.name "accounts:division_delete" object.id %}
-{% endblock %}
+{% endblock breadcrumbs %}
 {% block content %}
     <div class="mb-3">
         <p>
@@ -19,11 +16,9 @@
         </p>
         <p>削除すると、この担当に所属するユーザーの担当は空欄になります。</p>
     </div>
-    <form method="POST">
+    <form method="post">
         {% csrf_token %}
         {% bootstrap_button "削除" button_type="submit" button_class="btn-danger" %}
-
         {% include 'components/cancel.html' %}
-
     </form>
 {% endblock content %}

@@ -1,4 +1,4 @@
-{% extends 'accounts/base.html' %}
+{% extends "accounts/base.html" %}
 
 {% load static %}
 
@@ -6,16 +6,16 @@
 
 {% block head %}
     <link rel="stylesheet"
-          href="{% static 'login.css' %}">
+          href="{% static 'login.css' %}"/>
 {% endblock head %}
 {% block breadcrumbs %}
     {% clear_breadcrumbs %}
     {% breadcrumb "ログイン" "accounts:login" %}
-{% endblock %}
+{% endblock breadcrumbs %}
 {% block content %}
     <main class="form-signin">
         {{ context }}
-        <form method="POST">
+        <form method="post">
             {% csrf_token %}
             <h1 class="h3 mb-3 fw-normal">ログイン</h1>
             {% if next %}<p>このページにアクセスするにはログインしてください。</p>{% endif %}
@@ -34,7 +34,7 @@
             {% endif %}
             <input type="hidden"
                    name="next"
-                   value="{{ next }}">
+                   value="{{ next }}"/>
             <button class="w-100 btn btn-lg btn-primary"
                     type="submit">ログイン</button>
         </form>

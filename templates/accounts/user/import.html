@@ -11,7 +11,7 @@
     {{ block.super }}
     {% breadcrumb "ユーザー一覧" "accounts:users" %}
     {% breadcrumb "一括登録" "accounts:users_import" %}
-{% endblock %}
+{% endblock breadcrumbs %}
 {% block content %}
     {% if imported_users %}
         <div class="alert alert-primary mb-0">
@@ -20,7 +20,7 @@
         </div>
     {% endif %}
     {% for error in errors %}<div class="alert alert-danger mb-0">{{ error }}</div>{% endfor %}
-    <form method="POST"
+    <form method="post"
           enctype="multipart/form-data">
         {% csrf_token %}
         {% bootstrap_form form layout="floating" %}

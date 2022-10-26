@@ -11,9 +11,9 @@
     {{ block.super }}
     {% breadcrumb "班" "accounts:group" %}
     {% breadcrumb "新規作成" "accounts:group_create" %}
-{% endblock %}
+{% endblock breadcrumbs %}
 {% block content %}
-    <form method="POST">
+    <form method="post">
         {% csrf_token %}
         {% bootstrap_form form layout="floating" %}
         {% bootstrap_button "登録" button_type="submit" %}

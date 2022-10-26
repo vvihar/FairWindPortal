@@ -10,13 +10,13 @@
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb "ユーザー情報更新" "accounts:update" %}
-{% endblock %}
+{% endblock breadcrumbs %}
 {% block content %}
 
     {% include 'components/messages.html' %}
 
     <p>ユーザー名や姓名の変更を希望する場合は、プラットフォーム担当にお知らせください。</p>
-    <form method="POST">
+    <form method="post">
         {% csrf_token %}
         {% bootstrap_form form layout="floating" %}
         {% bootstrap_button "更新" button_type="submit" %}

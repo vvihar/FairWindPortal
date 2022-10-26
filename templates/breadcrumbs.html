@@ -1,13 +1,12 @@
 <ol class="breadcrumb">
     {% for url, label in breadcrumbs %}
         {% ifnotequal forloop.counter breadcrumbs_total %}
-        <li class="breadcrumb-item">
-            <a href="{{ url }}">{{ label|safe }}</a>
-        </li>
-    {% else %}
-        <li class="breadcrumb-item active" aria-current="page">
-            {{ label|safe }}
-        </li>
+            <li class="breadcrumb-item">
+                <a href="{{ url }}">{{ label|safe }}</a>
+            </li>
+        {% else %}
+            <li class="breadcrumb-item active"
+                aria-current="page">{{ label|safe }}</li>
         {% endifnotequal %}
     {% endfor %}
 </ol>

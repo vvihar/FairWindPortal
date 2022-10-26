@@ -1,5 +1,7 @@
 {% extends "base.html" %}
+
 {% load static %}
+
 {% block head %}
     <style>
         form input[type="text"] {
@@ -18,7 +20,7 @@
             z-index: 2;
         }
     </style>
-{% endblock %}
+{% endblock head %}
 {% block title %}
     FairWind Portal
 {% endblock title %}
@@ -49,14 +51,14 @@
             <div class="col-md-10 mx-auto col-lg-5">
                 <form class="p-4 p-md-5 border rounded-3 bg-light"
                       action="{% url 'accounts:login' %}"
-                      method="POST">
+                      method="post">
                     {% csrf_token %}
                     <div class="form-floating">
                         <input type="text"
                                class="form-control"
                                id="floatingInput"
                                placeholder="ユーザー名"
-                               name="username">
+                               name="username"/>
                         <label for="floatingInput">ユーザー名</label>
                     </div>
                     <div class="form-floating mb-4">
@@ -64,10 +66,11 @@
                                class="form-control"
                                id="floatingPassword"
                                placeholder="パスワード"
-                               name="password">
+                               name="password"/>
                         <label for="floatingPassword">パスワード</label>
                     </div>
-                    <button class="w-100 btn btn-lg btn-primary" type="submit">ログイン</button>
+                    <button class="w-100 btn btn-lg btn-primary"
+                            type="submit">ログイン</button>
                 </form>
             </div>
         </div>

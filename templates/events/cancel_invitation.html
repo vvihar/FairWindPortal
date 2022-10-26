@@ -11,7 +11,7 @@
     {{ block.super }}
     {% breadcrumb object.event "events:event_detail" object.event.id %}
     {% breadcrumb "打診取り消し" "events:event_cancel_invitation" %}
-{% endblock %}
+{% endblock breadcrumbs %}
 {% block content %}
     <div class="mb-3">
         <p>

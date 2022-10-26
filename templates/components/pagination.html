@@ -1,16 +1,19 @@
 {% load get_parameter %}
-<nav aria-label="Page navigation" class="mb-3">
+
+<nav aria-label="Page navigation"
+     class="mb-3">
     <ul class="pagination justify-content-center">
         <!-- 前へ の部分 -->
         {% if page_obj.has_previous %}
             <li class="page-item">
-                <a class="page-link" href="?{%  url_replace request 'page' 1 %}">
+                <a class="page-link"
+                   href="?{% url_replace request 'page' 1 %}">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
             <li class="page-item">
                 <a class="page-link"
-                   href="?{%  url_replace request 'page' page_obj.previous_page_number %}">
+                   href="?{% url_replace request 'page' page_obj.previous_page_number %}">
                     <span aria-hidden="true">&lsaquo;</span>
                 </a>
             </li>
@@ -20,11 +23,13 @@
             {% if num <= page_obj.number|add:5 and num >= page_obj.number|add:-5 %}
                 {% if page_obj.number == num %}
                     <li class="page-item active">
-                        <a class="page-link" href="#">{{ num }}</a>
+                        <a class="page-link"
+                           href="#">{{ num }}</a>
                     </li>
                 {% else %}
                     <li class="page-item">
-                        <a class="page-link" href="?{%  url_replace request 'page' num %}">{{ num }}</a>
+                        <a class="page-link"
+                           href="?{% url_replace request 'page' num %}">{{ num }}</a>
                     </li>
                 {% endif %}
             {% endif %}
@@ -33,13 +38,13 @@
         {% if page_obj.has_next %}
             <li class="page-item">
                 <a class="page-link"
-                   href="?{%  url_replace request 'page' page_obj.next_page_number %}">
+                   href="?{% url_replace request 'page' page_obj.next_page_number %}">
                     <span aria-hidden="true">&rsaquo;</span>
                 </a>
             </li>
             <li class="page-item">
                 <a class="page-link"
-                   href="?{%  url_replace request 'page' page_obj.paginator.num_pages %}">
+                   href="?{% url_replace request 'page' page_obj.paginator.num_pages %}">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             </li>

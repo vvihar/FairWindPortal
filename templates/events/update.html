@@ -10,7 +10,7 @@
           href="{% static 'accounts/css/suggest.css' %}"/>
     <script src="{% static 'accounts/js/suggest.js' %}"></script>
     <link rel="stylesheet"
-          href="https://unpkg.com/@jarstone/dselect/dist/css/dselect.css">
+          href="https://unpkg.com/@jarstone/dselect/dist/css/dselect.css"/>
     <script src="https://unpkg.com/@jarstone/dselect/dist/js/dselect.js"></script>
 {% endblock head %}
 {% block breadcrumbs %}
@@ -33,10 +33,10 @@
         {% bootstrap_button "登録" button_type="submit" %}
     </form>
     <script>
-    const config = {
-        search: true, // Toggle search feature. Default: false
-    }
-    dselect(document.querySelector('#id_person_in_charge'), config)
-    dselect(document.querySelector('#id_admin'), config)
+        const config = {
+            search: true, // Toggle search feature. Default: false
+        }
+        dselect(document.querySelector('#id_person_in_charge'), config)
+        dselect(document.querySelector('#id_admin'), config)
     </script>
 {% endblock content %}

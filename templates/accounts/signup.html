@@ -10,10 +10,10 @@
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb "ユーザー新規登録" "accounts:signup" %}
-{% endblock %}
+{% endblock breadcrumbs %}
 {% block content %}
     {{ context }}
-    <form method="POST">
+    <form method="post">
         {% csrf_token %}
         {% bootstrap_form form layout="floating" %}
         {% bootstrap_button "登録" button_type="submit" %}

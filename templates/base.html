@@ -10,11 +10,15 @@
         <meta name="viewport"
               content="width=device-width, initial-scale=1"/>
         <meta name="robots"
-              content="noindex">
+              content="noindex"/>
+        <meta name="description"
+              content="FairWind の団体内ポータルサイト"/>
+        <meta name="keywords"
+              content="東京大学,FairWind"/>
         {% bootstrap_css %}
         {% bootstrap_javascript %}
         <link rel="stylesheet"
-              href="{% static 'style.css' %}">
+              href="{% static 'style.css' %}"/>
         {% block head %}
         {% endblock head %}
         <title>
@@ -89,7 +93,7 @@
                                        href="#">Another action</a>
                                 </li>
                                 <li>
-                                    <hr class="dropdown-divider">
+                                    <hr class="dropdown-divider"/>
                                 </li>
                                 <li>
                                     <a class="dropdown-item"
@@ -138,7 +142,7 @@
                 {% block breadcrumbs %}
                     {% clear_breadcrumbs %}
                     {% breadcrumb "ホーム" "home" %}
-                {% endblock %}
+                {% endblock breadcrumbs %}
                 {% render_breadcrumbs 'breadcrumbs.html' %}
             </div>
         </div>
