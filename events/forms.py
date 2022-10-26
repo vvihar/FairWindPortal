@@ -29,6 +29,14 @@ class MakeSchoolDBForm(forms.Form):
 class EventCreateForm(forms.ModelForm):
     """企画作成フォーム"""
 
+    def clean(self):
+        cleaned_data = super().clean()
+        start_datetime = cleaned_data.get("start_datetime")
+        end_datetime = cleaned_data.get("end_datetime")
+        if start_datetime and end_datetime:
+            if start_datetime > end_datetime:
+                raise ValidationError("開始日時は終了日時よりも前に設定してください")
+
     class Meta:
         """Metaクラス"""
 
