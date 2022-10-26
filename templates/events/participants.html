@@ -30,7 +30,7 @@
         <div class="card-header border-bottom d-flex align-items-center justify-content-between">
             <h2 class="fs-5 fw-bold mb-0">参加者</h2>
             <div class="col text-end">
-                {% if user in event.participants.all or user in event.admin.all %}
+                {% if user.is_staff or user in event.admin.all %}
                     <a href="{% url 'events:event_invite' event.id %}"
                        class="btn btn-sm btn-primary">打診</a>
                 {% endif %}
