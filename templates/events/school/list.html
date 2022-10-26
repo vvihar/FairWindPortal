@@ -1,7 +1,9 @@
 {% extends "events/base.html" %}
-{% load widget_tweaks %}
+
 {% load django_bootstrap_breadcrumbs %}
+
 {% load static %}
+
 {% block head %}
 {% endblock head %}
 {% block breadcrumbs %}
@@ -10,9 +12,11 @@
 {% endblock breadcrumbs %}
 {% block content %}
     {% if user.is_staff %}
-        <a href="{% url 'events:db_update' %}" class="btn btn-danger mb-3">学校データベース更新</a>
+        <a href="{% url 'events:db_update' %}"
+           class="btn btn-danger mb-3">学校データベース更新</a>
     {% endif %}
-    <form action="" method="get">
+    <form action=""
+          method="get">
         <div class="input-group mb-3">
             <input type="search"
                    class="form-control"
@@ -20,7 +24,9 @@
                    aria-label="検索ワード"
                    value="{{ request.GET.search }}"
                    name="search"/>
-            <button class="btn btn-primary" type="submit" id="btn-search">検索</button>
+            <button class="btn btn-primary"
+                    type="submit"
+                    id="btn-search">検索</button>
         </div>
     </form>
     <table class="table">
@@ -47,5 +53,7 @@
             {% endfor %}
         </tbody>
     </table>
+
     {% include 'components/pagination.html' %}
+
 {% endblock content %}

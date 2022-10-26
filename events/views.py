@@ -294,7 +294,9 @@ class EventUpdate(UserPassesTestMixin, UpdateView):
     template_name = "events/update.html"
     model = Event
     form_class = EventCreateForm
-    success_url = reverse_lazy("events:")
+
+    def get_success_url(self):
+        return reverse_lazy("events:event_detail", kwargs={"pk": self.kwargs["pk"]})
 
     def form_valid(self, form):
         event = form.save(commit=False)

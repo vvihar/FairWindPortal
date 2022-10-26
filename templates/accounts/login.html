@@ -1,9 +1,12 @@
 {% extends 'accounts/base.html' %}
-{% load widget_tweaks %}
+
 {% load static %}
+
 {% load django_bootstrap_breadcrumbs %}
+
 {% block head %}
-    <link rel="stylesheet" href="{% static 'login.css' %}">
+    <link rel="stylesheet"
+          href="{% static 'login.css' %}">
 {% endblock head %}
 {% block breadcrumbs %}
     {% clear_breadcrumbs %}
@@ -29,8 +32,11 @@
                 {% for error in form.username.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
                 {% for error in form.password.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
             {% endif %}
-            <input type="hidden" name="next" value="{{ next }}">
-            <button class="w-100 btn btn-lg btn-primary" type="submit">ログイン</button>
+            <input type="hidden"
+                   name="next"
+                   value="{{ next }}">
+            <button class="w-100 btn btn-lg btn-primary"
+                    type="submit">ログイン</button>
         </form>
     </main>
 {% endblock content %}
