@@ -35,7 +35,6 @@ class EventCreateForm(forms.ModelForm):
         end_datetime = cleaned_data.get("end_datetime")
         person_in_charge = cleaned_data.get("person_in_charge")
         admin = cleaned_data.get("admin")
-        print(person_in_charge, admin)
         if start_datetime and end_datetime:
             if start_datetime > end_datetime:
                 raise ValidationError("開始日時は終了日時よりも前に設定してください")
