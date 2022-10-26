@@ -10,6 +10,9 @@
     <link rel="stylesheet"
           href="{% static 'accounts/css/suggest.css' %}"/>
     <script src="{% static 'accounts/js/suggest.js' %}"></script>
+    <link rel="stylesheet"
+          href="https://unpkg.com/@jarstone/dselect/dist/css/dselect.css">
+    <script src="https://unpkg.com/@jarstone/dselect/dist/js/dselect.js"></script>
 {% endblock head %}
 {% block breadcrumbs %}
     {{ block.super }}
@@ -24,7 +27,17 @@
                 {% for error in forms.non_field_errors %}<div class="alert alert-danger">{{ error }}</div>{% endfor %}
             </div>
         {% endif %}
-        {% bootstrap_form form layout="floating" %}
-        {% bootstrap_button "更新" button_type="submit" %}
+        {% bootstrap_form form layout="floating" exclude="person_in_charge,admin,school" %}
+        {% bootstrap_field form.person_in_charge %}
+        {% bootstrap_field form.admin layout="floating" %}
+        {% bootstrap_field form.school layout="floating" %}
+        {% bootstrap_button "登録" button_type="submit" %}
     </form>
+    <script>
+    const config = {
+        search: true, // Toggle search feature. Default: false
+    }
+    dselect(document.querySelector('#id_person_in_charge'), config)
+    dselect(document.querySelector('#id_admin'), config)
+    </script>
 {% endblock content %}

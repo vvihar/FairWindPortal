@@ -10,6 +10,9 @@
     <link rel="stylesheet"
           href="{% static 'accounts/css/suggest.css' %}"/>
     <script src="{% static 'accounts/js/suggest.js' %}"></script>
+    <link rel="stylesheet"
+          href="{% static 'accounts/css/dselect.css' %}">
+    <script src="{% static 'accounts/js/dselect.js' %}"></script>
 {% endblock head %}
 {% block breadcrumbs %}
     {{ block.super }}
@@ -23,8 +26,18 @@
                 {% for error in forms.non_field_errors %}<div class="alert alert-danger">{{ error }}</div>{% endfor %}
             </div>
         {% endif %}
-        {% bootstrap_form form layout="floating" %}
+        {% bootstrap_form form layout="floating" exclude="person_in_charge,admin,school" %}
+        {% bootstrap_field form.person_in_charge %}
+        {% bootstrap_field form.admin layout="floating" %}
+        {% bootstrap_field form.school layout="floating" %}
         {% bootstrap_button "登録" button_type="submit" %}
     </div>
 </form>
+<script>
+    const config = {
+        search: true, // Toggle search feature. Default: false
+    }
+    dselect(document.querySelector('#id_person_in_charge'), config)
+    dselect(document.querySelector('#id_admin'), config)
+</script>
 {% endblock content %}

@@ -39,9 +39,6 @@ class EventCreateForm(forms.ModelForm):
             "admin": SuggestWidget(
                 attrs={"data-url": reverse_lazy("accounts:api_members_get")}
             ),
-            "participants": SuggestWidget(
-                attrs={"data-url": reverse_lazy("accounts:api_members_get")}
-            ),
             "school": SuggestWidget(
                 attrs={"data-url": reverse_lazy("events:api_schools_get")}
             ),

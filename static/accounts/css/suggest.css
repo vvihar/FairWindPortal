@@ -17,11 +17,30 @@ ul.dropdown li:not(:last-child) {
     border-bottom: 1px solid rgba(0, 0, 0, 0.125);
 }
 
+ul[id$="-display"] {
+    padding-left: 0;
+}
 .suggest-item {
     cursor: pointer;
     transition: 0.2s;
+    background-color: #6c757d;
+    color: #f8f9fa;
+    padding-left: calc(0.5rem + 14px);
+    padding-right: 0.5rem;
+    border-radius: 0.25rem;
+    height: calc(1.5 * 1rem);
+    line-height: calc((1.5 * 1rem) - 1px);
+    position: relative;
+    display: inline-block;
 }
-
-.suggest-item:hover {
-    opacity: 0.5;
+.suggest-item .dselect-tag-remove {
+    position: absolute;
+    left: 0.25rem;
+    top: 50%;
+    margin-top: -7px;
+    color: rgba(248, 249, 250, 0.35);
+    transition: color 0.15s ease-in-out;
+}
+.suggest-item .dselect-tag-remove:hover {
+    color: #f8f9fa;
 }
