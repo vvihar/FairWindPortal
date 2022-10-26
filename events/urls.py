@@ -14,6 +14,7 @@ from .views import (
     SchoolDetail,
     SchoolList,
     api_schools_get,
+    redirect_my_invitation,
 )
 
 app_name = "events"
@@ -43,6 +44,11 @@ urlpatterns = [
         "<int:id>/invite/<int:pk>/reply",
         EventReplyInvitation.as_view(),
         name="event_reply_invitation",
+    ),
+    path(
+        "<int:pk>/invite/my/reply",
+        redirect_my_invitation,
+        name="event_reply_my_invitation",
     ),
     path("api/schools_get/", api_schools_get, name="api_schools_get"),
 ]

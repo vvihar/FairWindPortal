@@ -32,4 +32,20 @@
         <span class="badge rounded-pill bg-dark px-3 py-2 fw-normal">{{ event.status }}</span>
     </div>
     <a href="{% url 'events:event_participants' event.pk %}">参加者</a>
+    <a href="{% url 'events:event_update' event.pk %}">編集</a>
+    <a href="{% url 'events:event_reply_my_invitation' event.pk %}">打診回答</a>
+    {% if user.is_staff or user in event.admin.all %}
+        <div class="card my-3">
+            <div class="card-body">
+                <h5 class="card-title">ヒント</h5>
+                <p>打診を受けたメンバーは、次のURLから打診に回答することができます。</p>
+                <input class="form-control"
+                       type="text"
+                       value="{{ request.scheme }}://{{ request.get_host }}{% url 'events:event_reply_my_invitation' event.id %}"
+                       aria-label="readonly"
+                       readonly
+                       onFocus="javascript:this.select()"/>
+            </div>
+        </div>
+    {% endif %}
 {% endblock content %}

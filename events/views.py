@@ -350,6 +350,8 @@ class EventParticipants(ListView):
         event = Event.objects.get(id=self.kwargs["pk"])
         context["object_list"] = EventParticipation.objects.filter(event=event)
         context["event"] = event
+        context["counter_participate"] = len(context["object_list"].filter(status="参加"))
+        context["counter_waiting"] = len(context["object_list"].filter(status="回答待ち"))
         return context
 
 
@@ -409,6 +411,18 @@ class EventReplyInvitation(OnlyInvitedMixin, UpdateView):
         status = form.cleaned_data["status"]
         messages.success(self.request, f"「{status}」で登録しました")
         return super().form_valid(form)
+
+
+def redirect_my_invitation(request, pk):
+    """自分に打診された企画一覧にリダイレクトする"""
+    try:
+        participation = EventParticipation.objects.get(
+            participant=request.user, event=pk
+        )
+        return redirect("events:event_reply_invitation", pk=participation.pk, id=pk)
+    except EventParticipation.DoesNotExist:
+        messages.error(request, "この企画には打診されていません")
+        return redirect("events:event_detail", pk=pk)
 
 
 class EventCancelInvitation(OnlyEventAdminMixin, DeleteView):
