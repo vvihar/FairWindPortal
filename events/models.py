@@ -83,8 +83,6 @@ class School(models.Model):
 
     name = models.CharField(max_length=50, verbose_name="学校名")
 
-    # TODO: 企画と many to many
-
     class Meta:
         """メタ情報"""
 
