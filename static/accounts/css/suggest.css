@@ -40,7 +40,8 @@ ul[id$="-display"] {
     margin-top: -7px;
     color: rgba(248, 249, 250, 0.35);
     transition: color 0.15s ease-in-out;
+    pointer-events: none;
 }
-.suggest-item .dselect-tag-remove:hover {
+.suggest-item:hover .dselect-tag-remove {
     color: #f8f9fa;
 }
