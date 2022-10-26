@@ -13,15 +13,21 @@
     {% breadcrumb "打診に回答" "events:event_reply_invitation" %}
 {% endblock breadcrumbs %}
 {% block content %}
-    <div class="mb-3">
-        <p>「参加」か「辞退」を選択してください。</p>
-    </div>
-    <form method="post">
-        {% csrf_token %}
-        {% bootstrap_form form layout="floating" %}
-        {% bootstrap_button "送信" button_type="submit" %}
+    {% if object.status|stringformat:"s" == "回答待ち" %}
+        <div class="mb-3">
+            <p>「参加」か「辞退」を選択してください。</p>
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            {% bootstrap_form form layout="floating" %}
+            {% bootstrap_button "送信" button_type="submit" %}
 
-        {% include 'components/cancel.html' %}
+            {% include 'components/cancel.html' %}
 
-    </form>
+        </form>
+    {% else %}
+        <div>
+            <p>この打診には回答済みです。</p>
+        </div>
+    {% endif %}
 {% endblock content %}
