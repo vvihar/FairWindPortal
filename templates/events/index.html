@@ -25,6 +25,15 @@
                            tabindex="-1"
                            role="button"
                            aria-disabled="true">詳細</a>
+                        {% for participation in event.participation.all %}
+                            {% if participation.participant|stringformat:"s" == user|stringformat:"s" and participation.status|stringformat:"s" == "回答待ち" %}
+                                <a href="{% url 'events:event_reply_my_invitation' event.pk %}"
+                                   class="btn btn-warning"
+                                   tabindex="-1"
+                                   role="button"
+                                   aria-disabled="true">打診回答</a>
+                            {% endif %}
+                        {% endfor %}
                         <!--TODO: 削除機能は必要？-->
                     </div>
                 </div>
