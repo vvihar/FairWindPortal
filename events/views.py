@@ -414,7 +414,7 @@ class EventReplyInvitation(OnlyInvitedMixin, UpdateView):
 
 
 def redirect_my_invitation(request, pk):
-    """自分に打診された企画一覧にリダイレクトする"""
+    """自分に打診された企画の打診回答ページにリダイレクトする"""
     try:
         participation = EventParticipation.objects.get(
             participant=request.user, event=pk
