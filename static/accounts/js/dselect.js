@@ -1,3 +1,7 @@
+// Copyright (C) 2021 jarstone
+// Released under the MIT license
+// GitHub Repository: https://github.com/jarstone/dselect
+
 function dselectUpdate(button, classElement, classToggler) {
     const value = button.dataset.dselectValue;
     const target = button.closest(`.${classElement}`).previousElementSibling;
