@@ -105,7 +105,7 @@
                                     <td class="align-middle text-end">
                                         {% if participation.participant|stringformat:"s" == user|stringformat:"s" %}
                                             <a href="{% url 'events:event_reply_invitation' event.pk participation.pk %}"
-                                               class="btn btn-sm btn-secondary d-inline-flex align-items-cente my-1">打診回答</a>
+                                               class="btn btn-sm btn-warning d-inline-flex align-items-cente my-1">打診回答</a>
                                         {% endif %}
                                         {% if user in event.admin.all or user.is_staff %}
                                             <a href="{% url 'events:event_cancel_invitation' event.pk participation.pk %}"
