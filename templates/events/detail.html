@@ -59,8 +59,7 @@
         <span class="badge rounded-pill bg-light border border-dark text-dark px-3 py-2 fw-normal">{{ event.type }}</span>
         {% if user in event.admin.all or user.is_staff %}
             <span class="badge rounded-pill bg-light border border-dark text-dark p-0 fw-normal">
-                <form method="post"
-                      name="change_status">
+                <form method="post">
                     {% csrf_token %}
                     {{ form.status }}
                 </form>
