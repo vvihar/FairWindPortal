@@ -2,6 +2,8 @@
 
 {% load static %}
 
+{% load django_bootstrap5 %}
+
 {% block head %}
     <style>
         form input[type="text"] {
@@ -69,8 +71,7 @@
                                name="password"/>
                         <label for="floatingPassword">パスワード</label>
                     </div>
-                    <button class="w-100 btn btn-lg btn-primary"
-                            type="submit">ログイン</button>
+                    {% bootstrap_button content="ログイン" button_type="submit" extra_classes="w-100 btn-lg" %}
                 </form>
             </div>
         </div>

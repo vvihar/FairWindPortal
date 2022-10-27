@@ -2,6 +2,7 @@
 
 {% load static %}
 
+{% load django_bootstrap5 %}
 {% load django_bootstrap_breadcrumbs %}
 
 {% block head %}
@@ -20,23 +21,12 @@
             <h1 class="h3 mb-3 fw-normal">ログイン</h1>
             {% if next %}<p>このページにアクセスするにはログインしてください。</p>{% endif %}
             {% if form.errors %}<p>正しいユーザー名とパスワードを入力してください。</p>{% endif %}
-            <div class="form-floating">
-                {% render_field form.username class="form-control" id="floatingInput" name="username" placeholder="ユーザー名" %}
-                <label for="floatingInput">ユーザー名</label>
-            </div>
-            <div class="form-floating">
-                {% render_field form.password class="form-control" id="floatingPassword" name="password" placeholder="パスワード" %}
-                <label for="floatingPassword">パスワード</label>
-            </div>
-            {% if form.username.errors or form.password.errors %}
-                {% for error in form.username.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
-                {% for error in form.password.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
-            {% endif %}
+            {% bootstrap_field form.username layout="floating" wrapper_class="" %}
+            {% bootstrap_field form.password layout="floating" %}
             <input type="hidden"
                    name="next"
                    value="{{ next }}"/>
-            <button class="w-100 btn btn-lg btn-primary"
-                    type="submit">ログイン</button>
+            {% bootstrap_button content="ログイン" button_type="submit" extra_classes="w-100 btn-lg" %}
         </form>
     </main>
 {% endblock content %}
