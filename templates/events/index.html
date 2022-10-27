@@ -2,8 +2,8 @@
 
 {% load static %}
 
-{% block customcss %}
-{% endblock customcss %}
+{% block head %}
+{% endblock head %}
 {% block content %}
     <a href="{% url 'events:event_create' %}"
        class="btn btn-primary mb-3">新規登録</a>
@@ -15,20 +15,29 @@
                         <h5 class="card-title">{{ event.name }}</h5>
                         {% if user in event.admin.all or user.is_staff %}
                             <a href="{% url 'events:event_update' event.pk %}"
-                               class="btn btn-secondary"
+                               class="btn btn-dark btn-sm"
                                tabindex="-1"
                                role="button"
-                               aria-disabled="true">編集</a>
+                               aria-disabled="true">
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                     width="16"
+                                     height="16"
+                                     fill="currentColor"
+                                     class="bi bi-pen-fill"
+                                     viewBox="0 0 16 16">
+                                    <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001z"/>
+                                </svg>
+                            編集</a>
                         {% endif %}
                         <a href="{% url 'events:event_detail' event.pk %}"
-                           class="btn btn-secondary"
+                           class="btn btn-dark btn-sm"
                            tabindex="-1"
                            role="button"
                            aria-disabled="true">詳細</a>
                         {% for participation in event.participation.all %}
                             {% if participation.participant|stringformat:"s" == user|stringformat:"s" and participation.status|stringformat:"s" == "回答待ち" %}
                                 <a href="{% url 'events:event_reply_my_invitation' event.pk %}"
-                                   class="btn btn-warning"
+                                   class="btn btn-warning  btn-sm"
                                    tabindex="-1"
                                    role="button"
                                    aria-disabled="true">打診回答</a>
