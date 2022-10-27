@@ -338,6 +338,22 @@ class EventDetail(DetailView):
             messages.info(request, "この企画に打診されています")
         return super().get(request, *args, **kwargs)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        participations = self.get_object().participation.filter(status="参加")
+        participations_list = ""
+        for participation in participations:
+            participations_list += str(participation.participant) + "、"
+        context["participants"] = participations_list[:-1]
+        context[
+            "is_invited"
+        ] = self.request.user.pk in self.get_object().participation.filter(
+            status="回答待ち"
+        ).values_list(
+            "participant", flat=True
+        )
+        return context
+
 
 class EventParticipants(ListView):
     """企画の参加者・打診状況一覧"""

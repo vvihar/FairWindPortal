@@ -7,17 +7,22 @@
 
 {% block head %}
     <style>
-        .dot {
-            width: 12px;
-            height: 12px;
+        .table > tbody > tr > * {
+            padding-top: .75rem !important;
+            padding-bottom: .75rem !important;
         }
 
-        .rounded-circle {
-            border-radius: 50% !important;
-        }
-
-        .table>tbody>tr:last-child>td {
+        .table > tbody > tr:last-child > * {
             border-bottom: 0;
+        }
+
+        .table {
+            margin-bottom: 0;
+        }
+
+        tr > th {
+            width: 1px;
+            white-space: nowrap;
         }
     </style>
 {% endblock head %}
@@ -26,14 +31,83 @@
     {% breadcrumb event.name "events:event_detail" event.id %}
 {% endblock breadcrumbs %}
 {% block content %}
-    <h4 class="mb-3">{{ event.name }}</h4>
+    <h1 class="mb-3 fs-4">{{ event.name }}</h1>
     <div class="mb-3">
-        <span class="badge rounded-pill bg-dark px-3 py-2 fw-normal">{{ event.type }}</span>
-        <span class="badge rounded-pill bg-dark px-3 py-2 fw-normal">{{ event.status }}</span>
+        <span class="badge rounded-pill bg-light border border-dark text-dark px-3 py-2 fw-normal">{{ event.type }}</span>
+        <span class="badge rounded-pill bg-light border border-dark text-dark px-3 py-2 fw-normal">{{ event.status }}</span>
     </div>
-    <a href="{% url 'events:event_participants' event.pk %}">参加者</a>
-    <a href="{% url 'events:event_update' event.pk %}">編集</a>
-    <a href="{% url 'events:event_reply_my_invitation' event.pk %}">打診回答</a>
+    {% if user in event.admin.all or user.is_staff %}
+        <a href="{% url 'events:event_update' event.pk %}"
+           class="btn btn-dark btn-sm">
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="16"
+                 height="16"
+                 fill="currentColor"
+                 class="bi bi-pen-fill"
+                 viewBox="0 0 16 16">
+                <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001z"/>
+            </svg>
+        編集</a>
+    {% endif %}
+    <a href="{% url 'events:event_participants' event.pk %}"
+       class="btn btn-dark btn-sm">参加者一覧</a>
+    {% if is_invited %}
+        <a href="{% url 'events:event_reply_my_invitation' event.pk %}"
+           class="btn btn-warning btn-sm">打診回答</a>
+    {% endif %}
+    {% if user in event.admin.all %}
+        <div>
+            <small class="text-muted">あなたはこの企画の管理者です</small>
+        </div>
+    {% endif %}
+    <div class="card mt-4">
+        <div class="card-header border-bottom d-flex align-items-center">
+            <h2 class="fs-5 mb-0">基本情報</h2>
+        </div>
+        <div class="card-body py-0">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th scope="row">対象校</th>
+                        <td>
+                            <ul class="list-inline mb-0">
+                                {% for school in event.school.all %}
+                                    <li class="list-inline-item">
+                                        <a href="{% url 'events:school_detail' school.pk %}">{{ school }}</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">日時</th>
+                        <td>
+                            {% if event.start_datetime|date:"Ymd" == event.end_datetime|date:"Ymd" %}
+                                {{ event.start_datetime|date:"Y年m月d日（D）" }}
+                                {{ event.start_datetime|time:"H:i" }}〜{{ event.end_datetime|time:"H:i" }}
+                            {% else %}
+                                <span>{{ event.start_datetime|date:"Y/m/d（D）H:i" }}</span>
+                                〜
+                                <span>{{ event.end_datetime|date:"Y/m/d（D）H:i" }}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">場所</th>
+                        <td>{{ event.venue|default:"" }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">統括</th>
+                        <td>{{ event.person_in_charge }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">参加者</th>
+                        <td>{{ participants }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
     {% if user.is_staff or user in event.admin.all %}
         <div class="card my-3">
             <div class="card-body">
