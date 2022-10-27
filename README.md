@@ -16,7 +16,9 @@ git clone https://github.com/vvihar/FairWindPortal
 cd FairWindPortal
 ```
 
-仮想環境を構築する。
+仮想環境を構築する。  
+> **Warning**
+> Python 3.9.13 でないと後にエラーが出ることがある。`python -V`で Python のバージョンを確認し、必要に応じてバージョンを変更すること。
 
 ```zsh
 python -m venv env
