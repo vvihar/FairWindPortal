@@ -57,6 +57,20 @@ class EventCreateForm(forms.ModelForm):
         }
 
 
+class EventStatusUpdateForm(forms.ModelForm):
+    """企画のステータス更新フォーム"""
+
+    class Meta:
+        """Metaクラス"""
+
+        model = Event
+        fields = ("status",)
+
+        widgets = {
+            "status": forms.widgets.Select(attrs={"onchange": "this.form.submit();"})
+        }
+
+
 class EventMakeInvitationForm(forms.Form):
     """招待状を作成するフォーム"""
 

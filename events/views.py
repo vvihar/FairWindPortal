@@ -18,12 +18,14 @@ from django.views.generic import (
     FormView,
     ListView,
     UpdateView,
+    edit,
 )
 
 from .forms import (
     EventCreateForm,
     EventMakeInvitationForm,
     EventReplyInvitationForm,
+    EventStatusUpdateForm,
     MakeSchoolDBForm,
 )
 from .models import Event, EventParticipation, School
@@ -325,11 +327,29 @@ class EventUpdate(UserPassesTestMixin, UpdateView):
         return redirect(f"{reverse(settings.LOGIN_URL)}?next={self.request.path}")
 
 
-class EventDetail(DetailView):
+class EventDetail(DetailView, edit.ModelFormMixin):
     """企画詳細"""
 
     template_name = "events/detail.html"
     model = Event
+    form_class = EventStatusUpdateForm
+
+    def get_success_url(self):
+        return reverse_lazy("events:event_detail", kwargs={"pk": self.kwargs["pk"]})
+
+    def form_valid(self, form):
+        event = form.save(commit=False)
+        event.save()
+        messages.success(self.request, f"企画のステータスを「{event.status}」に更新しました")
+        return super().form_valid(form)
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
 
     def get(self, request, *args, **kwargs):
         if request.user.pk in self.get_object().participation.filter(
