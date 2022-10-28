@@ -1,0 +1,19 @@
+{% extends "events/base.html" %}
+
+{% load django_bootstrap_breadcrumbs %}
+
+{% load static %}
+
+{% block head %}
+{% endblock head %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "すべての企画" "events:event_list_all" %}
+{% endblock breadcrumbs %}
+{% block content %}
+    {% for event in object_list %}
+
+        {% include 'events/event_list_component.html' %}
+
+    {% endfor %}
+{% endblock content %}

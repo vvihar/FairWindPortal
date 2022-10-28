@@ -95,6 +95,16 @@ class Home(ListView):
         return context
 
 
+class EventListAll(ListView):
+    """全ての企画のリスト"""
+
+    model = Event
+    template_name = "events/event_list.html"
+
+    def get_queryset(self):
+        return Event.objects.all().order_by("-start_datetime")
+
+
 class SchoolList(ListView):
     """学校一覧"""
 
