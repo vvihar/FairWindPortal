@@ -3,7 +3,6 @@ from accounts.models import User
 from accounts.widgets import SuggestWidget
 from django import forms
 from django.core.exceptions import ValidationError
-from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 
 from .models import Event, EventParticipation
