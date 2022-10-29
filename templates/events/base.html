@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
 {% load django_bootstrap_breadcrumbs %}
 
@@ -10,6 +10,6 @@
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb "企画" "events:" %}
-{% endblock %}
+{% endblock breadcrumbs %}
 {% block content %}
 {% endblock content %}
