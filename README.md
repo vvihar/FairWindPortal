@@ -17,7 +17,7 @@ cd FairWindPortal
 ```
 
 仮想環境を構築する。  
-> **Warning**
+> **Warning**  
 > Python 3.9.13 でないと後にエラーが出ることがある。`python -V`で Python のバージョンを確認し、必要に応じてバージョンを変更すること。
 
 ```zsh
