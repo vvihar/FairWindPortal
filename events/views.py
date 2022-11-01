@@ -1,6 +1,7 @@
 import csv
 import io
 import re
+from http.client import HTTPResponse
 from urllib import request
 
 from django.conf import settings
@@ -349,6 +350,14 @@ class EventDetail(DetailView, edit.ModelFormMixin):
 
     def form_valid(self, form):
         event = form.save(commit=False)
+        # 打診中の人がいないか確認する
+        if (
+            event.status != "参加者募集中"
+            and event.status != "参加者打診中"
+            and event.participation.filter(status="回答待ち").exists()
+        ):
+            messages.error(self.request, "打診中の人がいるため、ステータスは更新されませんでした")
+            return redirect("events:event_detail", pk=self.kwargs["pk"])
         event.save()
         messages.success(self.request, f"企画のステータスを「{event.status}」に更新しました")
         return super().form_valid(form)
@@ -398,13 +407,12 @@ class EventParticipants(ListView):
         context["event"] = event
         context["counter_participate"] = len(context["object_list"].filter(status="参加"))
         context["counter_waiting"] = len(context["object_list"].filter(status="回答待ち"))
+        context["is_accepting"] = event.status == "参加者募集中" or event.status == "参加者打診中"
         return context
 
 
 class EventMakeInvitation(OnlyEventAdminMixin, FormView):
     """企画へ打診する"""
-
-    # FIXME: adminのみが打診できるようにする
 
     template_name = "events/make_invitation.html"
     form_class = EventMakeInvitationForm
@@ -418,9 +426,13 @@ class EventMakeInvitation(OnlyEventAdminMixin, FormView):
         event = get_object_or_404(Event, pk=self.kwargs["id"])
         context = super().get_context_data()
         context["event"] = event
+        context["is_accepting"] = event.status == "参加者募集中" or event.status == "参加者打診中"
         return context
 
     def form_valid(self, form):
+        if not self.get_context_data()["is_accepting"]:
+            messages.error(self.request, "この企画の参加者はすでに確定しました")
+            return redirect("events:event_detail", pk=self.kwargs["id"])
         participants = form.cleaned_data["participants"]
         event = get_object_or_404(Event, pk=self.kwargs["id"])
         invitations = []
@@ -473,8 +485,6 @@ def redirect_my_invitation(request, pk):
 
 class EventCancelInvitation(OnlyEventAdminMixin, DeleteView):
     """企画への打診を取り消す"""
-
-    # FIXME: adminだけが打診を取り消せるようにする
 
     template_name = "events/cancel_invitation.html"
     model = EventParticipation

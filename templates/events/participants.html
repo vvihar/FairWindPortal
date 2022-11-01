@@ -77,10 +77,11 @@
             <span class="badge rounded-pill bg-dark ms-2">{{ counter_waiting }}</span>
             <div class="col text-end">
                 {% if user.is_staff or user in event.admin.all %}
-                    <a href="{% url 'events:event_invite' event.id %}"
-                       class="btn btn-sm btn-primary">打診</a>
+                    {% if is_accepting %}
+                        <a href="{% url 'events:event_invite' event.id %}"
+                           class="btn btn-sm btn-primary">打診</a>
+                    {% endif %}
                 {% endif %}
-                <!--TODO: 参加者募集中時以外は打診できないようにする-->
             </div>
         </div>
         <div class="card-body py-0">
@@ -114,8 +115,10 @@
                                                class="btn btn-sm btn-warning d-inline-flex align-items-cente my-1">打診回答</a>
                                         {% endif %}
                                         {% if user in event.admin.all or user.is_staff %}
-                                            <a href="{% url 'events:event_cancel_invitation' event.pk participation.pk %}"
-                                               class="btn btn-sm btn-danger d-inline-flex align-items-center my-1">打診取り消し</a>
+                                            {% if is_accepting %}
+                                                <a href="{% url 'events:event_cancel_invitation' event.pk participation.pk %}"
+                                                   class="btn btn-sm btn-danger d-inline-flex align-items-center my-1">打診取り消し</a>
+                                            {% endif %}
                                         {% endif %}
                                     </td>
                                 </tr>

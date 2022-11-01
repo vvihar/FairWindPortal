@@ -16,12 +16,16 @@
     {% breadcrumb "打診" "events:event_invite" %}
 {% endblock breadcrumbs %}
 {% block content %}
-    <form method="post">
-        {% csrf_token %}
-        {% bootstrap_form form layout="floating" %}
-        {% bootstrap_button "打診" button_type="submit" %}
+    {% if is_accepting %}
+        <form method="post">
+            {% csrf_token %}
+            {% bootstrap_form form layout="floating" %}
+            {% bootstrap_button "打診" button_type="submit" %}
 
-        {% include 'components/cancel.html' %}
+            {% include 'components/cancel.html' %}
 
-    </form>
+        </form>
+    {% else %}
+        この企画の参加者はすでに確定しました。
+    {% endif %}
 {% endblock content %}
