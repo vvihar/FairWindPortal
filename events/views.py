@@ -95,6 +95,9 @@ class Home(ListView):
                 messages.info(self.request, f"{event}に打診されています")
         return context
 
+    def get_queryset(self):
+        return Event.objects.all().order_by("start_datetime")
+
 
 class EventListAll(ListView):
     """全ての企画のリスト"""
@@ -103,7 +106,7 @@ class EventListAll(ListView):
     template_name = "events/event_list.html"
 
     def get_queryset(self):
-        return Event.objects.all().order_by("-start_datetime")
+        return Event.objects.all().order_by("start_datetime")
 
 
 class SchoolList(ListView):
