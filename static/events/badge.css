@@ -1,0 +1,8 @@
+.dot {
+    width: 12px;
+    height: 12px;
+}
+
+.rounded-circle {
+    border-radius: 50% !important;
+}

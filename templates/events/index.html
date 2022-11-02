@@ -3,6 +3,8 @@
 {% load static %}
 
 {% block head %}
+    <link rel="stylesheet"
+          href="{% static 'events/badge.css' %}"/>
 {% endblock head %}
 {% block content %}
     <a href="{% url 'events:event_create' %}"

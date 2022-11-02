@@ -3,6 +3,42 @@
         <div class="card-body">
             <h5 class="card-title">{{ event.name }}</h5>
             <!--TODO: 企画のステータスを表示-->
+            {% if event.status|stringformat:"s" == "参加者募集中" %}
+                <div class="align-items-center mb-3">
+                    <span class="badge rounded-pill bg-light text-dark d-inline-flex border border-success">
+                        <span class="bg-success dot rounded-circle me-1"></span>
+                        <small>{{ event.status }}</small>
+                    </span>
+                </div>
+            {% elif event.status|stringformat:"s" == "参加者打診中" %}
+                <div class="align-items-center mb-3">
+                    <span class="badge rounded-pill bg-light text-dark d-inline-flex border border-warning">
+                        <span class="bg-warning dot rounded-circle me-1"></span>
+                        <small>{{ event.status }}</small>
+                    </span>
+                </div>
+            {% elif event.status|stringformat:"s" == "参加者決定済み" %}
+                <div class="align-items-center mb-3">
+                    <span class="badge rounded-pill bg-light text-dark d-inline-flex border border-dark">
+                        <span class="bg-dark dot rounded-circle me-1"></span>
+                        <small>{{ event.status }}</small>
+                    </span>
+                </div>
+            {% elif event.status|stringformat:"s" == "企画終了" %}
+                <div class="align-items-center mb-3">
+                    <span class="badge rounded-pill bg-light text-dark d-inline-flex border border-dark">
+                        <span class="bg-dark dot rounded-circle me-1"></span>
+                        <small>{{ event.status }}</small>
+                    </span>
+                </div>
+            {% elif event.status|stringformat:"s" == "アーカイブ" %}
+                <div class="align-items-center mb-3">
+                    <span class="badge rounded-pill bg-light text-dark d-inline-flex border border-secondary">
+                        <span class="bg-secondary dot rounded-circle me-1"></span>
+                        <small>{{ event.status }}</small>
+                    </span>
+                </div>
+            {% endif %}
             {% if user in event.admin.all or user.is_staff %}
                 <a href="{% url 'events:event_update' event.pk %}"
                    class="btn btn-dark btn-sm"
