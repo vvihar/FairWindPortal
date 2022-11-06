@@ -239,7 +239,7 @@ class EventParticipation(models.Model):
         help_text="参加者に伝えたいことを入力してください",
         max_length=1000,
         null=True,
-        blank=True,
+        blank=True,  # TODO: これを入力する欄を設ける
     )
 
     STATUS_CHOICES = (
