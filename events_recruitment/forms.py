@@ -1,7 +1,5 @@
 from django import forms
 
-from events.models import Event
-
 from .models import EventRecruitment
 
 
@@ -10,4 +8,4 @@ class EventRecruitmentForm(forms.ModelForm):
 
     class Meta:
         model = EventRecruitment
-        fields = "__all__"
+        exclude = ("event", "member")

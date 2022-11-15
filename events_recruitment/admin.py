@@ -6,7 +6,7 @@ from .models import EventRecruitment
 
 # Register your models here.
 class EventRecruitmentAdmin(admin.ModelAdmin):
-    form = EventRecruitmentForm
+    fields = ("event", "member", "preference", "comment")
 
 
 admin.site.register(EventRecruitment, EventRecruitmentAdmin)

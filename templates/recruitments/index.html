@@ -7,23 +7,45 @@
 {% block head %}
 {% endblock head %}
 {% block content %}
-    こんにちは
-    <form method="post">
-        {% for event, form in zipped %}
-            {{ event }}
-            {% bootstrap_form form exclude="event,member" %}
-            <input type="hidden"
-                   id="id_member"
-                   name="member"
-                   value="{{ user.pk }}"/>
-            <input type="hidden"
-                   id="id_event"
-                   name="event"
-                   value="{{ event.pk }}"/>
-        {% endfor %}
-        {{ formset.management_form }}
-        {% csrf_token %}
-        <button type="submit"
-                class="btn btn-primary">送信</button>
-    </form>
+    {% for event, recruitment in events %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">{{ event.name }}</h5>
+                <form method="post"
+                      action="{% url "recruitment:recruitment_update" event.pk %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label"
+                               for="id_preference">出欠</label>
+                        <select name="preference"
+                                class="form-select"
+                                required=""
+                                id="id_preference">
+                            <option value="">
+                                ---------
+                            </option>
+                            {% for option in options %}
+                                <option value="{{ option.0 }}"
+                                        {% ifequal option.0 recruitment.preference %}selected=""{% endifequal %}>
+                                    {{ option.1 }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label"
+                               for="id_comment">コメント</label>
+                        <input type="text"
+                               name="comment"
+                               maxlength="200"
+                               class="form-control"
+                               placeholder="コメント"
+                               id="id_comment"
+                               value="{{ recruitment.comment|default_if_none:"" }}"/>
+                    </div>
+                    {% bootstrap_button "更新" button_type="submit" %}
+                </form>
+            </div>
+        </div>
+    {% endfor %}
 {% endblock content %}
