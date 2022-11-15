@@ -1,0 +1,29 @@
+{% extends "recruitments/base.html" %}
+
+{% load static %}
+
+{% load django_bootstrap5 %}
+
+{% block head %}
+{% endblock head %}
+{% block content %}
+    こんにちは
+    <form method="post">
+        {% for event, form in zipped %}
+            {{ event }}
+            {% bootstrap_form form exclude="event,member" %}
+            <input type="hidden"
+                   id="id_member"
+                   name="member"
+                   value="{{ user.pk }}"/>
+            <input type="hidden"
+                   id="id_event"
+                   name="event"
+                   value="{{ event.pk }}"/>
+        {% endfor %}
+        {{ formset.management_form }}
+        {% csrf_token %}
+        <button type="submit"
+                class="btn btn-primary">送信</button>
+    </form>
+{% endblock content %}
