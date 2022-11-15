@@ -57,6 +57,17 @@ class SchoolDetailUpdate(UpdateView):
     def get_success_url(self):
         return reverse_lazy("schools:school_detail", kwargs={"pk": self.kwargs["pk"]})
 
+    def get_object(self, queryset=None):
+        try:
+            schooldetail = SchoolDetail.objects.get(pk=self.kwargs["pk"])
+        except SchoolDetail.DoesNotExist:
+            schooldetail = SchoolDetail.objects.create(
+                pk=self.kwargs["pk"],
+                school=School.objects.get(pk=self.kwargs["pk"]),
+                memo="",
+            )
+        return schooldetail
+
 
 class MakeSchoolDB(FormView):
     """学校データベースのDBを作成・更新する"""
