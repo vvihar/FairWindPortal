@@ -2,7 +2,6 @@
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">{{ event.name }}</h5>
-            <!--TODO: 企画のステータスを表示-->
             {% if event.status|stringformat:"s" == "参加者募集中" %}
                 <div class="align-items-center mb-3">
                     <span class="badge rounded-pill bg-light text-dark d-inline-flex border border-success">
