@@ -84,7 +84,7 @@
     <a href="{% url 'events:event_participants' event.pk %}"
        class="btn btn-dark btn-sm">参加者一覧</a>
     {% if is_invited %}
-        <a href="{% url 'events:event_reply_my_invitation' event.pk %}"
+        <a href="{% url 'events:event_reply_invitation' event.pk %}"
            class="btn btn-warning btn-sm">打診回答</a>
     {% endif %}
     {% if user in event.admin.all %}
@@ -147,7 +147,7 @@
                 <p>打診を受けたメンバーは、次のURLから打診に回答することができます。</p>
                 <input class="form-control"
                        type="text"
-                       value="{{ request.scheme }}://{{ request.get_host }}{% url 'events:event_reply_my_invitation' event.id %}"
+                       value="{{ request.scheme }}://{{ request.get_host }}{% url 'events:event_reply_invitation' event.id %}"
                        aria-label="readonly"
                        readonly
                        onFocus="javascript:this.select()"/>

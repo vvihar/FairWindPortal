@@ -11,7 +11,6 @@ from .views import (
     EventReplyInvitation,
     EventUpdate,
     Home,
-    redirect_my_invitation,
 )
 
 app_name = "events"
@@ -36,13 +35,8 @@ urlpatterns = [
         name="event_cancel_invitation",
     ),
     path(
-        "<int:id>/invite/<int:pk>/reply",
+        "<int:id>/invite/reply",
         EventReplyInvitation.as_view(),
         name="event_reply_invitation",
-    ),
-    path(
-        "<int:pk>/invite/my/reply",
-        redirect_my_invitation,
-        name="event_reply_my_invitation",
     ),
 ]
