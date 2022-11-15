@@ -28,8 +28,9 @@ from .forms import (
     EventReplyInvitationForm,
     EventStatusUpdateForm,
     MakeSchoolDBForm,
+    SchoolDetailUpdateForm,
 )
-from .models import Event, EventParticipation, School
+from .models import Event, EventParticipation, School, SchoolDetail
 
 # Create your views here.
 
@@ -132,11 +133,23 @@ class SchoolList(ListView):
         return object_list
 
 
-class SchoolDetail(DetailView):
+class SchoolDetailView(DetailView):
     """学校詳細"""
 
     model = School
     template_name = "events/school/detail.html"
+    form_class = SchoolDetailUpdateForm
+
+
+class SchoolDetailUpdate(UpdateView):
+    """学校詳細の編集画面。学校に関するデータを蓄積する"""
+
+    model = SchoolDetail
+    template_name = "events/school/detail_update.html"
+    form_class = SchoolDetailUpdateForm
+
+    def get_success_url(self):
+        return reverse_lazy("events:school_detail", kwargs={"pk": self.kwargs["pk"]})
 
 
 class MakeSchoolDB(FormView):

@@ -7,16 +7,29 @@
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb "学校" "events:school_list" %}
-    {% breadcrumb object.name "events:school_list" object.id %}
+    {% breadcrumb object.name "events:school_detail" object.pk %}
 {% endblock breadcrumbs %}
 {% block content %}
-    <h4 class="mb-3">{{ object.name }}</h4>
+    <h1 class="mb-3 fs-4">{{ object.name }}</h1>
     <div class="mb-3">
-        <span class="badge rounded-pill bg-dark px-3 py-2 fw-normal">{{ object.prefecture }}</span>
-        <span class="badge rounded-pill bg-dark px-3 py-2 fw-normal">{{ object.establisher }}</span>
-        <span class="badge rounded-pill bg-dark px-3 py-2 fw-normal">{{ object.type }}</span>
-        <span class="badge rounded-pill bg-primary px-3 py-2 fw-normal">{{ object.code }}</span>
+        <span class="badge rounded-pill bg-light border border-dark text-dark px-3 py-2 fw-normal">{{ object.prefecture }}</span>
+        <span class="badge rounded-pill bg-light border border-dark text-dark px-3 py-2 fw-normal">{{ object.establisher }}</span>
+        <span class="badge rounded-pill bg-light border border-dark text-dark px-3 py-2 fw-normal">{{ object.type }}</span>
     </div>
+    <a href="{% url 'events:school_detail_update' object.pk %}"
+       class="btn btn-dark btn-sm mb-3"
+       tabindex="-1"
+       role="button"
+       aria-disabled="true">
+        <svg xmlns="http://www.w3.org/2000/svg"
+             width="16"
+             height="16"
+             fill="currentColor"
+             class="bi bi-pen-fill"
+             viewBox="0 0 16 16">
+            <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001z"/>
+        </svg>
+    編集</a>
     {% if object.detail %}
         <div class="card">
             <div class="card-body">{{ object.detail.memo }}</div>

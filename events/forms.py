@@ -1,11 +1,12 @@
 """Eventsのフォームを管理する"""
-from accounts.models import User
-from accounts.widgets import SuggestWidget
 from django import forms
 from django.core.exceptions import ValidationError
 from django.urls import reverse_lazy
 
-from .models import Event, EventParticipation
+from accounts.models import User
+from accounts.widgets import SuggestWidget
+
+from .models import Event, EventParticipation, SchoolDetail
 
 
 class MakeSchoolDBForm(forms.Form):
@@ -23,6 +24,16 @@ class MakeSchoolDBForm(forms.Form):
         required=True,
         widget=forms.widgets.Select,
     )
+
+
+class SchoolDetailUpdateForm(forms.ModelForm):
+    """学校詳細編集フォーム"""
+
+    class Meta:
+        """Metaクラス"""
+
+        model = SchoolDetail
+        exclude = ("school",)
 
 
 class EventCreateForm(forms.ModelForm):
