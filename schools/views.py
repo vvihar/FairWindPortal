@@ -20,7 +20,7 @@ class SchoolList(ListView):
     """学校一覧"""
 
     model = School
-    template_name = "events/school/list.html"
+    template_name = "schools/list.html"
     paginate_by = 100
 
     def get_queryset(self):
@@ -43,7 +43,7 @@ class SchoolDetailView(DetailView):
     """学校詳細"""
 
     model = School
-    template_name = "events/school/detail.html"
+    template_name = "schools/detail.html"
     form_class = SchoolDetailUpdateForm
 
 
@@ -51,7 +51,7 @@ class SchoolDetailUpdate(UpdateView):
     """学校詳細の編集画面。学校に関するデータを蓄積する"""
 
     model = SchoolDetail
-    template_name = "events/school/detail_update.html"
+    template_name = "schools/detail_update.html"
     form_class = SchoolDetailUpdateForm
 
     def get_success_url(self):
@@ -61,7 +61,7 @@ class SchoolDetailUpdate(UpdateView):
 class MakeSchoolDB(FormView):
     """学校データベースのDBを作成・更新する"""
 
-    template_name = "events/school/db_update.html"
+    template_name = "schools/db_update.html"
     form_class = MakeSchoolDBForm
     success_url = reverse_lazy("schools:school_list")
 
