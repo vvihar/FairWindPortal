@@ -83,8 +83,8 @@ class Event(models.Model):
     class Meta:
         """メタ情報"""
 
-        verbose_name = "イベント"
-        verbose_name_plural = "イベント"
+        verbose_name = "企画"
+        verbose_name_plural = "企画"
 
     def __str__(self):
         if self.name:
@@ -97,12 +97,12 @@ class Event(models.Model):
 
 
 class EventParticipation(models.Model):
-    """イベントへの参加者の情報を管理する"""
+    """企画への参加者の情報を管理する"""
 
     event = models.ForeignKey(
         Event,
         on_delete=models.CASCADE,
-        verbose_name="イベント",
+        verbose_name="企画",
         related_name="participation",
     )
 
@@ -147,8 +147,8 @@ class EventParticipation(models.Model):
     class Meta:
         """メタ情報"""
 
-        verbose_name = "イベント参加者"
-        verbose_name_plural = "イベント参加者"
+        verbose_name = "企画参加者"
+        verbose_name_plural = "企画参加者"
 
     def __str__(self):
         return f"{self.event} - {self.participant}"
