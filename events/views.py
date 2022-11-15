@@ -291,7 +291,6 @@ class MakeSchoolDB(FormView):
                     school.establisher = school_data["設置区分"]
                     school.name = school_data["学校名"]
                     school.number = number
-
                 else:
                     school = School(
                         code=school_data["学校コード"],
