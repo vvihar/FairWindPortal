@@ -26,6 +26,7 @@ urlpatterns = (
         path("", Home.as_view(), name="home"),
         path("accounts/", include("accounts.urls")),
         path("events/", include("events.urls")),
+        path("events/recruitments/", include("events_recruitment.urls")),  # 出欠掲示板
         path("schools/", include("schools.urls")),
     ]
     + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
