@@ -11,10 +11,6 @@ from .views import (
     EventReplyInvitation,
     EventUpdate,
     Home,
-    MakeSchoolDB,
-    SchoolDetail,
-    SchoolList,
-    api_schools_get,
     redirect_my_invitation,
 )
 
@@ -22,9 +18,6 @@ app_name = "events"
 
 urlpatterns = [
     path("", Home.as_view(), name=""),
-    path("school/db_update/", MakeSchoolDB.as_view(), name="db_update"),
-    path("school/", SchoolList.as_view(), name="school_list"),
-    path("school/<str:pk>/", SchoolDetail.as_view(), name="school_detail"),
     path("all/", EventListAll.as_view(), name="event_list_all"),
     path("new/", EventCreate.as_view(), name="event_create"),
     path("<int:pk>/update/", EventUpdate.as_view(), name="event_update"),
@@ -52,5 +45,4 @@ urlpatterns = [
         redirect_my_invitation,
         name="event_reply_my_invitation",
     ),
-    path("api/schools_get/", api_schools_get, name="api_schools_get"),
 ]

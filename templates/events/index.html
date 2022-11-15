@@ -3,6 +3,8 @@
 {% load static %}
 
 {% block head %}
+    <link rel="stylesheet"
+          href="{% static 'events/badge.css' %}"/>
 {% endblock head %}
 {% block content %}
     <a href="{% url 'events:event_create' %}"
@@ -19,7 +21,7 @@
     </div>
     <div class="row">
         <div class="col-sm-6">
-            <a href="{% url 'events:school_list' %}"
+            <a href="{% url 'schools:' %}"
                class="btn btn-outline-dark d-flex flex-column py-3 mb-3">
                 <div>学校</div>
             </a>

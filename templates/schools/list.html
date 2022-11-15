@@ -1,4 +1,4 @@
-{% extends "events/base.html" %}
+{% extends "schools/base.html" %}
 
 {% load django_bootstrap_breadcrumbs %}
 
@@ -8,11 +8,10 @@
 {% endblock head %}
 {% block breadcrumbs %}
     {{ block.super }}
-    {% breadcrumb "学校" "events:school_list" %}
 {% endblock breadcrumbs %}
 {% block content %}
     {% if user.is_staff %}
-        <a href="{% url 'events:db_update' %}"
+        <a href="{% url 'schools:db_update' %}"
            class="btn btn-danger mb-3">学校データベース更新</a>
     {% endif %}
     <form action=""
@@ -47,7 +46,7 @@
                     <td>{{ school.type }}</td>
                     <td>{{ school.name }}</td>
                     <td>
-                        <a href="{% url 'events:school_detail' school.code %}">詳細</a>
+                        <a href="{% url 'schools:school_detail' school.code %}">詳細</a>
                     </td>
                 </tr>
             {% endfor %}

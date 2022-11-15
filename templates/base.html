@@ -27,7 +27,7 @@
         </title>
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <header class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container container-fluid">
                 <a class="navbar-brand"
                    href="{% url 'home' %}">FairWind Portal</a>
@@ -61,6 +61,16 @@
                             {% else %}
                                 <a class="nav-link"
                                    href="{% url 'events:' %}">企画</a>
+                            {% endif %}
+                        </li>
+                        <li class="nav-item">
+                            {% if request.path|startswith:'/schools/' %}
+                                <a class="nav-link active"
+                                   aria-current="page"
+                                   href="{% url 'schools:' %}">学校</a>
+                            {% else %}
+                                <a class="nav-link"
+                                   href="{% url 'schools:' %}">学校</a>
                             {% endif %}
                         </li>
                         <li class="nav-item">
@@ -135,8 +145,8 @@
                     </div>
                 </div>
             </div>
-        </nav>
-        <div class="pt-3 mb-3 border-bottom"
+        </header>
+        <nav class="pt-3 mb-3 border-bottom"
              aria-label="breadcrumb">
             <div class="container">
                 {% block breadcrumbs %}
@@ -145,14 +155,14 @@
                 {% endblock breadcrumbs %}
                 {% render_breadcrumbs 'breadcrumbs.html' %}
             </div>
-        </div>
-        <div class="container mb-3">
+        </nav>
+        <main class="container mb-3">
 
             {% include 'components/messages.html' %}
 
             {% block content %}
             {% endblock content %}
-        </div>
+        </main>
         <!--{% include 'toast.html' %}-->
     </body>
 </html>

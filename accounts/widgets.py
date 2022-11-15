@@ -10,8 +10,8 @@ class SuggestWidget(forms.SelectMultiple):
     class Media:
         """Metaクラス"""
 
-        js = ("accounts/js/suggest.js",)
-        css = {"all": ("accounts/css/suggest.css",)}
+        js = ("utils/js/suggest.js",)
+        css = {"all": ("utils/css/suggest.css",)}
 
     def __init__(self, attrs=None):
         super().__init__(attrs)

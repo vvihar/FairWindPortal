@@ -1,28 +1,12 @@
 """Eventsのフォームを管理する"""
-from accounts.models import User
-from accounts.widgets import SuggestWidget
 from django import forms
 from django.core.exceptions import ValidationError
 from django.urls import reverse_lazy
 
+from accounts.models import User
+from accounts.widgets import SuggestWidget
+
 from .models import Event, EventParticipation
-
-
-class MakeSchoolDBForm(forms.Form):
-    """学校データベースの作成フォーム"""
-
-    file_url_east = forms.URLField(
-        label="東日本の学校コード一覧", help_text="学校コード一覧のCSVファイルのURLを入力してください。"
-    )
-    file_url_west = forms.URLField(
-        label="西日本の学校コード一覧", help_text="学校コード一覧のCSVファイルのURLを入力してください。"
-    )
-    encoding = forms.ChoiceField(
-        label="文字コード",
-        choices=(("utf-8", "UTF-8"), ("cp932", "Shift-JIS")),
-        required=True,
-        widget=forms.widgets.Select,
-    )
 
 
 class EventCreateForm(forms.ModelForm):
@@ -51,7 +35,7 @@ class EventCreateForm(forms.ModelForm):
                 attrs={"data-url": reverse_lazy("accounts:api_members_get")}
             ),
             "school": SuggestWidget(
-                attrs={"data-url": reverse_lazy("events:api_schools_get")}
+                attrs={"data-url": reverse_lazy("schools:api_schools_get")}
             ),
         }
 

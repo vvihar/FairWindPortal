@@ -1,0 +1,20 @@
+{% extends "schools/base.html" %}
+
+{% load django_bootstrap_breadcrumbs %}
+
+{% load django_bootstrap5 %}
+{% load static %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb object.name "schools:school_detail" object.pk %}
+    {% breadcrumb "編集" "schools:school_detail_update" %}
+{% endblock breadcrumbs %}
+{% block content %}
+    <h1 class="mb-3 fs-4">{{ object.school.name }}</h1>
+    <form method="post">
+        {% csrf_token %}
+        {% bootstrap_form form layout="floating" %}
+        {% bootstrap_button "更新" button_type="submit" %}
+    </form>
+{% endblock content %}
