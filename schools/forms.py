@@ -1,7 +1,7 @@
 """Schoolsのフォームを管理する"""
 from django import forms
 
-from .models import SchoolDetail
+from .models import School
 
 
 class MakeSchoolDBForm(forms.Form):
@@ -27,5 +27,5 @@ class SchoolDetailUpdateForm(forms.ModelForm):
     class Meta:
         """Metaクラス"""
 
-        model = SchoolDetail
-        exclude = ("school",)
+        model = School
+        fields = ("memo",)

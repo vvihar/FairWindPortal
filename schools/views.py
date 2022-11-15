@@ -11,7 +11,7 @@ from django.urls import reverse_lazy
 from django.views.generic import DetailView, FormView, ListView, UpdateView
 
 from .forms import MakeSchoolDBForm, SchoolDetailUpdateForm
-from .models import School, SchoolDetail
+from .models import School
 
 # Create your views here.
 
@@ -50,23 +50,12 @@ class SchoolDetailView(DetailView):
 class SchoolDetailUpdate(UpdateView):
     """学校詳細の編集画面。学校に関するデータを蓄積する"""
 
-    model = SchoolDetail
+    model = School
     template_name = "schools/detail_update.html"
     form_class = SchoolDetailUpdateForm
 
     def get_success_url(self):
         return reverse_lazy("schools:school_detail", kwargs={"pk": self.kwargs["pk"]})
-
-    def get_object(self, queryset=None):
-        try:
-            schooldetail = SchoolDetail.objects.get(pk=self.kwargs["pk"])
-        except SchoolDetail.DoesNotExist:
-            schooldetail = SchoolDetail.objects.create(
-                pk=self.kwargs["pk"],
-                school=School.objects.get(pk=self.kwargs["pk"]),
-                memo="",
-            )
-        return schooldetail
 
 
 class MakeSchoolDB(FormView):

@@ -82,29 +82,7 @@ class School(models.Model):
 
     name = models.CharField(max_length=50, verbose_name="学校名")
 
-    class Meta:
-        """メタ情報"""
-
-        verbose_name = "学校"
-        verbose_name_plural = "学校"
-
-    def __str__(self):
-        return self.name
-
-
-class SchoolDetail(models.Model):
-    """学校についてのメモやFWが活動を通して得た情報を蓄積する"""
-
-    school = models.OneToOneField(
-        School,
-        on_delete=models.DO_NOTHING,
-        verbose_name="学校",
-        related_name="detail",
-        primary_key=True,
-        db_constraint=False,  # 学校DBの更新時に強引にエラーを回避する
-    )
-
-    memo = models.TextField(verbose_name="備考", blank=True, null=True)
+    memo = models.TextField(verbose_name="メモ", default="", blank=True, null=False)
     # TODO: Markdown を導入する
     # TODO: 新規作成＆編集画面を実装する
 
@@ -113,8 +91,8 @@ class SchoolDetail(models.Model):
     class Meta:
         """メタ情報"""
 
-        verbose_name = "学校詳細"
-        verbose_name_plural = "学校詳細"
+        verbose_name = "学校"
+        verbose_name_plural = "学校"
 
     def __str__(self):
-        return f"{self.school.prefecture} {self.school.name}"
+        return self.name

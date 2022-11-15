@@ -7,7 +7,7 @@
 
 {% block breadcrumbs %}
     {{ block.super }}
-    {% breadcrumb object.school.name "schools:school_detail" object.school.pk %}
+    {% breadcrumb object.name "schools:school_detail" object.pk %}
     {% breadcrumb "編集" "schools:school_detail_update" %}
 {% endblock breadcrumbs %}
 {% block content %}
