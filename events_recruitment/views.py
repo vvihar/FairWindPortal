@@ -24,7 +24,7 @@ class EventRecruitmentUpdate(UpdateView):
     success_url = reverse_lazy("recruitment:")
 
     def get_object(self):
-        event = Event.objects.get(pk=self.kwargs["pk"])
+        event = Event.objects.get(pk=self.kwargs["id"])
         try:
             return EventRecruitment.objects.get(event=event, member=self.request.user)
         except EventRecruitment.DoesNotExist:

@@ -7,5 +7,5 @@ app_name = "recruitment"
 
 urlpatterns = [
     path("", Home.as_view(), name=""),
-    path("<int:pk>/", EventRecruitmentUpdate.as_view(), name="recruitment_update"),
+    path("<int:id>/", EventRecruitmentUpdate.as_view(), name="recruitment_update"),
 ]
