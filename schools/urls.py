@@ -12,7 +12,7 @@ from .views import (
 app_name = "schools"
 
 urlpatterns = [
-    path("", SchoolList.as_view(), name="school_list"),
+    path("", SchoolList.as_view(), name=""),
     path("db_update/", MakeSchoolDB.as_view(), name="db_update"),
     path("<str:pk>/", SchoolDetailView.as_view(), name="school_detail"),
     path(

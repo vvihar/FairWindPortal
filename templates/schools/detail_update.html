@@ -1,4 +1,4 @@
-{% extends "events/base.html" %}
+{% extends "schools/base.html" %}
 
 {% load django_bootstrap_breadcrumbs %}
 
@@ -7,7 +7,6 @@
 
 {% block breadcrumbs %}
     {{ block.super }}
-    {% breadcrumb "学校" "schools:school_list" %}
     {% breadcrumb object.school.name "schools:school_detail" object.school.pk %}
     {% breadcrumb "編集" "schools:school_detail_update" %}
 {% endblock breadcrumbs %}
