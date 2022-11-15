@@ -162,6 +162,9 @@ class MakeSchoolDB(FormView):
     def form_valid(self, form):
         """フォームが有効な場合"""
 
+        existing_schools = School.objects.all()
+        existing_schoolcodes = [school.code for school in existing_schools]
+
         url_east = form.cleaned_data["file_url_east"]
         url_west = form.cleaned_data["file_url_west"]
         urls = [url_east, url_west]
@@ -279,19 +282,33 @@ class MakeSchoolDB(FormView):
                         school_data["都道府県"] = prefecture[1]
                         break
 
-                school = School(
-                    code=school_data["学校コード"],
-                    type=school_data["学校種"],
-                    prefecture=school_data["都道府県"],
-                    establisher=school_data["設置区分"],
-                    name=school_data["学校名"],
-                    number=number,
-                )
-                schools.append(school)
+                if school_data["学校コード"] in existing_schoolcodes:
+                    school = existing_schools[
+                        existing_schoolcodes.index(school_data["学校コード"])
+                    ]
+                    school.type = school_data["学校種"]
+                    school.prefecture = school_data["都道府県"]
+                    school.establisher = school_data["設置区分"]
+                    school.name = school_data["学校名"]
+                    school.number = number
+
+                else:
+                    school = School(
+                        code=school_data["学校コード"],
+                        type=school_data["学校種"],
+                        prefecture=school_data["都道府県"],
+                        establisher=school_data["設置区分"],
+                        name=school_data["学校名"],
+                        number=number,
+                    )
+                    schools.append(school)
+
                 number += 1
 
-        School.objects.all().delete()
         School.objects.bulk_create(schools)
+        School.objects.bulk_update(
+            existing_schools, ["type", "prefecture", "establisher", "name", "number"]
+        )
         messages.success(self.request, "学校データを更新しました")
         return super().form_valid(form)
 
