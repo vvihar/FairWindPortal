@@ -64,6 +64,16 @@
                             {% endif %}
                         </li>
                         <li class="nav-item">
+                            {% if request.path|startswith:'/schools/' %}
+                                <a class="nav-link active"
+                                   aria-current="page"
+                                   href="{% url 'schools:' %}">学校</a>
+                            {% else %}
+                                <a class="nav-link"
+                                   href="{% url 'schools:' %}">学校</a>
+                            {% endif %}
+                        </li>
+                        <li class="nav-item">
                             {% if request.path|startswith:'/accounts/' %}
                                 <a class="nav-link active"
                                    aria-current="page"
