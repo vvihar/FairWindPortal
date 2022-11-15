@@ -31,8 +31,9 @@
         </svg>
     編集</a>
     {% if object.detail %}
-        <div class="card">
+        <div class="card mb-2">
             <div class="card-body">{{ object.detail.memo }}</div>
         </div>
+        <p class="text-end text-muted mb-0">最終更新：{{ object.detail.last_updated|date:"Y/n/j H:i" }}</p>
     {% endif %}
 {% endblock content %}

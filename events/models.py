@@ -1,5 +1,6 @@
-from accounts.models import Group, User
 from django.db import models
+
+from accounts.models import Group, User
 
 # Create your models here.
 
@@ -108,6 +109,8 @@ class SchoolDetail(models.Model):
     memo = models.TextField(verbose_name="備考", blank=True, null=True)
     # TODO: Markdown を導入する
     # TODO: 新規作成＆編集画面を実装する
+
+    last_updated = models.DateTimeField(auto_now=True, verbose_name="最終更新日時")
 
     class Meta:
         """メタ情報"""
