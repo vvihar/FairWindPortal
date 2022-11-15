@@ -6,8 +6,8 @@
 
 {% block breadcrumbs %}
     {{ block.super }}
-    {% breadcrumb "学校" "events:school_list" %}
-    {% breadcrumb object.name "events:school_detail" object.pk %}
+    {% breadcrumb "学校" "schools:school_list" %}
+    {% breadcrumb object.name "schools:school_detail" object.pk %}
 {% endblock breadcrumbs %}
 {% block content %}
     <h1 class="mb-3 fs-4">{{ object.name }}</h1>
@@ -16,7 +16,7 @@
         <span class="badge rounded-pill bg-light border border-dark text-dark px-3 py-2 fw-normal">{{ object.establisher }}</span>
         <span class="badge rounded-pill bg-light border border-dark text-dark px-3 py-2 fw-normal">{{ object.type }}</span>
     </div>
-    <a href="{% url 'events:school_detail_update' object.pk %}"
+    <a href="{% url 'schools:school_detail_update' object.pk %}"
        class="btn btn-dark btn-sm mb-3"
        tabindex="-1"
        role="button"

@@ -7,9 +7,9 @@
 
 {% block breadcrumbs %}
     {{ block.super }}
-    {% breadcrumb "学校" "events:school_list" %}
-    {% breadcrumb object.school.name "events:school_detail" object.school.pk %}
-    {% breadcrumb "編集" "events:school_detail_update" %}
+    {% breadcrumb "学校" "schools:school_list" %}
+    {% breadcrumb object.school.name "schools:school_detail" object.school.pk %}
+    {% breadcrumb "編集" "schools:school_detail_update" %}
 {% endblock breadcrumbs %}
 {% block content %}
     <h1 class="mb-3 fs-4">{{ object.school.name }}</h1>

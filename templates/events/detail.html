@@ -105,7 +105,7 @@
                             <ul class="list-inline mb-0">
                                 {% for school in event.school.all %}
                                     <li class="list-inline-item">
-                                        <a href="{% url 'events:school_detail' school.pk %}">{{ school }}</a>
+                                        <a href="{% url 'schools:school_detail' school.pk %}">{{ school }}</a>
                                     </li>
                                 {% endfor %}
                             </ul>

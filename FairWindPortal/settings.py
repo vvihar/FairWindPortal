@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "utils.apps.UtilsConfig",
     "accounts.apps.AccountsConfig",
     "events.apps.EventsConfig",
+    "schools.apps.SchoolsConfig",
 ]
 
 MIDDLEWARE = [
