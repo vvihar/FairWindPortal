@@ -21,9 +21,13 @@
 {% endblock breadcrumbs %}
 {% block content %}
     <h5>{{ event.name }}</h5>
-    <p>
-        ◎は○のタブで<b>太字</b>で表示されます。表の見出しをクリックすることで、ソートできます。
-    </p>
+    <ul>
+        <li>
+            ◎は○のタブで<b>太字</b>で表示されます。
+        </li>
+        <li>班内メンバーはグレーの背景で表示されます。</li>
+        <li>表の見出しをクリックすることで、ソートできます。</li>
+    </ul>
     <ul class="nav nav-tabs"
         id="myTab"
         role="tablist">
@@ -65,7 +69,7 @@
                         {% if forloop.first %}
                             {% for application in object_list %}
                                 {% if application.preference == "◎" %}
-                                    <tr>
+                                    <tr {% if application.member.group == event.group_in_charge %}class="table-active"{% endif %}>
                                         <td class="fw-bold">{{ application.member }}</td>
                                         <td>{{ application.comment|default_if_none:"" }}</td>
                                     </tr>
@@ -74,7 +78,7 @@
                         {% endif %}
                         {% for application in object_list %}
                             {% if application.preference == option.1 %}
-                                <tr>
+                                <tr {% if application.member.group == event.group_in_charge %}class="table-active"{% endif %}>
                                     <td>{{ application.member }}</td>
                                     <td>{{ application.comment|default_if_none:"" }}</td>
                                 </tr>
