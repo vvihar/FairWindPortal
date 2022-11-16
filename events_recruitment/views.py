@@ -12,11 +12,13 @@ from .models import EventRecruitment
 
 
 class Home(TemplateView):
+    """出欠掲示板の本体のページ"""
+
     template_name = "recruitments/index.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        events = Event.objects.filter(status="参加者募集中")
+        events = Event.objects.filter(status="参加者募集中").order_by("start_datetime")
         recruitments = []
         for event in events:
             if self.request.user.pk in event.recruitment.values_list(
@@ -27,13 +29,14 @@ class Home(TemplateView):
                 )
             else:
                 recruitments.append(None)
-        context["events"] = zip(events, recruitments)
+        has_answered = [recruitment is not None for recruitment in recruitments]
+        context["events"] = zip(events, recruitments, has_answered)
         context["options"] = EventRecruitmentForm.Meta.model.PREFERENCE_CHOICES
         return context
 
 
 class EventRecruitmentUpdate(UpdateView):
-    """出欠掲示板のフォーム。GETリクエストは受け付けない"""
+    """出欠掲示板の更新を受け付ける。GETリクエストは受け付けない"""
 
     model = EventRecruitment
     form_class = EventRecruitmentForm

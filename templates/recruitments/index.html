@@ -3,48 +3,127 @@
 {% load static %}
 
 {% load django_bootstrap5 %}
+{% load django_bootstrap_breadcrumbs %}
 
 {% block head %}
 {% endblock head %}
+{% block breadcrumbs %}
+    {{ block.super }}
+{% endblock breadcrumbs %}
 {% block content %}
-    {% for event, recruitment in events %}
+    {% for event, recruitment, has_answered in events %}
         <div class="card mb-3">
             <div class="card-body">
-                <h5 class="card-title">{{ event.name }}</h5>
-                <form method="post"
-                      action="{% url "recruitment:recruitment_update" event.pk %}">
-                    {% csrf_token %}
-                    <div class="mb-3">
-                        <label class="form-label"
-                               for="id_preference">出欠</label>
-                        <select name="preference"
-                                class="form-select"
-                                required=""
-                                id="id_preference">
-                            <option value="">
-                                ---------
-                            </option>
-                            {% for option in options %}
-                                <option value="{{ option.0 }}"
-                                        {% ifequal option.0 recruitment.preference %}selected=""{% endifequal %}>
-                                    {{ option.1 }}
-                                </option>
-                            {% endfor %}
-                        </select>
+                <h5 class="card-title">
+                    {{ event.name }}
+                    {% if not has_answered %}<span class="badge rounded-pill bg-danger ms-1">未回答</span>{% endif %}
+                </h5>
+                <div class="text-muted mb-3">
+                    <ul>
+                        <li>
+                            {% if event.start_datetime|date:"Ymd" == event.end_datetime|date:"Ymd" %}
+                                {{ event.start_datetime|date:"Y年m月d日（D）" }}
+                                {{ event.start_datetime|time:"H:i" }}〜{{ event.end_datetime|time:"H:i" }}
+                            {% else %}
+                                <span>{{ event.start_datetime|date:"Y/m/d（D）H:i" }}</span>
+                                〜
+                                <span>{{ event.end_datetime|date:"Y/m/d（D）H:i" }}</span>
+                            {% endif %}
+                        </li>
+                        {% if event.venue %}<li>{{ event.venue }}</li>{% endif %}
+                        <!--TODO: 作成メンバーからのメッセージを表示-->
+                    </ul>
+                </div>
+                <!--<div class="col d-flex align-items-start">
+                    <div class="bg-primary text-dark flex-shrink-0 me-3">
+                        {% if recruitment.preference == "eager" %}
+                            ◎
+                        {% elif recruitment.preference == "yes" %}
+                            ○
+                        {% elif recruitment.preference == "conditionally" %}
+                            △
+                        {% elif recruitment.preference == "no" %}
+                            ×
+                        {% endif %}
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label"
-                               for="id_comment">コメント</label>
-                        <input type="text"
-                               name="comment"
-                               maxlength="200"
-                               class="form-control"
-                               placeholder="コメント"
-                               id="id_comment"
-                               value="{{ recruitment.comment|default_if_none:"" }}"/>
+                    <div>
+                        <p>{{ recruitment.comment }}</p>
                     </div>
-                    {% bootstrap_button "更新" button_type="submit" %}
-                </form>
+                </div>-->
+                <div>
+                    <a href="{% url 'events:event_detail' event.pk %}"
+                       class="btn btn-dark btn-sm"
+                       tabindex="-1"
+                       role="button"
+                       aria-disabled="true">詳細</a>
+                    <!-- Button trigger modal -->
+                    <button type="button"
+                            class="btn btn-primary btn-sm"
+                            data-bs-toggle="modal"
+                            data-bs-target="#recruitment-form-{{ event.pk }}">
+                        出欠を更新
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade"
+             id="recruitment-form-{{ event.pk }}"
+             tabindex="-1"
+             aria-labeledby="recruitment-label-{{ event.pk }}"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable">
+                <div class="modal-content">
+                    <form method="post"
+                          action="{% url "recruitment:recruitment_update" event.pk %}">
+                        <div class="modal-header">
+                            <h5 class="modal-title"
+                                id="recruitment-label-{{ event.pk }}">{{ event.name }}</h5>
+                            <button type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label class="form-label"
+                                       for="id_preference">出欠</label>
+                                <select name="preference"
+                                        class="form-select"
+                                        required=""
+                                        id="id_preference">
+                                    <option value="">
+                                        ---------
+                                    </option>
+                                    {% for option in options %}
+                                        <option value="{{ option.0 }}"
+                                                {% ifequal option.0 recruitment.preference %}selected=""{% endifequal %}>
+                                            {{ option.1 }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label"
+                                       for="id_comment">コメント</label>
+                                <input type="text"
+                                       name="comment"
+                                       maxlength="200"
+                                       class="form-control"
+                                       placeholder="コメント"
+                                       id="id_comment"
+                                       value="{{ recruitment.comment|default_if_none:"" }}"/>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button"
+                                    class="btn btn-secondary"
+                                    data-bs-dismiss="modal">閉じる</button>
+                            {% bootstrap_button "更新" button_type="submit" %}
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     {% endfor %}
