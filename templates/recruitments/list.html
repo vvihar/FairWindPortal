@@ -17,7 +17,7 @@
 {% endblock head %}
 {% block breadcrumbs %}
     {{ block.super }}
-    {% breadcrumb event.name "recruitment:recruitment_list" event.pk %}
+    {% breadcrumb "出欠一覧" "recruitment:recruitment_list" %}
 {% endblock breadcrumbs %}
 {% block content %}
     <h5>{{ event.name }}</h5>
