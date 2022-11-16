@@ -62,6 +62,8 @@
                     <thead>
                         <tr>
                             <th scope="col">氏名</th>
+                            <th scope="col">期</th>
+                            <th scope="col">所属</th>
                             <th scope="col">コメント</th>
                         </tr>
                     </thead>
@@ -69,19 +71,17 @@
                         {% if forloop.first %}
                             {% for application in object_list %}
                                 {% if application.preference == "◎" %}
-                                    <tr {% if application.member.group == event.group_in_charge %}class="table-active"{% endif %}>
-                                        <td class="fw-bold">{{ application.member }}</td>
-                                        <td>{{ application.comment|default_if_none:"" }}</td>
-                                    </tr>
+
+                                    {% include "recruitments/list_component.html" %}
+
                                 {% endif %}
                             {% endfor %}
                         {% endif %}
                         {% for application in object_list %}
                             {% if application.preference == option.1 %}
-                                <tr {% if application.member.group == event.group_in_charge %}class="table-active"{% endif %}>
-                                    <td>{{ application.member }}</td>
-                                    <td>{{ application.comment|default_if_none:"" }}</td>
-                                </tr>
+
+                                {% include "recruitments/list_component.html" %}
+
                             {% endif %}
                         {% endfor %}
                     </tbody>
