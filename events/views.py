@@ -25,27 +25,6 @@ from .models import Event, EventParticipation
 # Create your views here.
 
 
-class OnlyInvitedMixin(UserPassesTestMixin):
-    """打診された人と管理者のみがアクセスできるMixin"""
-
-    raise_exception = True
-
-    def test_func(self):
-        user = self.request.user
-        participation = get_object_or_404(EventParticipation, pk=self.kwargs["pk"])
-        if user == participation.participant:
-            return True
-        # FIXME: 企画の管理者用の編集ページを作る
-        elif user.is_staff:
-            messages.error(self.request, "打診対象者ではなく、サイトの管理者としてこのページにアクセスしています")
-            return True
-        else:
-            return False
-
-    def handle_no_permission(self):
-        return redirect(f"{reverse(settings.LOGIN_URL)}?next={self.request.path}")
-
-
 class OnlyEventAdminMixin(UserPassesTestMixin):
     """
     企画の管理者と管理者のみがアクセスできるMixin
