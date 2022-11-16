@@ -1,0 +1,11 @@
+<tr {% if application.member.group == event.group_in_charge %}
+        class="table-active"
+    {% endif %}>
+    <td class="fw-bold">{{ application.member }}</td>
+    <td>{{ application.member.grade }}期</td>
+    <td>
+        {{ application.member.course }}
+        {% if application.member.faculty %}→ {{ application.member.faculty }}{{ application.member.department }}{% endif %}
+    </td>
+    <td>{{ application.comment|default_if_none:"" }}</td>
+</tr>

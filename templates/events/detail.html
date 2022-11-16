@@ -83,6 +83,13 @@
     {% endif %}
     <a href="{% url 'events:event_participants' event.pk %}"
        class="btn btn-dark btn-sm">参加者一覧</a>
+    {% if object.status|stringformat:"s" == "参加者募集中" %}
+        <a href="{% url 'recruitment:' %}"
+           class="btn btn-primary  btn-sm"
+           tabindex="-1"
+           role="button"
+           aria-disabled="true">出欠掲示板</a>
+    {% endif %}
     {% if is_invited %}
         <a href="{% url 'events:event_reply_invitation' event.pk %}"
            class="btn btn-warning btn-sm">打診回答</a>
