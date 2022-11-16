@@ -14,20 +14,9 @@
         <a href="{% url 'schools:db_update' %}"
            class="btn btn-danger mb-3">学校データベース更新</a>
     {% endif %}
-    <form action=""
-          method="get">
-        <div class="input-group mb-3">
-            <input type="search"
-                   class="form-control"
-                   placeholder="キーワードを入力"
-                   aria-label="検索ワード"
-                   value="{{ request.GET.search }}"
-                   name="search"/>
-            <button class="btn btn-primary"
-                    type="submit"
-                    id="btn-search">検索</button>
-        </div>
-    </form>
+
+    {% include 'components/searchform.html' %}
+
     <table class="table">
         <thead>
             <tr>

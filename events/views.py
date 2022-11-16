@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import UserPassesTestMixin
+from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import (
@@ -94,9 +95,38 @@ class EventListAll(ListView):
 
     model = Event
     template_name = "events/event_list.html"
+    paginate_by = 10
 
     def get_queryset(self):
-        return Event.objects.all().order_by("start_datetime")
+        q_word = self.request.GET.get("search")
+        if q_word:
+            q_word = q_word.replace("高校", "高等学校")
+            object_list = Event.objects.filter(
+                Q(name__icontains=q_word)
+                | Q(school__name__icontains=q_word)
+                | Q(venue__icontains=q_word)
+                | Q(type__icontains=q_word)
+            ).order_by("start_datetime")
+        else:
+            object_list = Event.objects.all().order_by("start_datetime")
+        return object_list
+
+    """
+    def get_queryset(self):
+        q_word = self.request.GET.get("search")
+        if q_word:
+            q_word = q_word.replace("高校", "高等学校")
+            object_list = School.objects.filter(
+                Q(name__icontains=q_word)
+                | Q(prefecture__icontains=q_word)
+                | Q(type__icontains=q_word)
+                | Q(establisher__icontains=q_word)
+                | Q(code__icontains=q_word)
+            ).order_by("number")
+        else:
+            object_list = School.objects.all().order_by("number")
+        return object_list
+        """
 
 
 class EventCreate(CreateView):

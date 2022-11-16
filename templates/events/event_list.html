@@ -13,9 +13,15 @@
     {% breadcrumb "すべての企画" "events:event_list_all" %}
 {% endblock breadcrumbs %}
 {% block content %}
+
+    {% include 'components/searchform.html' %}
+
     {% for event in object_list %}
 
         {% include 'events/event_list_component.html' %}
 
     {% endfor %}
+
+    {% include 'components/pagination.html' %}
+
 {% endblock content %}
