@@ -55,7 +55,12 @@
                        class="btn btn-dark btn-sm"
                        tabindex="-1"
                        role="button"
-                       aria-disabled="true">詳細</a>
+                       aria-disabled="true">企画詳細</a>
+                    <a href="{% url 'recruitment:recruitment_list' event.pk %}"
+                       class="btn btn-dark btn-sm"
+                       tabindex="-1"
+                       role="button"
+                       aria-disabled="true">出欠一覧</a>
                     <!-- Button trigger modal -->
                     <button type="button"
                             class="btn btn-primary btn-sm"

@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView, UpdateView
+from django.views.generic import ListView, TemplateView, UpdateView
 
 from events.models import Event
 
@@ -63,3 +63,22 @@ class EventRecruitmentUpdate(UpdateView):
 
     def get(self, request, *args, **kwargs):
         return redirect("recruitment:")
+
+
+class EventRecruitmentList(ListView):
+    model = EventRecruitment
+    template_name = "recruitments/list.html"
+
+    def get_queryset(self):
+        event = Event.objects.get(pk=self.kwargs["id"])
+        return EventRecruitment.objects.filter(event=event)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["event"] = Event.objects.get(pk=self.kwargs["id"])
+        context["options"] = (
+            ("yes", "○"),
+            ("conditionally", "△"),
+            ("no", "×"),
+        )
+        return context

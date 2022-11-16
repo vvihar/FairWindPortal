@@ -16,10 +16,10 @@ class EventRecruitment(models.Model):
     member = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="メンバー")
 
     PREFERENCE_CHOICES = (
-        ("eager", "◎"),
-        ("yes", "○"),
-        ("conditionally", "△"),
-        ("no", "×"),
+        ("◎", "◎"),
+        ("○", "○"),
+        ("△", "△"),
+        ("×", "×"),
     )
     preference = models.CharField(
         choices=PREFERENCE_CHOICES, max_length=15, verbose_name="出欠"

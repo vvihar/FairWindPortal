@@ -1,0 +1,76 @@
+{% extends "recruitments/base.html" %}
+
+{% load static %}
+
+{% load django_bootstrap5 %}
+{% load django_bootstrap_breadcrumbs %}
+
+{% block head %}
+{% endblock head %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb event.name "recruitment:recruitment_list" event.pk %}
+{% endblock breadcrumbs %}
+{% block content %}
+    <ul class="nav nav-tabs"
+        id="myTab"
+        role="tablist">
+        {% for option in options %}
+            <li class="nav-item"
+                role="presentation">
+                <button class="nav-link
+                               {% if forloop.first %}
+                                   active
+                               {% endif %}"
+                        id="{{ option.0 }}-tab"
+                        data-bs-toggle="tab"
+                        data-bs-target="#{{ option.0 }}"
+                        type="button"
+                        role="tab"
+                        aria-controls="{{ option.0 }}">
+                    {{ option.1 }}
+                </button>
+            </li>
+        {% endfor %}
+    </ul>
+    <div class="tab-content">
+        {% for option in options %}
+            <div class="tab-pane fade show
+                        {% if forloop.first %}
+                            active
+                        {% endif %}"
+                 id="{{ option.0 }}"
+                 role="tabpanel"
+                 aria-labelledby="{{ option.0 }}-tab">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">氏名</th>
+                            <th scope="col">コメント</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if forloop.first %}
+                            {% for application in object_list %}
+                                {% if application.preference == "◎" %}
+                                    <tr>
+                                        <td class="fw-bold">{{ application.member }}</td>
+                                        <td>{{ application.comment|default_if_none:"" }}</td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                        {% for application in object_list %}
+                            {% if application.preference == option.1 %}
+                                <tr>
+                                    <td>{{ application.member }}</td>
+                                    <td>{{ application.comment|default_if_none:"" }}</td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock content %}
