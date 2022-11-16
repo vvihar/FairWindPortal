@@ -272,7 +272,7 @@ class EventMakeInvitation(OnlyEventAdminMixin, FormView):
         return super().form_valid(form)
 
 
-class EventReplyInvitation(OnlyInvitedMixin, UpdateView):
+class EventReplyInvitation(UpdateView):
     """企画への打診を回答する"""
 
     template_name = "events/reply_invitation.html"
@@ -289,17 +289,20 @@ class EventReplyInvitation(OnlyInvitedMixin, UpdateView):
         messages.success(self.request, f"「{status}」で登録しました")
         return super().form_valid(form)
 
+    def get_object(self):
+        try:
+            return EventParticipation.objects.get(
+                participant=self.request.user, event=self.kwargs["id"]
+            )
+        except EventParticipation.DoesNotExist:
+            messages.error(self.request, "この企画には打診されていません")
+            return None
 
-def redirect_my_invitation(request, pk):
-    """自分に打診された企画の打診回答ページにリダイレクトする"""
-    try:
-        participation = EventParticipation.objects.get(
-            participant=request.user, event=pk
-        )
-        return redirect("events:event_reply_invitation", pk=participation.pk, id=pk)
-    except EventParticipation.DoesNotExist:
-        messages.error(request, "この企画には打診されていません")
-        return redirect("events:event_detail", pk=pk)
+    def dispatch(self, request, *args, **kwargs):
+        """打診されていない場合は企画詳細ページにリダイレクト"""
+        if not self.get_object():
+            return redirect("events:event_detail", pk=self.kwargs["id"])
+        return super().dispatch(request, *args, **kwargs)
 
 
 class EventCancelInvitation(OnlyEventAdminMixin, DeleteView):

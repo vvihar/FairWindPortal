@@ -68,7 +68,7 @@
             {% endif %}
             {% for participation in event.participation.all %}
                 {% if participation.participant|stringformat:"s" == user|stringformat:"s" and participation.status|stringformat:"s" == "回答待ち" %}
-                    <a href="{% url 'events:event_reply_my_invitation' event.pk %}"
+                    <a href="{% url 'events:event_reply_invitation' event.pk %}"
                        class="btn btn-warning  btn-sm"
                        tabindex="-1"
                        role="button"
