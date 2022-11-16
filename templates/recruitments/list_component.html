@@ -5,7 +5,9 @@
     <td>{{ application.member.grade }}期</td>
     <td>
         {{ application.member.course }}
-        {% if application.member.faculty %}→ {{ application.member.faculty }}{{ application.member.department }}{% endif %}
+        {% if application.member.faculty %}
+            → {{ application.member.faculty }}{{ application.member.department|default_if_none:"" }}
+        {% endif %}
     </td>
     <td>{{ application.comment|default_if_none:"" }}</td>
 </tr>

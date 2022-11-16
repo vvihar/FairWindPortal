@@ -53,7 +53,7 @@
                                     <span class="text-muted">／</span>
                                     {{ participation.participant.course }}
                                     {% if participation.participant.faculty %}
-                                        → {{ participation.participant.faculty }}{{ participation.participant.department }}
+                                        → {{ participation.participant.faculty }}{{ participation.participant.department|default_if_none:"" }}
                                     {% endif %}
                                 </td>
                                 <td></td>
@@ -99,7 +99,7 @@
                                         <span class="text-muted">／</span>
                                         {{ participation.participant.course }}
                                         {% if participation.participant.faculty %}
-                                            → {{ participation.participant.faculty }}{{ participation.participant.department }}
+                                            → {{ participation.participant.faculty }}{{ participation.participant.department|default_if_none:"" }}
                                         {% endif %}
                                     </td>
                                     <td class="align-middle text-end">
@@ -148,7 +148,7 @@
                                         <span class="text-muted">／</span>
                                         {{ participation.participant.course }}
                                         {% if participation.participant.faculty %}
-                                            ��� {{ participation.participant.faculty }}{{ participation.participant.department }}
+                                            ��� {{ participation.participant.faculty }}{{ participation.participant.department|default_if_none:"" }}
                                         {% endif %}
                                     </td>
                                     <td class="align-middle"></td>
