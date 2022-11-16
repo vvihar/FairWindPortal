@@ -1,0 +1,19 @@
+table th div {
+    margin: 0 5px;
+    display: inline-block;
+}
+
+table th::after {
+    content: '↑';
+    display: inline-block;
+    transition: .5s;
+}
+
+th.tablesorter-headerAsc::after,
+th.tablesorter-headerDesc::after {
+    color: var(--bs-yellow);
+}
+
+table th.tablesorter-headerDesc::after {
+    transform: rotateX(180deg);
+}

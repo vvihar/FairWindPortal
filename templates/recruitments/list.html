@@ -6,12 +6,24 @@
 {% load django_bootstrap_breadcrumbs %}
 
 {% block head %}
+    <script src="https://cdn.jsdelivr.net/combine/npm/jquery@3.6.1,npm/tablesorter@2.31.3/dist/js/jquery.tablesorter.min.js"></script>
+    <script>
+        $(function() {
+            $(".sort").tablesorter();
+        });
+    </script>
+    <link rel="stylesheet"
+          href="{% static 'utils/css/tablesorter.css' %}">
 {% endblock head %}
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb event.name "recruitment:recruitment_list" event.pk %}
 {% endblock breadcrumbs %}
 {% block content %}
+    <h5>{{ event.name }}</h5>
+    <p>
+        ◎は○のタブで<b>太字</b>で表示されます。表の見出しをクリックすることで、ソートできます。
+    </p>
     <ul class="nav nav-tabs"
         id="myTab"
         role="tablist">
@@ -42,7 +54,7 @@
                  id="{{ option.0 }}"
                  role="tabpanel"
                  aria-labelledby="{{ option.0 }}-tab">
-                <table class="table">
+                <table class="table sort">
                     <thead>
                         <tr>
                             <th scope="col">氏名</th>
