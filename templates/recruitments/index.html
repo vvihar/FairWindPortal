@@ -9,6 +9,7 @@
 {% endblock head %}
 {% block breadcrumbs %}
     {{ block.super }}
+    {% breadcrumb "出欠掲示板" "events:recruitment" %}
 {% endblock breadcrumbs %}
 {% block content %}
     {% for event, recruitment, has_answered in events %}
@@ -56,7 +57,7 @@
                        tabindex="-1"
                        role="button"
                        aria-disabled="true">企画詳細</a>
-                    <a href="{% url 'recruitment:recruitment_list' event.pk %}"
+                    <a href="{% url 'events:recruitment_list' event.pk %}"
                        class="btn btn-dark btn-sm"
                        tabindex="-1"
                        role="button"
@@ -80,7 +81,7 @@
             <div class="modal-dialog modal-dialog-scrollable">
                 <div class="modal-content">
                     <form method="post"
-                          action="{% url "recruitment:recruitment_update" event.pk %}">
+                          action="{% url "events:recruitment_update" event.pk %}">
                         <div class="modal-header">
                             <h5 class="modal-title"
                                 id="recruitment-label-{{ event.pk }}">{{ event.name }}</h5>

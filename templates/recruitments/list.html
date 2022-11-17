@@ -13,14 +13,15 @@
         });
     </script>
     <link rel="stylesheet"
-          href="{% static 'utils/css/tablesorter.css' %}">
+          href="{% static 'utils/css/tablesorter.css' %}"/>
 {% endblock head %}
 {% block breadcrumbs %}
     {{ block.super }}
-    {% breadcrumb "出欠一覧" "recruitment:recruitment_list" %}
+    {% breadcrumb event.name "events:event_detail" event.pk %}
+    {% breadcrumb "出欠一覧" "events:recruitment_list" %}
 {% endblock breadcrumbs %}
 {% block content %}
-    <h5>{{ event.name }}</h5>
+    <h4>{{ event.name }}</h4>
     <ul>
         <li>
             ◎は○のタブで<b>太字</b>で表示されます。
@@ -49,44 +50,73 @@
             </li>
         {% endfor %}
     </ul>
-    <div class="tab-content">
-        {% for option in options %}
-            <div class="tab-pane fade show
-                        {% if forloop.first %}
-                            active
-                        {% endif %}"
-                 id="{{ option.0 }}"
-                 role="tabpanel"
-                 aria-labelledby="{{ option.0 }}-tab">
-                <table class="table sort">
-                    <thead>
-                        <tr>
-                            <th scope="col">氏名</th>
-                            <th scope="col">期</th>
-                            <th scope="col">所属</th>
-                            <th scope="col">コメント</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% if forloop.first %}
+    <form method="get"
+          id="form">
+        {% csrf_token %}
+        <div class="tab-content">
+            {% for option in options %}
+                <div class="tab-pane fade show
+                            {% if forloop.first %}
+                                active
+                            {% endif %}"
+                     id="{{ option.0 }}"
+                     role="tabpanel"
+                     aria-labelledby="{{ option.0 }}-tab">
+                    <table class="table sort">
+                        <thead>
+                            <tr>
+                                <th scope="col">氏名</th>
+                                <th scope="col">期</th>
+                                <th scope="col">所属</th>
+                                <th scope="col">コメント</th>
+                                {% if is_admin %}<th class="text-center">打診</th>{% endif %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if forloop.first %}
+                                {% for application in object_list %}
+                                    {% if application.preference == "◎" %}
+
+                                        {% include "recruitments/list_component.html" %}
+
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
                             {% for application in object_list %}
-                                {% if application.preference == "◎" %}
+                                {% if application.preference == option.1 %}
 
                                     {% include "recruitments/list_component.html" %}
 
                                 {% endif %}
                             {% endfor %}
-                        {% endif %}
-                        {% for application in object_list %}
-                            {% if application.preference == option.1 %}
-
-                                {% include "recruitments/list_component.html" %}
-
-                            {% endif %}
-                        {% endfor %}
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
+            {% endfor %}
+        </div>
+        {% if is_admin %}
+            <div class="form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input"
+                           type="checkbox"
+                           name="temp"
+                           value="true"
+                           checked/>
+                    仮登録
+                </label>
             </div>
-        {% endfor %}
-    </div>
+            <div class="form-text">
+                <ul>
+                    <li>正式に打診する場合はチェックを外してください。</li>
+                    <li>正式な打診前に他のメンバーに打診候補を共有するなどしたい場合はチェックしてください。</li>
+                </ul>
+            </div>
+            {% bootstrap_button "登録" button_class="btn-primary" btn_type="submit" %}
+        {% endif %}
+    </form>
+    {% if is_admin %}
+        <script>SUBMIT_PATH="{% url 'events:event_invite' event.id %}"</script>
+        <script src="{% static 'recruitments/form_method.js' %}"></script>
+    {% endif %}
+    <!--TODO: 打診候補者の集計機能を実装したい-->
 {% endblock content %}

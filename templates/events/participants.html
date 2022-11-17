@@ -26,6 +26,7 @@
     {% breadcrumb "参加者" "events:event_participation" %}
 {% endblock breadcrumbs %}
 {% block content %}
+    <h4>{{ event.name }}</h4>
     <!--参加者-->
     <div class="card border mt-4">
         <div class="card-header border-bottom d-flex align-items-center">
@@ -53,7 +54,7 @@
                                     <span class="text-muted">／</span>
                                     {{ participation.participant.course }}
                                     {% if participation.participant.faculty %}
-                                        → {{ participation.participant.faculty }}{{ participation.participant.department }}
+                                        → {{ participation.participant.faculty }}{{ participation.participant.department|default_if_none:"" }}
                                     {% endif %}
                                 </td>
                                 <td></td>
@@ -99,7 +100,7 @@
                                         <span class="text-muted">／</span>
                                         {{ participation.participant.course }}
                                         {% if participation.participant.faculty %}
-                                            → {{ participation.participant.faculty }}{{ participation.participant.department }}
+                                            → {{ participation.participant.faculty }}{{ participation.participant.department|default_if_none:"" }}
                                         {% endif %}
                                     </td>
                                     <td class="align-middle text-end">
@@ -148,7 +149,7 @@
                                         <span class="text-muted">／</span>
                                         {{ participation.participant.course }}
                                         {% if participation.participant.faculty %}
-                                            ��� {{ participation.participant.faculty }}{{ participation.participant.department }}
+                                            ��� {{ participation.participant.faculty }}{{ participation.participant.department|default_if_none:"" }}
                                         {% endif %}
                                     </td>
                                     <td class="align-middle"></td>

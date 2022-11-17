@@ -16,7 +16,11 @@
     {% breadcrumb "打診" "events:event_invite" %}
 {% endblock breadcrumbs %}
 {% block content %}
+    <h4>{{ event.name }}</h4>
     {% if is_accepting %}
+        <p>
+            <a href="{% url 'events:recruitment_list' event.id %}">出欠掲示板</a>からも打診を行うことができます。
+        </p>
         <form method="post">
             {% csrf_token %}
             {% bootstrap_form form layout="floating" %}
