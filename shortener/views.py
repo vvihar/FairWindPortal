@@ -52,47 +52,6 @@ def make_short_url(request):
         raise Http404("Invalid request")
 
 
-class MakeShortURL(LoginRequiredMixin, FormMixin, View):
-    """短縮URLを作成する。GETリクエストは受け付けない"""
-
-    fields = ["redirect_to"]
-    template_name = "shortener/shortener.html"  # 消す
-
-    def get_success_url(self):
-        # return to the previous page
-        return self.request.META.get("HTTP_REFERER", "/")
-
-    def post(self, request, *args, **kwargs):
-        check_expire_date()
-        redirect_to = request.POST["redirect_to"]
-        if ShortURL.objects.filter(redirect_to=redirect_to).exists():
-            return self.form_invalid(self.get_form())
-        return self.form_valid(self.get_form())
-
-    def form_invalid(self, form):
-        # return existing shorturl if exists
-        redirect_to = self.request.POST["redirect_to"]
-        if ShortURL.objects.filter(redirect_to=redirect_to).exists():
-            shorturl = ShortURL.objects.get(redirect_to=redirect_to)
-            messages.info(self.request, f"短縮URLを作成しました：{shorturl}")
-            return super().form_valid(form)
-        return super().form_invalid(form)
-
-    def form_valid(self, form):
-        scheme = self.request.scheme
-        host = self.request.get_host()
-        form.save()
-        hashid = form.instance.hashid
-        shorturl = f"{scheme}://{host}/s/{hashid}"
-        messages.success(self.request, f"短縮URLを作成しました：{shorturl}")
-        return super().form_valid(form)
-
-    """
-    def get(self, request, *args, **kwargs):
-        raise BadRequest("GET method is not allowed")
-    """
-
-
 def redirect_to(request, hashid):
     """正規のURLにリダイレクトする"""
     check_expire_date()
