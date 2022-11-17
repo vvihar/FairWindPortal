@@ -15,8 +15,8 @@
     {% if is_admin %}
         <td class="text-center">
             <input type="checkbox"
-                   name="mid"
-                   class="form-check-input"
+                   name="participants"
+                   class="form-check-input invite"
                    value="{{ application.member.id }}"
                    {% if application.member.id|stringformat:"s" in request.GET|get_list:"mid" %}checked{% endif %}/>
         </td>
