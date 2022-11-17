@@ -28,6 +28,7 @@ urlpatterns = (
         path("events/", include("events.urls")),
         path("events/recruitments/", include("events_recruitment.urls")),  # 出欠掲示板
         path("schools/", include("schools.urls")),
+        path("s/", include("shortener.urls")),
     ]
     + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
