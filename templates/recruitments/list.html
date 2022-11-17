@@ -62,7 +62,8 @@
                      id="{{ option.0 }}"
                      role="tabpanel"
                      aria-labelledby="{{ option.0 }}-tab">
-                    <table class="table sort">
+                    <table class="table sort"
+                           {% if is_admin %} id="row-input"{% endif %}>
                         <thead>
                             <tr>
                                 <th scope="col">氏名</th>
@@ -111,12 +112,57 @@
                     <li>正式な打診前に他のメンバーに打診候補を共有するなどしたい場合はチェックしてください。</li>
                 </ul>
             </div>
-            {% bootstrap_button "登録" button_class="btn-primary" btn_type="submit" %}
+            <p>
+                {% bootstrap_button "登録" button_class="btn-primary" btn_type="submit" %}
+                <button class="btn btn-secondary"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapseShare"
+                        aria-expanded="false"
+                        aria-controls="collapseShare">
+                    共有
+                </button>
+            </p>
         {% endif %}
     </form>
     {% if is_admin %}
-        <script>SUBMIT_PATH="{% url 'events:event_invite' event.id %}"</script>
+        <script>
+            SUBMIT_PATH="{% url 'events:event_invite' event.id %}";
+            BASE_URL="{{ request.path }}";
+        </script>
         <script src="{% static 'recruitments/form_method.js' %}"></script>
     {% endif %}
     <!--TODO: 打診候補者の集計機能を実装したい-->
+    <!--collapse-->
+    <div class="collapse
+                {% if hashid %}
+                    show
+                {% endif %}"
+         id="collapseShare">
+        <div class="card card-body">
+            <p>仮登録した打診候補者は、次のURLで企画の管理者と共有することができます。</p>
+            <div>
+                <input class="form-control"
+                       type="text"
+                       {% if hashid %}
+                           value="{{ request.scheme }}://{{ request.get_host }}{% url 'shortener:redirect_to' hashid %}"
+                       {% else %}
+                           value="{{ request.build_absolute_uri }}"
+                       {% endif %}
+                       aria-label="readonly"
+                       readonly
+                       id="share-url"
+                       onFocus="javascript:this.select()"/>
+                {% if hashid %}<div class="form-text">この短縮URLは、生成から1ヶ月後以降に無効になります。</div>{% endif %}
+            </div>
+            {% if not hashid %}
+                <form action="{% url 'shortener:' %}"
+                      method="post"
+                      id="shorten-form">
+                    {% csrf_token %}
+                    {% bootstrap_button "URLを短縮" button_class="btn-secondary mt-3" button_type="button" id="shorten-button" onClick="ShortenURL()" %}
+                </form>
+            {% endif %}
+        </div>
+    </div>
 {% endblock content %}

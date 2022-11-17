@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% load django_bootstrap5 %}
+
+{% block content %}
+    <form action=""
+          method="post">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        {% bootstrap_form_errors form %}
+        {% bootstrap_button "送信" %}
+    </form>
+{% endblock %}

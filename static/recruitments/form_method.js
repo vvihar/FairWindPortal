@@ -16,3 +16,30 @@ form.addEventListener("submit", () => {
         form.method = "post";
     }
 });
+
+// generate url from checkbox
+const generateUrl = () => {
+    const inviteCheckbox = document.getElementsByClassName("invite");
+    let url = BASE_URL + "?";
+    for (let i = 0; i < inviteCheckbox.length; i++) {
+        if (inviteCheckbox[i].checked) {
+            url += "mid=" + inviteCheckbox[i].value + "&";
+        }
+    }
+    url = url.slice(0, -1);
+    return url;
+}
+// shorten url when the button is clicked
+const shortenButton = document.getElementById("shorten-button");
+// post request to shorten url
+function ShortenURL() {
+    const url = generateUrl();
+    const shortenForm = document.getElementById("shorten-form");
+    // set value to the form before submit the form
+    const input = document.createElement("input");
+    input.setAttribute("type", "hidden");
+    input.setAttribute("name", "redirect_to");
+    input.setAttribute("value", url);
+    shortenForm.appendChild(input);
+    shortenForm.submit();
+}

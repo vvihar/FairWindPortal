@@ -83,4 +83,5 @@ class EventRecruitmentList(ListView):
             ("no", "×"),
         )
         context["is_admin"] = self.request.user in context["event"].admin.all()
+        context["hashid"] = self.request.GET.get("hashid")
         return context
