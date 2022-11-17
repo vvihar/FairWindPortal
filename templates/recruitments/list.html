@@ -49,44 +49,63 @@
             </li>
         {% endfor %}
     </ul>
-    <div class="tab-content">
-        {% for option in options %}
-            <div class="tab-pane fade show
-                        {% if forloop.first %}
-                            active
-                        {% endif %}"
-                 id="{{ option.0 }}"
-                 role="tabpanel"
-                 aria-labelledby="{{ option.0 }}-tab">
-                <table class="table sort">
-                    <thead>
-                        <tr>
-                            <th scope="col">氏名</th>
-                            <th scope="col">期</th>
-                            <th scope="col">所属</th>
-                            <th scope="col">コメント</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% if forloop.first %}
+    <form method="get">
+        <div class="tab-content">
+            {% for option in options %}
+                <div class="tab-pane fade show
+                            {% if forloop.first %}
+                                active
+                            {% endif %}"
+                     id="{{ option.0 }}"
+                     role="tabpanel"
+                     aria-labelledby="{{ option.0 }}-tab">
+                    <table class="table sort">
+                        <thead>
+                            <tr>
+                                <th scope="col">氏名</th>
+                                <th scope="col">期</th>
+                                <th scope="col">所属</th>
+                                <th scope="col">コメント</th>
+                                {% if is_admin %}<th class="text-center">打診</th>{% endif %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if forloop.first %}
+                                {% for application in object_list %}
+                                    {% if application.preference == "◎" %}
+
+                                        {% include "recruitments/list_component.html" %}
+
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
                             {% for application in object_list %}
-                                {% if application.preference == "◎" %}
+                                {% if application.preference == option.1 %}
 
                                     {% include "recruitments/list_component.html" %}
 
                                 {% endif %}
                             {% endfor %}
-                        {% endif %}
-                        {% for application in object_list %}
-                            {% if application.preference == option.1 %}
-
-                                {% include "recruitments/list_component.html" %}
-
-                            {% endif %}
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        {% endfor %}
-    </div>
+                        </tbody>
+                    </table>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="form-check">
+            <label class="form-check-label">
+                <input class="form-check-input"
+                       type="checkbox"
+                       name="temp"
+                       checked/>
+                仮登録
+            </label>
+        </div>
+        <div class="form-text">
+            <ul>
+                <li>正式に打診する場合はチェックを外してください。</li>
+                <li>正式な打診前に他のメンバーに打診候補を共有したい場合はチェックしてください。</li>
+            </ul>
+        </div>
+        {% bootstrap_button "登録" button_class="btn-primary" btn_type="submit" %}
+    </form>
 {% endblock content %}

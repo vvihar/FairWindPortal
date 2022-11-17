@@ -81,4 +81,17 @@ class EventRecruitmentList(ListView):
             ("conditionally", "△"),
             ("no", "×"),
         )
+        context["is_admin"] = self.request.user in context["event"].admin.all()
         return context
+
+    def get(self, request, *args, **kwargs):
+        form = {}
+        form["event"] = Event.objects.get(pk=self.kwargs["id"])
+        form["m_eager"] = self.request.GET.getlist("eg")  # ◎
+        form["m_yes"] = self.request.GET.getlist("yes")  # ○
+        form["m_conditionally"] = self.request.GET.getlist("cd")  # △
+        # ×と回答したメンバーにはさすがに打診できない
+        temp = self.request.GET.get("temp") == "on"
+        if temp:
+            print("temp")
+        return super().get(request, *args, **kwargs)
