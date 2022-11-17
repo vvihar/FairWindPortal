@@ -115,25 +115,7 @@
         {% endif %}
     </form>
     {% if is_admin %}
-        <script>
-        const form = document.getElementById("form");
-
-        form.addEventListener("submit", ()=> {
-            const temp = document.getElementsByName("temp")[0];
-            const csrfmiddlewaretoken = document.getElementsByName("csrfmiddlewaretoken")[0];
-            const inviteCheckbox = document.getElementsByClassName("invite");
-            if (temp.checked) { // 仮登録
-                csrfmiddlewaretoken.disabled = true;
-                for (let i = 0; i < inviteCheckbox.length; i++) {
-                    inviteCheckbox[i].setAttribute("name", "mid");
-                }
-                temp.disabled = true;
-            } else { // 本登録
-                csrfmiddlewaretoken.disabled = false;
-                form.action = "{% url 'events:event_invite' event.id %}";
-                form.method = "post";
-            }
-        });
-        </script>
+        <script src="{% static 'recruitments/form_method.js' %}"></script>
     {% endif %}
+    <!--TODO: 打診候補者の集計機能を実装したい-->
 {% endblock content %}
