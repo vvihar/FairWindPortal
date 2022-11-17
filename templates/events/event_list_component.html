@@ -60,7 +60,7 @@
                role="button"
                aria-disabled="true">詳細</a>
             {% if event.status|stringformat:"s" == "参加者募集中" %}
-                <a href="{% url 'recruitment:' %}"
+                <a href="{% url 'events:recruitment' %}"
                    class="btn btn-primary  btn-sm"
                    tabindex="-1"
                    role="button"

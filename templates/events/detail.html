@@ -84,7 +84,7 @@
     <a href="{% url 'events:event_participants' event.pk %}"
        class="btn btn-dark btn-sm">参加者一覧</a>
     {% if object.status|stringformat:"s" == "参加者募集中" %}
-        <a href="{% url 'recruitment:' %}"
+        <a href="{% url 'events:recruitment' %}"
            class="btn btn-primary  btn-sm"
            tabindex="-1"
            role="button"
