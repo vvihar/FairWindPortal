@@ -12,7 +12,7 @@ form.addEventListener("submit", () => {
         temp.disabled = true;
     } else { // 本登録
         csrfmiddlewaretoken.disabled = false;
-        form.action = "{% url 'events:event_invite' event.id %}";
+        form.action = SUBMIT_PATH;
         form.method = "post";
     }
 });

@@ -115,6 +115,7 @@
         {% endif %}
     </form>
     {% if is_admin %}
+        <script>SUBMIT_PATH="{% url 'events:event_invite' event.id %}"</script>
         <script src="{% static 'recruitments/form_method.js' %}"></script>
     {% endif %}
     <!--TODO: 打診候補者の集計機能を実装したい-->
