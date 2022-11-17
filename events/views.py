@@ -278,6 +278,11 @@ class EventMakeInvitation(OnlyEventAdminMixin, FormView):
                     str(participant).replace(" ", "") + "さんは既にこの企画に打診されています",
                 )
         EventParticipation.objects.bulk_create(invitations)
+        if invitations:
+            invited_members = ""
+            for i in invitations:
+                invited_members += str(i.participant) + "さん、"
+            messages.success(self.request, invited_members[:-1] + "に打診しました")
         return super().form_valid(form)
 
 

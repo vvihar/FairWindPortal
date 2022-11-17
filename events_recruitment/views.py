@@ -11,7 +11,7 @@ from .models import EventRecruitment
 # Create your views here.
 
 
-class Home(TemplateView):
+class EventRecruitmentHome(TemplateView):
     """出欠掲示板の本体のページ"""
 
     template_name = "recruitments/index.html"
@@ -40,7 +40,7 @@ class EventRecruitmentUpdate(UpdateView):
 
     model = EventRecruitment
     form_class = EventRecruitmentForm
-    success_url = reverse_lazy("recruitment:")
+    success_url = reverse_lazy("events:recruitment")
 
     def get_object(self):
         event = Event.objects.get(pk=self.kwargs["id"])
@@ -54,7 +54,7 @@ class EventRecruitmentUpdate(UpdateView):
         event = Event.objects.get(pk=self.kwargs["id"])
         if event.status != "参加者募集中":
             messages.error(self.request, f"「{event}」は参加者募集期間外です")
-            return redirect("recruitment:")
+            return redirect("events:recruitment")
         recruitment_form.event = event
         recruitment_form.member = self.request.user
         recruitment_form.save()
@@ -62,12 +62,13 @@ class EventRecruitmentUpdate(UpdateView):
         return super().form_valid(form)
 
     def get(self, request, *args, **kwargs):
-        return redirect("recruitment:")
+        return redirect("events:recruitment")
 
 
 class EventRecruitmentList(ListView):
     model = EventRecruitment
     template_name = "recruitments/list.html"
+    # FIXME: すでに打診されたメンバーは別枠で表示する
 
     def get_queryset(self):
         event = Event.objects.get(pk=self.kwargs["id"])
@@ -81,4 +82,5 @@ class EventRecruitmentList(ListView):
             ("conditionally", "△"),
             ("no", "×"),
         )
+        context["is_admin"] = self.request.user in context["event"].admin.all()
         return context

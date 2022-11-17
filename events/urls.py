@@ -1,6 +1,12 @@
 """EventsのURLを管理する"""
 from django.urls import path
 
+from events_recruitment.views import (
+    EventRecruitmentHome,
+    EventRecruitmentList,
+    EventRecruitmentUpdate,
+)
+
 from .views import (
     EventCancelInvitation,
     EventCreate,
@@ -38,5 +44,16 @@ urlpatterns = [
         "<int:id>/invite/reply",
         EventReplyInvitation.as_view(),
         name="event_reply_invitation",
+    ),
+    path("recruitments/", EventRecruitmentHome.as_view(), name="recruitment"),
+    path(
+        "<int:id>/recruit/submit/",
+        EventRecruitmentUpdate.as_view(),
+        name="recruitment_update",
+    ),
+    path(
+        "<int:id>/recruit/list/",
+        EventRecruitmentList.as_view(),
+        name="recruitment_list",
     ),
 ]

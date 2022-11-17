@@ -1,11 +1,24 @@
+{% load get_list %}
+
 <tr {% if application.member.group == event.group_in_charge %}
         class="table-active"
     {% endif %}>
-    <td class="fw-bold">{{ application.member }}</td>
+    <td {% if application.preference == "◎" %} class="fw-bold"{% endif %}>{{ application.member }}</td>
     <td>{{ application.member.grade }}期</td>
     <td>
         {{ application.member.course }}
-        {% if application.member.faculty %}→ {{ application.member.faculty }}{{ application.member.department }}{% endif %}
+        {% if application.member.faculty %}
+            → {{ application.member.faculty }}{{ application.member.department|default_if_none:"" }}
+        {% endif %}
     </td>
     <td>{{ application.comment|default_if_none:"" }}</td>
+    {% if is_admin %}
+        <td class="text-center">
+            <input type="checkbox"
+                   name="participants"
+                   class="form-check-input invite"
+                   value="{{ application.member.id }}"
+                   {% if application.member.id|stringformat:"s" in request.GET|get_list:"mid" %}checked{% endif %}/>
+        </td>
+    {% endif %}
 </tr>
