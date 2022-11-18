@@ -1,4 +1,7 @@
+import csv
+
 from django.contrib import messages
+from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, TemplateView, UpdateView
@@ -85,3 +88,32 @@ class EventRecruitmentList(ListView):
         context["is_admin"] = self.request.user in context["event"].admin.all()
         context["hashid"] = self.request.GET.get("hashid")
         return context
+
+
+def event_recruitment_csv(request, id):
+    """出欠掲示板のCSVをダウンロードする"""
+
+    event = Event.objects.get(pk=id)
+    if request.user not in event.admin.all():
+        return redirect("events:recruitment")
+    response = HttpResponse(content_type="text/csv", charset="CP932")
+    response["Content-Disposition"] = 'attachment; filename="event.csv"'
+    writer = csv.writer(response)
+    writer.writerow(["名前", "期", "科類", "学部", "学科", "出欠", "コメント"])
+    for recruitment in EventRecruitment.objects.filter(event=event):
+        writer.writerow(
+            [
+                recruitment.member.last_name + recruitment.member.first_name,
+                recruitment.member.grade,
+                recruitment.member.course,
+                (str(recruitment.member.faculty) if recruitment.member.faculty else ""),
+                (
+                    str(recruitment.member.department)
+                    if recruitment.member.department
+                    else ""
+                ),
+                recruitment.get_preference_display(),
+                recruitment.comment,
+            ]
+        )
+    return response

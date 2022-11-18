@@ -29,6 +29,13 @@
         <li>班内メンバーはグレーの背景で表示されます。</li>
         <li>表の見出しをクリックすることで、ソートできます。</li>
     </ul>
+    {% if is_admin %}
+        <p>
+            <a class="btn btn-secondary"
+               href="{% url 'events:recruitment_csv' event.id %}"
+               role="button">CSVをダウンロード</a>
+        </p>
+    {% endif %}
     <ul class="nav nav-tabs"
         id="myTab"
         role="tablist">
@@ -120,7 +127,7 @@
                         data-bs-target="#collapseShare"
                         aria-expanded="false"
                         aria-controls="collapseShare">
-                    共有
+                    URLで共有
                 </button>
             </p>
         {% endif %}
