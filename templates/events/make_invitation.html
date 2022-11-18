@@ -13,7 +13,7 @@
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb event.name "events:event_detail" event.id %}
-    {% breadcrumb "打診" "events:event_invite" %}
+    {% breadcrumb "打診" "events:event_invite" object.event.id %}
 {% endblock breadcrumbs %}
 {% block content %}
     <h1 class="fs-4">{{ event.name }}</h1>

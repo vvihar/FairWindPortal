@@ -10,6 +10,7 @@
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb object.event "events:event_detail" object.event.id %}
+    {% breadcrumb "打診" "events:event_invite" object.event.id %}
     {% breadcrumb "打診取消" "events:event_cancel_invitation" %}
 {% endblock breadcrumbs %}
 {% block content %}
