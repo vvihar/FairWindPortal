@@ -111,7 +111,7 @@
                                         {% if user in event.admin.all or user.is_staff %}
                                             {% if is_accepting %}
                                                 <a href="{% url 'events:event_cancel_invitation' event.pk participation.pk %}"
-                                                   class="btn btn-sm btn-danger d-inline-flex align-items-center my-1">打診取り消し</a>
+                                                   class="btn btn-sm btn-danger d-inline-flex align-items-center my-1">打診取消</a>
                                             {% endif %}
                                         {% endif %}
                                     </td>
