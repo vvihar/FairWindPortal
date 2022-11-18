@@ -16,7 +16,7 @@
     {% breadcrumb "打診" "events:event_invite" %}
 {% endblock breadcrumbs %}
 {% block content %}
-    <h4>{{ event.name }}</h4>
+    <h1 class="fs-4">{{ event.name }}</h1>
     {% if is_accepting %}
         <p>
             <a href="{% url 'events:recruitment_list' event.id %}">出欠掲示板</a>からも打診を行うことができます。

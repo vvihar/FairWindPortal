@@ -26,9 +26,9 @@
     {% breadcrumb "参加者" "events:event_participation" %}
 {% endblock breadcrumbs %}
 {% block content %}
-    <h4>{{ event.name }}</h4>
+    <h1 class="fs-4">{{ event.name }}</h1>
     <!--参加者-->
-    <div class="card border mt-4">
+    <div class="card border mt-3">
         <div class="card-header border-bottom d-flex align-items-center">
             <h2 class="fs-5 fw-bold mb-0">参加者</h2>
             <span class="badge rounded-pill bg-dark ms-2">{{ counter_participate }}</span>
