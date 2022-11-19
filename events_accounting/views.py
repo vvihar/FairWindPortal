@@ -65,6 +65,8 @@ class CreateBill(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        event = Event.objects.get(pk=self.kwargs["id"])
+        context["event"] = event
         if self.request.POST:
             context["formset"] = BillingItemFormset(self.request.POST, prefix="items")
         else:
