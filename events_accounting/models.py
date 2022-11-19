@@ -12,11 +12,9 @@ from schools.models import School
 class Bill(models.Model):
     """請求書"""
 
-    # 最新版の情報しか保持されないので注意する
-
     # 企画
-    event = models.OneToOneField(
-        Event, on_delete=models.CASCADE, verbose_name="企画", related_name="bill"
+    event = models.ForeignKey(
+        Event, verbose_name="企画", on_delete=models.CASCADE, related_name="bills"
     )
 
     # 請求書の件名
@@ -28,9 +26,7 @@ class Bill(models.Model):
     )
 
     # 請求書番号
-    bill_number = models.CharField(
-        "請求書番号", max_length=20, unique=True, blank=True, null=False
-    )
+    bill_number = models.CharField("請求書番号", max_length=20, blank=True, null=True)
 
     # 発行回数
     version = models.IntegerField("発行回数", blank=True, null=True)
@@ -62,15 +58,17 @@ class Bill(models.Model):
     def clean(self):
         if not self.title:
             self.title = self.event.name
-        if not self.version:
-            self.version = 1
-        elif self.version >= 1:
-            self.version += 1
-        self.bill_number = (
-            self.event.start_datetime.strftime("%Y%m%d")
-            + "-"
-            + "{0:01d}".format(self.event.id)
-        )
+        existing_bills = Bill.objects.filter(event=self.event)
+        latest_bill = existing_bills.order_by("-version").first()
+        self.version = latest_bill.version + 1 if latest_bill else 1
+        if not self.bill_number:
+            self.bill_number = (
+                self.event.start_datetime.strftime("%Y%m%d")
+                + "-"
+                + "{0:02d}".format(self.event.id)
+                + "-"
+                + "{0:02d}".format(self.version)
+            )
         if not self.payment_deadline:
             self.payment_deadline = self.issued_date + datetime.timedelta(days=30)
 
@@ -79,7 +77,7 @@ class Bill(models.Model):
         return super().save(**kwargs)
 
     def __str__(self):
-        return self.title
+        return f"{self.event.name} ({self.bill_number})"
 
     class Meta:
         """Metaクラス"""
