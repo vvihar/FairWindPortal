@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "events_recruitment.apps.EventsRecruitmentConfig",
     "schools.apps.SchoolsConfig",
     "shortener.apps.ShortenerConfig",
+    "events_accounting.apps.EventsAccountingConfig",
 ]
 
 MIDDLEWARE = [
