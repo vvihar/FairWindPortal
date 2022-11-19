@@ -19,9 +19,14 @@ class BillForm(forms.ModelForm):
         """Metaクラス"""
 
         model = Bill
-        exclude = ("event", "bill_number", "version", "is_archived")
+        exclude = ("event", "bill_number", "version", "is_archived", "is_issued")
 
         widgets = {
             "issued_date": forms.widgets.DateInput(attrs={"type": "date"}),
             "payment_deadline": forms.widgets.DateInput(attrs={"type": "date"}),
         }
+
+
+BillingItemFormset = forms.inlineformset_factory(
+    Bill, BillingItem, exclude=("bill",), extra=1, max_num=15, can_delete=True
+)

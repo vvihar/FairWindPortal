@@ -80,6 +80,7 @@ class BillingItem(models.Model):
     item = models.CharField("費目", max_length=100)
     breakdown = models.CharField("内訳", max_length=100, blank=True, null=True)
     volume = models.IntegerField("数量", default=1)
+    # FIXME: 数量を小数も許容する
     unit = models.CharField("単位", max_length=10, default="個")
     amount = models.IntegerField("金額", default=0)
 

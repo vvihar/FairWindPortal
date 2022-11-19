@@ -7,9 +7,6 @@
 
 {% block head %}
     <link rel="stylesheet"
-          href="{% static 'utils/css/suggest.css' %}"/>
-    <script src="{% static 'utils/js/suggest.js' %}"></script>
-    <link rel="stylesheet"
           href="{% static 'utils/css/dselect.css' %}"/>
     <script src="{% static 'utils/js/dselect.js' %}"></script>
 {% endblock head %}
@@ -22,9 +19,16 @@
     <form method="post">
         {% csrf_token %}
         {% bootstrap_form form layout="floating" exclude="person_in_charge,post" %}
-        <hr>
         {% bootstrap_field form.person_in_charge %}
         {% bootstrap_field form.post layout="floating" %}
+        {{ formset.management_form }}
+        {% for item_form in formset %}
+            <div class="card mb-3 text-dark bg-light item-form">
+                <h5 class="card-header">請求項目</h5>
+                <div class="card-body">{% bootstrap_form item_form layout="horizontal" %}</div>
+            </div>
+        {% endfor %}
+        {% bootstrap_button "請求項目を追加" button_type="button" button_class="btn-secondary" id="add-btn" %}
         {% bootstrap_button "登録" button_type="submit" %}
     </form>
     <script>
@@ -32,5 +36,53 @@
             search: true, // Toggle search feature. Default: false
         }
         dselect(document.querySelector('#id_person_in_charge'), config)
+    </script>
+    <script>
+        const totalManageElement = document.getElementById('id_items-TOTAL_FORMS')
+        // set the number of forms upon page load
+        totalManageElement.value = document.getElementsByClassName('item-form').length;
+
+        let currentItemCount = parseInt(totalManageElement.value)
+        const addBtn = document.getElementById('add-btn')
+        addBtn.addEventListener('click', () => {
+            const itemForm = document.getElementsByClassName('item-form')[0];
+            const clone_itemForm = itemForm.cloneNode(true);
+            // change id for cloned form's child elements
+            const inputs = clone_itemForm.getElementsByTagName('input');
+            for (let i = 0; i < inputs.length; i++) {
+                const input = inputs[i];
+                const id = input.id;
+                const name = input.name;
+                input.id = id.replace('0', currentItemCount);
+                input.name = name.replace('0', currentItemCount);
+            };
+            const inputs_text = clone_itemForm.querySelectorAll('input[type="text"]');
+            for (let i = 0; i < inputs_text.length; i++) {
+                const input = inputs_text[i];
+                input.value = '';
+            };
+            // set value to today's date (YYYY-MM-DD)
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = ('0' + (today.getMonth() + 1)).slice(-2);
+            const day = ('0' + today.getDate()).slice(-2);
+            const date = year + '-' + month + '-' + day;
+            clone_itemForm.querySelector('input[name$="date"]').value = date;
+            clone_itemForm.querySelector('input[name$="volume"]').value = 1;
+            clone_itemForm.querySelector('input[name$="unit"]').value = "個";
+            clone_itemForm.querySelector('input[name$="amount"]').value = 0;
+
+            const labels = clone_itemForm.getElementsByTagName('label')
+            for (let i = 0; i < labels.length; i++) {
+                const label = labels[i];
+                const forAttr = label.getAttribute('for');
+                label.setAttribute('for', forAttr.replace('0', currentItemCount));
+            };
+            // insert cloned form after last form
+            const lastForm = document.getElementsByClassName('item-form')[currentItemCount - 1];
+            lastForm.insertAdjacentElement('afterend', clone_itemForm);
+            currentItemCount += 1;
+            totalManageElement.value = currentItemCount;
+        });
     </script>
 {% endblock content %}

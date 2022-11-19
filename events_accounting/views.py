@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import (
@@ -11,7 +12,7 @@ from django.views.generic import (
 
 from events.models import Event
 
-from .forms import BillForm
+from .forms import BillForm, BillingItemFormset
 from .models import Bill, BillingItem
 
 # Create your views here.
@@ -23,7 +24,7 @@ class CreateBill(CreateView):
     form_class = BillForm
 
     def get_success_url(self):
-        return reverse_lazy("events:bill_create", kwargs={"id": self.kwargs["id"]})
+        return reverse_lazy("events:event_detail", kwargs={"pk": self.kwargs["id"]})
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -47,7 +48,28 @@ class CreateBill(CreateView):
                 + "-"
                 + "{0:02d}".format(bill_form.version)
             )
-        return super().form_valid(form)
+        form_set = BillingItemFormset(
+            self.request.POST,
+            self.request.FILES,
+            instance=bill_form,
+            prefix="items",
+        )
+        if form_set.is_valid():
+            bill_form.save()
+            form_set.save()
+            messages.success(self.request, "保存しました")
+            return super().form_valid(form)
+        else:
+            messages.error(self.request, "保存に失敗しました")
+            return super().form_invalid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.POST:
+            context["formset"] = BillingItemFormset(self.request.POST, prefix="items")
+        else:
+            context["formset"] = BillingItemFormset(prefix="items")
+        return context
 
     # 参考: https://blog.narito.ninja/detail/62
     # Modalの中でBillingItemを作成できるようにする
