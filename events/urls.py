@@ -1,6 +1,7 @@
 """EventsのURLを管理する"""
 from django.urls import path
 
+from events_accounting.views import CreateBill
 from events_recruitment.views import (
     EventRecruitmentHome,
     EventRecruitmentList,
@@ -45,6 +46,7 @@ urlpatterns = [
         EventReplyInvitation.as_view(),
         name="event_reply_invitation",
     ),
+    # 出欠掲示板（event_recruitment）
     path("recruitments/", EventRecruitmentHome.as_view(), name="recruitment"),
     path(
         "<int:id>/recruit/submit/",
@@ -56,4 +58,6 @@ urlpatterns = [
         EventRecruitmentList.as_view(),
         name="recruitment_list",
     ),
+    # 請求書（event_accounting）
+    path("<int:id>/bill/create", CreateBill.as_view(), name="bill_create"),
 ]

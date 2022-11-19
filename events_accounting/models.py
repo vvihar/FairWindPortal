@@ -17,14 +17,6 @@ class Bill(models.Model):
         Event, verbose_name="企画", on_delete=models.CASCADE, related_name="bills"
     )
 
-    # 請求書の件名
-    title = models.CharField(
-        "件名",
-        max_length=100,
-        blank=True,
-        null=True,
-    )
-
     # 請求書番号
     bill_number = models.CharField("請求書番号", max_length=20, blank=True, null=True)
 
@@ -47,7 +39,7 @@ class Bill(models.Model):
     )
 
     # 請求日
-    issued_date = models.DateField("請求日", default=datetime.date.today)
+    issued_date = models.DateField("発行日", default=datetime.date.today)
 
     # 請求書の支払い期限は請求日から30日後
     payment_deadline = models.DateField("支払い期限", blank=True, null=False, default=None)
@@ -55,20 +47,11 @@ class Bill(models.Model):
     # 振込先を表示
     display_bank_account = models.BooleanField("団体口座を表示", default=True)
 
+    is_archived = models.BooleanField("アーカイブ済み", default=False)
+
+    is_issued = models.BooleanField("発行済み", default=False)
+
     def clean(self):
-        if not self.title:
-            self.title = self.event.name
-        existing_bills = Bill.objects.filter(event=self.event)
-        latest_bill = existing_bills.order_by("-version").first()
-        self.version = latest_bill.version + 1 if latest_bill else 1
-        if not self.bill_number:
-            self.bill_number = (
-                self.event.start_datetime.strftime("%Y%m%d")
-                + "-"
-                + "{0:02d}".format(self.event.id)
-                + "-"
-                + "{0:02d}".format(self.version)
-            )
         if not self.payment_deadline:
             self.payment_deadline = self.issued_date + datetime.timedelta(days=30)
 
@@ -101,7 +84,7 @@ class BillingItem(models.Model):
     amount = models.IntegerField("金額", default=0)
 
     def __str__(self):
-        return self.item + "-" + self.bill.title
+        return self.item + "-" + self.bill.event.name
 
     class Meta:
         """Metaクラス"""
