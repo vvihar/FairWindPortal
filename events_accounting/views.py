@@ -110,6 +110,13 @@ class BillUpdate(UpdateView):
             prefix="items",
         )
         if form_set.is_valid():
+            # if the number of billing items that are not marked for deletion is 0, raise an error
+            if (
+                len([item for item in form_set.cleaned_data if not item.get("DELETE")])
+                == 0
+            ):
+                messages.error(self.request, "請求項目を1つ以上入力してください")
+                return self.form_invalid(form)
             bill_form.save()
             form_set.save()
             messages.success(self.request, "保存しました")
