@@ -30,3 +30,6 @@ class BillForm(forms.ModelForm):
 BillingItemFormset = forms.inlineformset_factory(
     Bill, BillingItem, exclude=("bill",), extra=1, max_num=15, can_delete=True
 )
+BillingItemUpdateFormset = forms.inlineformset_factory(
+    Bill, BillingItem, exclude=("bill",), extra=0, max_num=15, can_delete=True
+)

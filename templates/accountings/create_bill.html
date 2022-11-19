@@ -16,6 +16,7 @@
     {% breadcrumb "請求書" "events:bill_create" %}
 {% endblock breadcrumbs %}
 {% block content %}
+    <h1 class="fs-4 mb-3">{{ event.name }}</h1>
     <form method="post">
         {% csrf_token %}
         {% bootstrap_form form layout="floating" exclude="person_in_charge,post" %}
