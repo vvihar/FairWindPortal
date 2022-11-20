@@ -202,6 +202,9 @@ def download_bill(request, id, pk):
 def preview_bill(request, id, pk):
     """請求書をPDFでプレビューする"""
     bill = Bill.objects.get(pk=pk)
+    if bill.is_issued:
+        # redirect to download_bill
+        return redirect("events:bill_download", id=id, pk=pk)
     return make_bill_pdf(bill, preview=True)
 
 
