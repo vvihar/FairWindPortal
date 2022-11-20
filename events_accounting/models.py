@@ -77,10 +77,10 @@ class BillingItem(models.Model):
     )
 
     date = models.DateField("日付", default=datetime.date.today)
-    item = models.CharField("費目", max_length=100)
-    breakdown = models.CharField("内訳", max_length=100, blank=True, null=True)
+    item = models.CharField("費目", max_length=11)
+    breakdown = models.CharField("内訳", max_length=20, blank=True, null=True)
     volume = models.DecimalField("数量", max_digits=10, decimal_places=1, default=1)
-    unit = models.CharField("単位", max_length=10, default="個")
+    unit = models.CharField("単位", max_length=4, default="個")
     amount = models.IntegerField("金額", default=0)
 
     def __str__(self):
