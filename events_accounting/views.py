@@ -296,7 +296,7 @@ def print_strings(pdf_canvas, bill):
     ]
     # insert title row in the first
     data.insert(0, ["日付", "費目", "内訳", "数量", "単位", "金額"])
-    page_width = 480
+    page_width = 210 * mm - 2 * 60
     table = Table(
         data,
         colWidths=[
@@ -325,4 +325,4 @@ def print_strings(pdf_canvas, bill):
 
     # 以上
     pdf_canvas.setFont("ipaexg", 9)
-    pdf_canvas.drawString(520, item_start_y - 85 - len(billing_items) * 15, "以上")
+    pdf_canvas.drawString(515, item_start_y - 85 - len(billing_items) * 15, "以上")
