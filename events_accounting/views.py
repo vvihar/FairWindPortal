@@ -196,19 +196,56 @@ def download_bill(request, id, pk):
         bill.is_issued = True
         bill.save()
     if bill.is_issued:
-        with tempfile.TemporaryDirectory() as tmpdir:
-            pdf_canvas = canvas.Canvas(
-                filename=os.path.join(tmpdir, bill.bill_number + ".pdf")
-            )
-            pdf_canvas.setAuthor("FairWind")
-            pdf_canvas.setTitle(f"御請求書（{bill.event.name}）")
-            pdf_canvas.setSubject(f"御請求書（{bill.event.name}）")
-            print_strings(pdf_canvas, bill)
-            pdf_canvas.save()
-            return FileResponse(
-                open(os.path.join(tmpdir, bill.bill_number + ".pdf"), "rb"),
-                # as_attachment=True, #TODO: ダウンロードさせる
-            )
+        return make_bill_pdf(bill)
+
+
+def preview_bill(request, id, pk):
+    """請求書をPDFでプレビューする"""
+    bill = Bill.objects.get(pk=pk)
+    return make_bill_pdf(bill, preview=True)
+
+
+def make_bill_pdf(bill, preview=False):
+    with tempfile.TemporaryDirectory() as tmpdir:
+        if preview:
+            filename = os.path.join(tmpdir, bill.bill_number + "-preview.pdf")
+            title = f"【プレビュー】御請求書（{bill.event.name}）"
+        else:
+            filename = os.path.join(tmpdir, bill.bill_number + ".pdf")
+            title = f"御請求書（{bill.event.name}）"
+        pdf_canvas = canvas.Canvas(filename=filename)
+        pdf_canvas.setAuthor("FairWind")
+        pdf_canvas.setTitle(title)
+        pdf_canvas.setSubject(title)
+        print_strings(pdf_canvas, bill)
+        if preview:
+            preview_watermark(pdf_canvas)
+        pdf_canvas.save()
+        return FileResponse(
+            open(filename, "rb"),
+            # as_attachment=True, #TODO: ダウンロードさせる
+        )
+
+
+def preview_watermark(pdf_canvas):
+    font_url = os.path.join(
+        settings.BASE_DIR, "static", "accountings", "fonts", "ipaexg.ttf"
+    )
+    pdfmetrics.registerFont(TTFont("ipaexg", font_url))
+    pdf_canvas.setFont("ipaexg", 36)
+    # set font color to red
+    pdf_canvas.setFillColorRGB(1, 0, 0)
+    pdf_canvas.drawCentredString(105 * mm, 740, "プレビュー")
+    pdf_canvas.setFont("ipaexg", 12)
+    pdf_canvas.drawCentredString(105 * mm, 720, "※この請求書はプレビューのため無効です")
+    # draw a big red cross
+    pdf_canvas.setLineWidth(3)
+    pdf_canvas.setLineCap(1)
+    pdf_canvas.setDash(1, 1)
+    pdf_canvas.setFillColorRGB(1, 0, 0)
+    pdf_canvas.setStrokeColorRGB(1, 0, 0)
+    pdf_canvas.line(10 * mm, 10 * mm, 200 * mm, 287 * mm)
+    pdf_canvas.line(10 * mm, 287 * mm, 200 * mm, 10 * mm)
 
 
 def print_strings(pdf_canvas, bill):
