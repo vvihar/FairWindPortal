@@ -1,6 +1,8 @@
 from django import forms
 from django.core.exceptions import ValidationError
 
+from events.models import Event
+
 from .models import Bill, BillingItem
 
 
@@ -14,6 +16,12 @@ class BillForm(forms.ModelForm):
         if issued_date and payment_deadline:
             if issued_date > payment_deadline:
                 raise ValidationError("支払期限は請求日よりも後に設定してください")
+
+    def __init__(self, event, *args, **kwargs):
+        super(BillForm, self).__init__(*args, **kwargs)
+        # set limit_choices_to for recipients
+        self.fields["recipient"].queryset = event.school.all()
+        self.fields["person_in_charge"].queryset = event.admin.all()
 
     class Meta:
         """Metaクラス"""

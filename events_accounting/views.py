@@ -74,6 +74,11 @@ class BillCreate(CreateView):
             context["formset"] = BillingItemFormset(prefix="items")
         return context
 
+    def get_form_kwargs(self):
+        kwargs = super(BillCreate, self).get_form_kwargs()
+        kwargs["event"] = Event.objects.get(pk=self.kwargs["id"])
+        return kwargs
+
     # 参考: https://blog.narito.ninja/detail/62
     # Modalの中でBillingItemを作成できるようにする
     # 1. ModalでBillingItemを作成する。このときeventにはそのeventを指定する
@@ -137,3 +142,8 @@ class BillUpdate(UpdateView):
         )
         context["formset"] = formset
         return context
+
+    def get_form_kwargs(self, **kwargs):
+        kwargs = super().get_form_kwargs(**kwargs)
+        kwargs["event"] = Event.objects.get(pk=self.kwargs["id"])
+        return kwargs

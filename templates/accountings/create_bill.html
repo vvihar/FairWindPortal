@@ -5,11 +5,6 @@
 {% load django_bootstrap_breadcrumbs %}
 {% load django_bootstrap5 %}
 
-{% block head %}
-    <link rel="stylesheet"
-          href="{% static 'utils/css/dselect.css' %}"/>
-    <script src="{% static 'utils/js/dselect.js' %}"></script>
-{% endblock head %}
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb event.name "events:event_detail" event.id %}
@@ -19,9 +14,7 @@
     <h1 class="fs-4 mb-3">{{ event.name }}</h1>
     <form method="post">
         {% csrf_token %}
-        {% bootstrap_form form layout="floating" exclude="person_in_charge,post" %}
-        {% bootstrap_field form.person_in_charge %}
-        {% bootstrap_field form.post layout="floating" %}
+        {% bootstrap_form form layout="floating" %}
         {{ formset.management_form }}
         {% for item_form in formset %}
             <div class="card mb-3 text-dark bg-light item-form">
@@ -32,11 +25,5 @@
         {% bootstrap_button "請求項目を追加" button_type="button" button_class="btn-secondary" id="add-btn" %}
         {% bootstrap_button "登録" button_type="submit" %}
     </form>
-    <script>
-        const config = {
-            search: true, // Toggle search feature. Default: false
-        }
-        dselect(document.querySelector('#id_person_in_charge'), config)
-    </script>
     <script src="{% static 'accountings/bill_items_form.js' %}"></script>
 {% endblock content %}
