@@ -294,7 +294,6 @@ def print_strings(pdf_canvas, bill):
     pdf_canvas.drawString(
         150, 615, f"{bill.payment_deadline.strftime('%Y年%m月%d日（%a）')}"
     )
-    pdf_canvas.line(150, 611, 380, 611)
 
     if bill.display_bank_account:
         pdf_canvas.drawString(60, 595, "お振込先:")
@@ -302,8 +301,10 @@ def print_strings(pdf_canvas, bill):
             fw_bank_account = settings.FW_BANK_ACCOUNT
         except AttributeError:
             fw_bank_account = "三菱UFJ銀行　新宿支店　普通　1234567"  # dummy
+        bill_info_width = pdf_canvas.stringWidth(fw_bank_account, "ipaexg", font_size)
         pdf_canvas.drawString(150, 595, fw_bank_account)
-        pdf_canvas.line(150, 591, 380, 591)
+        pdf_canvas.line(150, 591, 150 + bill_info_width, 591)
+        pdf_canvas.line(150, 611, 150 + bill_info_width, 611)
         item_start_y = 585
     else:
         item_start_y = 610
@@ -340,7 +341,7 @@ def print_strings(pdf_canvas, bill):
     pdf_canvas.setFont("ipaexg", 14)
     pdf_canvas.drawString(60, item_start_y - 35, "合計金額:")
     pdf_canvas.drawString(150, item_start_y - 35, f"￥{amount:,}（税込）")
-    pdf_canvas.line(150, item_start_y - 39, 380, item_start_y - 39)
+    pdf_canvas.line(150, item_start_y - 39, 150 + bill_info_width, item_start_y - 39)
 
     # 請求項目
     # display billing items in a table as rows
