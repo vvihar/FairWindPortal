@@ -304,10 +304,11 @@ def print_strings(pdf_canvas, bill):
         bill_info_width = pdf_canvas.stringWidth(fw_bank_account, "ipaexg", font_size)
         pdf_canvas.drawString(150, 595, fw_bank_account)
         pdf_canvas.line(150, 591, 150 + bill_info_width, 591)
-        pdf_canvas.line(150, 611, 150 + bill_info_width, 611)
         item_start_y = 585
     else:
         item_start_y = 610
+        bill_info_width = 230
+    pdf_canvas.line(150, 611, 150 + bill_info_width, 611)
 
     # 団体情報
     address_style = ParagraphStyle(
