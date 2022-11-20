@@ -37,6 +37,7 @@ addBtn.addEventListener('click', () => {
     clone_itemForm.querySelector('input[name$="unit"]').value = "個";
     clone_itemForm.querySelector('input[name$="amount"]').value = 0;
     clone_itemForm.querySelector('input[name$="DELETE"]').checked = false;
+    clone_itemForm.querySelector('input[name$="id"]').remove();
 
     const labels = clone_itemForm.getElementsByTagName('label')
     for (let i = 0; i < labels.length; i++) {
