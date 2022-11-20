@@ -1,0 +1,35 @@
+{% extends "events/base.html" %}
+
+{% load static %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% load django_bootstrap5 %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb event.name "events:event_detail" event.id %}
+    {% breadcrumb "請求書削除" "events:bill_delete" event.id object.pk %}
+{% endblock breadcrumbs %}
+{% block content %}
+    <h1 class="fs-4 mb-3">{{ event.name }}</h1>
+    {% if object.is_issued %}
+        <div class="mb-3">
+            <p>
+                請求書「<strong>{{ object }}</strong>」は発行済みのため削除できません。
+            </p>
+        </div>
+    {% else %}
+        <div class="mb-3">
+            <p>
+                請求書「<strong>{{ object }}</strong>」を削除しますか？
+            </p>
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            {% bootstrap_button "削除" button_type="submit" button_class="btn-danger" %}
+
+            {% include 'components/cancel.html' %}
+
+        </form>
+    {% endif %}
+{% endblock content %}

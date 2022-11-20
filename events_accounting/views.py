@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import (
     CreateView,
@@ -149,3 +149,27 @@ class BillUpdate(UpdateView):
         kwargs = super().get_form_kwargs(**kwargs)
         kwargs["event"] = Event.objects.get(pk=self.kwargs["id"])
         return kwargs
+
+
+class BillDelete(DeleteView):
+    model = Bill
+    template_name = "accountings/delete_bill.html"
+
+    def get_success_url(self):
+        return reverse_lazy("events:bill_create", kwargs={"id": self.kwargs["id"]})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        event = Event.objects.get(pk=self.kwargs["id"])
+        context["event"] = event
+        return context
+
+    def delete(self, request, *args, **kwargs):
+        bill = Bill.objects.get(pk=self.kwargs["pk"])
+        if bill.is_issued:
+            messages.error(request, "発行済みの請求書は削除できません")
+            return redirect(
+                "events:bill_update", pk=self.kwargs["pk"], id=self.kwargs["id"]
+            )
+        messages.success(request, "請求書を削除しました")
+        return super().delete(request, *args, **kwargs)

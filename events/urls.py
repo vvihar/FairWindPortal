@@ -1,7 +1,7 @@
 """EventsのURLを管理する"""
 from django.urls import path
 
-from events_accounting.views import BillCreate, BillUpdate
+from events_accounting.views import BillCreate, BillDelete, BillUpdate
 from events_recruitment.views import (
     EventRecruitmentHome,
     EventRecruitmentList,
@@ -61,4 +61,5 @@ urlpatterns = [
     # 請求書（event_accounting）
     path("<int:id>/bill/create", BillCreate.as_view(), name="bill_create"),
     path("<int:id>/bill/<int:pk>/update", BillUpdate.as_view(), name="bill_update"),
+    path("<int:id>/bill/<int:pk>/delete", BillDelete.as_view(), name="bill_delete"),
 ]
