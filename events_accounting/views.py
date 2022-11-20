@@ -276,7 +276,7 @@ def print_strings(pdf_canvas, bill):
     # タイトル
     font_size = 24
     pdf_canvas.setFont("ipaexg", font_size)
-    pdf_canvas.drawString(245, 760, "御 請 求 書")
+    pdf_canvas.drawCentredString(105 * mm, 760, "御 請 求 書")
 
     font_size = 14
     pdf_canvas.setFont("ipaexg", font_size)
@@ -412,4 +412,6 @@ def print_strings(pdf_canvas, bill):
 
     # 以上
     pdf_canvas.setFont("ipaexg", 9)
-    pdf_canvas.drawString(515, item_start_y - 105 - len(billing_items) * 15, "以上")
+    pdf_canvas.drawRightString(
+        60 + page_width, item_start_y - 105 - len(billing_items) * 15, "以上"
+    )
