@@ -16,13 +16,14 @@ from django.views.generic import (
     UpdateView,
 )
 from reportlab.lib import colors
-from reportlab.lib.pagesizes import A4, portrait
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.units import mm
 from reportlab.pdfbase import pdfmetrics
-from reportlab.pdfbase.cidfonts import UnicodeCIDFont
+from reportlab.pdfbase.pdfmetrics import stringWidth
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas
-from reportlab.platypus import Table, TableStyle
+from reportlab.platypus import Paragraph, Table, TableStyle
 
 from events.models import Event
 
@@ -260,13 +261,17 @@ def print_strings(pdf_canvas, bill):
     width, height = A4
     locale.setlocale(locale.LC_TIME, "ja_JP.UTF-8")
 
+    page_width = 210 * mm - 2 * 60
+
     # 発行日
     font_size = 9
     pdf_canvas.setFont("ipaexg", font_size)
-    pdf_canvas.drawString(420, 790, f"発行日: {bill.issued_date.strftime('%Y年%m月%d日')}")
+    pdf_canvas.drawRightString(
+        60 + page_width, 790, f"発行日: {bill.issued_date.strftime('%Y年%m月%d日')}"
+    )
 
     # 請求書番号
-    pdf_canvas.drawString(420, 775, f"請求書番号: {bill.bill_number}")
+    pdf_canvas.drawRightString(60 + page_width, 775, f"請求書番号: {bill.bill_number}")
 
     # タイトル
     font_size = 24
@@ -300,15 +305,28 @@ def print_strings(pdf_canvas, bill):
         item_start_y = 595
 
     # 団体情報
-    fwinfo_x = 430
-    pdf_canvas.setFont("ipaexg", 11)
-    pdf_canvas.drawString(fwinfo_x, 715, "FairWind")
+    address_style = ParagraphStyle(
+        fontName="ipaexg", fontSize=9, leading=10, name="address"
+    )
+    address_list = ["〒153-0041", "東京都目黒区駒場3-8-1", "東京大学駒場キャンパス", "キャンパスプラザB303号室"]
+    address_str = "<br/>".join(address_list)
+    address = Paragraph(
+        address_str,
+        address_style,
+    )  # 本番は環境変数に
+    address.wrapOn(pdf_canvas, page_width, height)
+    width_list = [stringWidth(line, "ipaexg", 9) for line in address_list]
+    address.drawOn(pdf_canvas, 60 + page_width - max(width_list), 665)
+
+    pdf_canvas.setFont("ipaexg", 14)
+    pdf_canvas.drawString(60 + page_width - max(width_list), 710, "FairWind")
+
     pdf_canvas.setFont("ipaexg", 9)
-    pdf_canvas.drawString(fwinfo_x, 700, "〒153-0041")
-    pdf_canvas.drawString(fwinfo_x, 690, "東京都目黒区駒場3-8-1")  # 本番は環境変数に
-    pdf_canvas.drawString(fwinfo_x, 680, "東京大学駒場キャンパス")
-    pdf_canvas.drawString(fwinfo_x, 670, "○○棟○○号室")  # 本番は環境変数に
-    pdf_canvas.drawString(fwinfo_x, 650, f"{bill.post}: {bill.person_in_charge}")
+    pdf_canvas.drawString(
+        60 + page_width - max(width_list),
+        650,
+        f"{bill.post}: {bill.person_in_charge}",
+    )
 
     # 合計金額
     billing_items = bill.billing_item.all()
@@ -337,7 +355,6 @@ def print_strings(pdf_canvas, bill):
     ]
     # insert title row in the first
     data.insert(0, ["No.", "日付", "費目", "内訳", "数量", "単位", "金額"])
-    page_width = 210 * mm - 2 * 60
     table = Table(
         data,
         colWidths=[
