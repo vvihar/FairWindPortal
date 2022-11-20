@@ -283,6 +283,7 @@ def print_strings(pdf_canvas, bill):
     # date, item, breakdown, volume, unit, amount
     data = [
         [
+            i + 1,
             billing_item.date.strftime("%Y/%m/%d"),
             billing_item.item,
             billing_item.breakdown,
@@ -292,20 +293,21 @@ def print_strings(pdf_canvas, bill):
             billing_item.unit,
             "￥" + billing_item.amount.__format__(","),
         ]
-        for billing_item in billing_items
+        for i, billing_item in enumerate(billing_items)
     ]
     # insert title row in the first
-    data.insert(0, ["日付", "費目", "内訳", "数量", "単位", "金額"])
+    data.insert(0, ["No.", "日付", "費目", "内訳", "数量", "単位", "金額"])
     page_width = 210 * mm - 2 * 60
     table = Table(
         data,
         colWidths=[
+            page_width * 0.05,
             page_width * 0.15,
             page_width * 0.2,
             page_width * 0.35,
-            page_width * 0.075,
-            page_width * 0.1,
-            page_width * 0.125,
+            page_width * 0.06,
+            page_width * 0.08,
+            page_width * 0.11,
         ],
         rowHeights=15,
     )
@@ -325,4 +327,4 @@ def print_strings(pdf_canvas, bill):
 
     # 以上
     pdf_canvas.setFont("ipaexg", 9)
-    pdf_canvas.drawString(515, item_start_y - 85 - len(billing_items) * 15, "以上")
+    pdf_canvas.drawString(515, item_start_y - 90 - len(billing_items) * 15, "以上")
