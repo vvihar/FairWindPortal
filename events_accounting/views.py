@@ -298,24 +298,30 @@ def print_strings(pdf_canvas, bill):
 
     if bill.display_bank_account:
         pdf_canvas.drawString(60, 595, "お振込先:")
-        pdf_canvas.drawString(150, 595, "三菱UFJ銀行　新宿支店　普通　1234567")  # 本番は環境変数に
+        try:
+            fw_bank_account = settings.FW_BANK_ACCOUNT
+        except AttributeError:
+            fw_bank_account = "三菱UFJ銀行　新宿支店　普通　1234567"  # dummy
+        pdf_canvas.drawString(150, 595, fw_bank_account)
         pdf_canvas.line(150, 591, 380, 591)
-        item_start_y = 575
+        item_start_y = 585
     else:
-        item_start_y = 595
+        item_start_y = 610
 
     # 団体情報
     address_style = ParagraphStyle(
         fontName="ipaexg", fontSize=9, leading=10, name="address"
     )
-    address_list = ["〒153-0041", "東京都目黒区駒場3-8-1", "東京大学駒場キャンパス", "キャンパスプラザB303号室"]
-    address_str = "<br/>".join(address_list)
+    try:
+        fw_address = settings.FW_ADDRESS
+    except AttributeError:
+        fw_address = ["〒153-0041", "東京都目黒区駒場3-8-1", "東京大学駒場キャンパス", "〇〇棟〇〇号室"]  # dummy
     address = Paragraph(
-        address_str,
+        "<br/>".join(fw_address),
         address_style,
-    )  # 本番は環境変数に
+    )
     address.wrapOn(pdf_canvas, page_width, height)
-    width_list = [stringWidth(line, "ipaexg", 9) for line in address_list]
+    width_list = [stringWidth(line, "ipaexg", 9) for line in fw_address]
     address.drawOn(pdf_canvas, 60 + page_width - max(width_list), 665)
 
     pdf_canvas.setFont("ipaexg", 14)
