@@ -213,7 +213,9 @@ def download_bill(request, id, pk):
 
 def print_strings(pdf_canvas, bill):
     """データをPDFに描画する"""
-    font_url = os.path.join(settings.BASE_DIR, "static", "accountings", "ipaexg.ttf")
+    font_url = os.path.join(
+        settings.BASE_DIR, "static", "accountings", "fonts", "ipaexg.ttf"
+    )
     pdfmetrics.registerFont(TTFont("ipaexg", font_url))
     width, height = A4
     locale.setlocale(locale.LC_TIME, "ja_JP.UTF-8")
@@ -305,6 +307,7 @@ def print_strings(pdf_canvas, bill):
             page_width * 0.1,
             page_width * 0.125,
         ],
+        rowHeights=15,
     )
     table.setStyle(
         TableStyle(
