@@ -325,6 +325,27 @@ def print_strings(pdf_canvas, bill):
     table.wrapOn(pdf_canvas, width, height)
     table.drawOn(pdf_canvas, 60, item_start_y - 70 - len(billing_items) * 15)
 
+    sum_data = [["合計", f"￥{amount:,}"]]
+    sum_table = Table(
+        sum_data,
+        colWidths=[page_width * 0.08, page_width * 0.11],
+        rowHeights=15,
+    )
+    sum_table.setStyle(
+        TableStyle(
+            [
+                ("FONT", (0, 0), (-1, -1), "ipaexg", 8.5),
+                ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+                ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+                ("BOX", (0, 0), (-1, -1), 1, colors.black),
+            ]
+        )
+    )
+    sum_table.wrapOn(pdf_canvas, width, height)
+    sum_table.drawOn(
+        pdf_canvas, 60 + page_width * 0.81, item_start_y - 85 - len(billing_items) * 15
+    )
+
     # 以上
     pdf_canvas.setFont("ipaexg", 9)
-    pdf_canvas.drawString(515, item_start_y - 90 - len(billing_items) * 15, "以上")
+    pdf_canvas.drawString(515, item_start_y - 105 - len(billing_items) * 15, "以上")
