@@ -20,6 +20,7 @@ class BillForm(forms.ModelForm):
     def __init__(self, event, *args, **kwargs):
         super(BillForm, self).__init__(*args, **kwargs)
         # set limit_choices_to for recipients
+        # views.pyのget_form_kwargsでeventをforms.pyに渡しているので、ここでeventを使うことができる
         self.fields["recipient"].queryset = event.school.all()
         self.fields["person_in_charge"].queryset = event.admin.all()
 

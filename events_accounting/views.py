@@ -75,6 +75,7 @@ class BillCreate(CreateView):
         return context
 
     def get_form_kwargs(self):
+        """forms.pyのBillFormの__init__にeventを渡すための処理"""
         kwargs = super(BillCreate, self).get_form_kwargs()
         kwargs["event"] = Event.objects.get(pk=self.kwargs["id"])
         return kwargs
@@ -144,6 +145,7 @@ class BillUpdate(UpdateView):
         return context
 
     def get_form_kwargs(self, **kwargs):
+        """forms.pyのBillFormの__init__にeventを渡すための処理"""
         kwargs = super().get_form_kwargs(**kwargs)
         kwargs["event"] = Event.objects.get(pk=self.kwargs["id"])
         return kwargs
