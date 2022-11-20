@@ -335,7 +335,7 @@ def print_strings(pdf_canvas, bill):
     )
 
     # 合計金額
-    billing_items = bill.billing_item.all()
+    billing_items = bill.billing_item.all().order_by("date")
     amount = sum([item.amount for item in billing_items])
     pdf_canvas.setFont("ipaexg", 14)
     pdf_canvas.drawString(60, item_start_y - 35, "合計金額:")
