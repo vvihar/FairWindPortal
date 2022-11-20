@@ -84,7 +84,7 @@ class BillingItem(models.Model):
     amount = models.IntegerField("金額", default=0)
 
     def __str__(self):
-        return self.item + "-" + self.bill.event.name
+        return self.item + "-" + self.bill.event.name + "-" + self.bill.bill_number
 
     class Meta:
         """Metaクラス"""
