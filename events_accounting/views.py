@@ -232,13 +232,11 @@ def issue_bill(request, pk, id):
         raise Http404
     if request.user not in event.admin.all():
         raise Http404
-    if bill.is_issued:
-        return redirect("events:bill_list", id=id)
-    else:
+    if not bill.is_issued:
         bill.is_issued = True
         bill.save()
         messages.success(request, f"「{bill.bill_number}」を発行しました")
-        return redirect("events:bill_list", id=id)
+    return redirect("events:bill_list", id=id)
 
 
 def download_bill(request, id, pk):
