@@ -4,6 +4,7 @@ from django.urls import path
 from events_accounting.views import (
     BillCreate,
     BillDelete,
+    BillList,
     BillUpdate,
     download_bill,
     preview_bill,
@@ -66,6 +67,7 @@ urlpatterns = [
     ),
     # 請求書（event_accounting）
     path("<int:id>/bill/create", BillCreate.as_view(), name="bill_create"),
+    path("<int:id>/bill/", BillList.as_view(), name="bill_list"),
     path("<int:id>/bill/<int:pk>/update", BillUpdate.as_view(), name="bill_update"),
     path("<int:id>/bill/<int:pk>/delete", BillDelete.as_view(), name="bill_delete"),
     path("<int:id>/bill/<int:pk>/download", download_bill, name="bill_download"),

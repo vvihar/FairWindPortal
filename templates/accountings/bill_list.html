@@ -1,0 +1,36 @@
+{% extends "events/base.html" %}
+
+{% load static %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% load django_bootstrap5 %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb event.name "events:event_detail" event.id %}
+    {% breadcrumb "請求書" "events:bill_list" event.id %}
+{% endblock breadcrumbs %}
+{% block content %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">請求書番号</th>
+                <th scope="col">ステータス</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for bill in object_list %}
+                <tr>
+                    <td>{{ bill.bill_number }}</td>
+                    <td>
+                        {% if bill.is_issued %}
+                            発行済み
+                        {% else %}
+                            未発行
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock content %}

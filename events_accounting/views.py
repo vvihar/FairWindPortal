@@ -87,6 +87,7 @@ class BillCreate(CreateView):
             context["formset"] = BillingItemFormset(self.request.POST, prefix="items")
         else:
             context["formset"] = BillingItemFormset(prefix="items")
+        context["title"] = "作成"
         return context
 
     def get_form_kwargs(self):
@@ -157,6 +158,7 @@ class BillUpdate(UpdateView):
             prefix="items",
         )
         context["formset"] = formset
+        context["title"] = "更新"
         return context
 
     def get_form_kwargs(self, **kwargs):
@@ -208,6 +210,20 @@ class BillDelete(DeleteView):
         if bill.event != event:
             raise Http404
         return super().get(request, *args, **kwargs)
+
+
+class BillList(ListView):
+    model = Bill
+    template_name = "accountings/bill_list.html"
+
+    def get_queryset(self):
+        return Bill.objects.filter(event__id=self.kwargs["id"])
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        event = Event.objects.get(pk=self.kwargs["id"])
+        context["event"] = event
+        return context
 
 
 def download_bill(request, id, pk):
