@@ -65,7 +65,7 @@ class EventRecruitmentUpdate(UpdateView):
         return super().form_valid(form)
 
     def get(self, request, *args, **kwargs):
-        return redirect("events:recruitment")
+        return redirect("events:recruitment_list", id=self.kwargs["id"])
 
 
 class EventRecruitmentList(ListView):
