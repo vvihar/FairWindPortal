@@ -57,14 +57,17 @@ urlpatterns = [
     # 出欠掲示板（event_recruitment）
     path("recruitments/", EventRecruitmentHome.as_view(), name="recruitment"),
     path(
+        "<int:id>/recruit/list/event.csv", event_recruitment_csv, name="recruitment_csv"
+    ),  # event.csvというファイルの実体がここにあるわけではない（URLのパターンを指定しているだけ）
+    path(
+        "<int:id>/recruit/",
+        EventRecruitmentList.as_view(),
+        name="recruitment_list",
+    ),
+    path(
         "<int:id>/recruit/submit/",
         EventRecruitmentUpdate.as_view(),
         name="recruitment_update",
-    ),
-    path(
-        "<int:id>/recruit/list/",
-        EventRecruitmentList.as_view(),
-        name="recruitment_list",
     ),
     # 請求書（event_accounting）
     path("<int:id>/bill/create", BillCreate.as_view(), name="bill_create"),
@@ -73,7 +76,4 @@ urlpatterns = [
     path("<int:id>/bill/<int:pk>/delete", BillDelete.as_view(), name="bill_delete"),
     path("<int:id>/bill/<int:pk>/download", download_bill, name="bill_download"),
     path("<int:id>/bill/<int:pk>/issue", issue_bill, name="bill_issue"),
-    path(
-        "<int:id>/recruit/list/event.csv", event_recruitment_csv, name="recruitment_csv"
-    ),  # event.csvというファイルの実体がここにあるわけではない（URLのパターンを指定しているだけ）
 ]
