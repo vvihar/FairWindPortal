@@ -13,6 +13,7 @@ from events_recruitment.views import (
     EventRecruitmentHome,
     EventRecruitmentList,
     EventRecruitmentUpdate,
+    event_recruitment_csv,
 )
 
 from .views import (
@@ -72,4 +73,7 @@ urlpatterns = [
     path("<int:id>/bill/<int:pk>/delete", BillDelete.as_view(), name="bill_delete"),
     path("<int:id>/bill/<int:pk>/download", download_bill, name="bill_download"),
     path("<int:id>/bill/<int:pk>/issue", issue_bill, name="bill_issue"),
+    path(
+        "<int:id>/recruit/list/event.csv", event_recruitment_csv, name="recruitment_csv"
+    ),  # event.csvというファイルの実体がここにあるわけではない（URLのパターンを指定しているだけ）
 ]
