@@ -206,7 +206,6 @@ class BillDelete(DeleteView):
         event = Event.objects.get(pk=self.kwargs["id"])
         bill = Bill.objects.get(pk=self.kwargs["pk"])
         if bill.event != event:
-            messages.error(self.request, "不正なアクセスです")
             raise Http404
         return super().get(request, *args, **kwargs)
 
