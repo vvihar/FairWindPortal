@@ -1,0 +1,30 @@
+{% extends "events/base.html" %}
+
+{% load static %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% load django_bootstrap5 %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb event.name "events:event_detail" event.id %}
+    {% breadcrumb "請求書" "events:bill_list" event.id %}
+    {% breadcrumb title "events:bill_create" %}
+{% endblock breadcrumbs %}
+{% block content %}
+    <h1 class="fs-4 mb-3">{{ event.name }}</h1>
+    <form method="post">
+        {% csrf_token %}
+        {% bootstrap_form form layout="floating" %}
+        {{ formset.management_form }}
+        {% for item_form in formset %}
+            <div class="card mb-3 text-dark bg-light item-form">
+                <h5 class="card-header">請求項目</h5>
+                <div class="card-body">{% bootstrap_form item_form layout="horizontal" %}</div>
+            </div>
+        {% endfor %}
+        {% bootstrap_button "請求項目を追加" button_type="button" button_class="btn-secondary" id="add-btn" %}
+        {% bootstrap_button "登録" button_type="submit" %}
+    </form>
+    <script src="{% static 'accountings/bill_items_form.js' %}"></script>
+{% endblock content %}
