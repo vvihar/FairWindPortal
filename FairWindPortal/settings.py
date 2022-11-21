@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.forms",
+    "django.contrib.humanize",
     "django_bootstrap5",
     "django_bootstrap_breadcrumbs",
     "utils.apps.UtilsConfig",

@@ -2,6 +2,7 @@
 
 {% load static %}
 
+{% load humanize %}
 {% load django_bootstrap_breadcrumbs %}
 {% load django_bootstrap5 %}
 
@@ -20,16 +21,14 @@
             <tr>
                 <th scope="col">請求書番号</th>
                 <th scope="col">PDF</th>
+                <th scope="col">最終更新</th>
                 <th scope="col">操作</th>
             </tr>
         </thead>
         <tbody>
             {% for bill in object_list %}
                 <tr class="align-middle">
-                    <td>
-                        {{ bill.bill_number }}
-                        {% if forloop.last %}<span class="badge rounded-pill bg-warning text-dark ms-1">最新</span>{% endif %}
-                    </td>
+                    <td>{{ bill.bill_number }}</td>
                     <td>
                         <a href="{% url 'events:bill_download' event.id bill.pk %}"
                            target="_blank"
@@ -46,6 +45,7 @@
                             </svg>
                         PDF</a>
                     </td>
+                    <td>{{ bill.last_updated|naturaltime }}</td>
                     <td>
                         {% if bill.is_issued %}
                             発行済み

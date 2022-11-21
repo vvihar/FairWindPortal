@@ -51,6 +51,8 @@ class Bill(models.Model):
 
     is_issued = models.BooleanField("発行済み", default=False)
 
+    last_updated = models.DateTimeField("最終更新日", auto_now=True)
+
     def clean(self):
         if not self.payment_deadline:
             self.payment_deadline = self.issued_date + datetime.timedelta(days=30)
