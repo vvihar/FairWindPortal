@@ -7,7 +7,6 @@ from events_accounting.views import (
     BillList,
     BillUpdate,
     download_bill,
-    preview_bill,
 )
 from events_recruitment.views import (
     EventRecruitmentHome,
@@ -71,5 +70,4 @@ urlpatterns = [
     path("<int:id>/bill/<int:pk>/update", BillUpdate.as_view(), name="bill_update"),
     path("<int:id>/bill/<int:pk>/delete", BillDelete.as_view(), name="bill_delete"),
     path("<int:id>/bill/<int:pk>/download", download_bill, name="bill_download"),
-    path("<int:id>/bill/<int:pk>/preview", preview_bill, name="bill_preview"),
 ]

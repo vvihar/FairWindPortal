@@ -230,25 +230,12 @@ def download_bill(request, id, pk):
     """請求書をPDFでダウンロードする"""
     bill = Bill.objects.get(pk=pk)
     event = Event.objects.get(pk=id)
-    if bill.event != event:
+    if bill.event != event:  # 請求書が紐づけられている企画と、URLから取得した企画が一致しない場合は不正なアクセスとみなす
         raise Http404
-    if not bill.is_issued:
-        bill.is_issued = True
-        bill.save()
     if bill.is_issued:
         return make_bill_pdf(bill)
-
-
-def preview_bill(request, id, pk):
-    """請求書をPDFでプレビューする"""
-    bill = Bill.objects.get(pk=pk)
-    event = Event.objects.get(pk=id)
-    if bill.event != event:
-        raise Http404
-    if bill.is_issued:
-        # redirect to download_bill
-        return redirect("events:bill_download", id=id, pk=pk)
-    return make_bill_pdf(bill, preview=True)
+    else:
+        return make_bill_pdf(bill, preview=True)
 
 
 def make_bill_pdf(bill, preview=False):
