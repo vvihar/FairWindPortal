@@ -26,6 +26,7 @@ from reportlab.pdfgen import canvas
 from reportlab.platypus import Paragraph, Table, TableStyle
 
 from events.models import Event
+from events.views import OnlyEventAdminMixin
 
 from .forms import BillForm, BillingItemFormset, BillingItemUpdateFormset
 from .models import Bill
@@ -33,13 +34,13 @@ from .models import Bill
 # Create your views here.
 
 
-class BillCreate(CreateView):
+class BillCreate(OnlyEventAdminMixin, CreateView):
     template_name = "accountings/create_bill.html"
     model = Bill
     form_class = BillForm
 
     def get_success_url(self):
-        return reverse_lazy("events:event_detail", kwargs={"pk": self.kwargs["id"]})
+        return reverse_lazy("events:bill_list", kwargs={"id": self.kwargs["id"]})
 
     def form_valid(self, form):
         bill_form = form.save(commit=False)
@@ -73,7 +74,7 @@ class BillCreate(CreateView):
                 return self.form_invalid(form)
             bill_form.save()
             form_set.save()
-            messages.success(self.request, "請求書を作成しました")
+            messages.success(self.request, f"「{bill_form.bill_number}」を作成しました")
             return super().form_valid(form)
         else:
             messages.error(self.request, "請求書の作成に失敗しました")
@@ -105,7 +106,7 @@ class BillCreate(CreateView):
     # 5. 以後はPDFのダウンロードのみできるようにする
 
 
-class BillUpdate(UpdateView):
+class BillUpdate(OnlyEventAdminMixin, UpdateView):
     """領収書を発行前に編集する（発行後は編集不可）"""
 
     template_name = "accountings/create_bill.html"
@@ -113,10 +114,7 @@ class BillUpdate(UpdateView):
     form_class = BillForm
 
     def get_success_url(self):
-        return reverse_lazy(
-            "events:bill_update",
-            kwargs={"pk": self.kwargs["pk"], "id": self.kwargs["id"]},
-        )
+        return reverse_lazy("events:bill_list", kwargs={"id": self.kwargs["id"]})
 
     def form_valid(self, form):
         bill_form = form.save(commit=False)
@@ -141,7 +139,7 @@ class BillUpdate(UpdateView):
                 return self.form_invalid(form)
             bill_form.save()
             form_set.save()
-            messages.success(self.request, "保存しました")
+            messages.success(self.request, f"「{bill_form.bill_number}」を更新しました")
             return super().form_valid(form)
         else:
             messages.error(self.request, "保存に失敗しました")
@@ -168,25 +166,23 @@ class BillUpdate(UpdateView):
         return kwargs
 
     def get(self, request, *args, **kwargs):
-        # TODO: 発行済みの請求書は編集できないようにする
-        # self.object = self.get_object()
-        # if self.object.is_issued:
-        #    messages.error(self.request, "発行済みの請求書は編集できません")
-        #    return redirect("events:bill_detail", pk=self.object.pk, id=self.kwargs["id"])
+        bill = self.get_object()
+        if bill.is_issued:
+            messages.error(self.request, "発行済みの請求書は編集できません")
+            return redirect("events:bill_list", id=self.kwargs["id"])
         event = Event.objects.get(pk=self.kwargs["id"])
-        bill = Bill.objects.get(pk=self.kwargs["pk"])
         if bill.event != event:
             messages.error(self.request, "不正なアクセスです")
             raise Http404
         return super().get(request, *args, **kwargs)
 
 
-class BillDelete(DeleteView):
+class BillDelete(OnlyEventAdminMixin, DeleteView):
     model = Bill
     template_name = "accountings/delete_bill.html"
 
     def get_success_url(self):
-        return reverse_lazy("events:bill_create", kwargs={"id": self.kwargs["id"]})
+        return reverse_lazy("events:bill_list", kwargs={"id": self.kwargs["id"]})
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -201,18 +197,21 @@ class BillDelete(DeleteView):
             return redirect(
                 "events:bill_update", pk=self.kwargs["pk"], id=self.kwargs["id"]
             )
-        messages.success(request, "請求書を削除しました")
+        messages.success(request, f"「{bill.bill_number}」を削除しました")
         return super().delete(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
+        bill = self.get_object()
+        if bill.is_issued:
+            messages.error(self.request, "発行済みの請求書は削除できません")
+            return redirect("events:bill_list", id=self.kwargs["id"])
         event = Event.objects.get(pk=self.kwargs["id"])
-        bill = Bill.objects.get(pk=self.kwargs["pk"])
         if bill.event != event:
             raise Http404
         return super().get(request, *args, **kwargs)
 
 
-class BillList(ListView):
+class BillList(OnlyEventAdminMixin, ListView):
     model = Bill
     template_name = "accountings/bill_list.html"
 
@@ -226,11 +225,29 @@ class BillList(ListView):
         return context
 
 
+def issue_bill(request, pk, id):
+    bill = Bill.objects.get(pk=pk)
+    event = Event.objects.get(pk=id)
+    if bill.event != event:  # 請求書が紐づけられている企画と、URLから取得した企画が一致しない場合は不正なアクセスとみなす
+        raise Http404
+    if request.user not in event.admin.all():
+        raise Http404
+    if bill.is_issued:
+        return redirect("events:bill_list", id=id)
+    else:
+        bill.is_issued = True
+        bill.save()
+        messages.success(request, f"「{bill.bill_number}」を発行しました")
+        return redirect("events:bill_list", id=id)
+
+
 def download_bill(request, id, pk):
     """請求書をPDFでダウンロードする"""
     bill = Bill.objects.get(pk=pk)
     event = Event.objects.get(pk=id)
     if bill.event != event:  # 請求書が紐づけられている企画と、URLから取得した企画が一致しない場合は不正なアクセスとみなす
+        raise Http404
+    if request.user not in event.admin.all():
         raise Http404
     if bill.is_issued:
         return make_bill_pdf(bill)
@@ -256,11 +273,7 @@ def make_bill_pdf(bill, preview=False):
     pdf_canvas.showPage()
     pdf_canvas.save()
     buffer.seek(0)
-    return FileResponse(
-        buffer,
-        filename=filename
-        # as_attachment=True, #TODO: ダウンロードさせる
-    )
+    return FileResponse(buffer, filename=filename, as_attachment=not preview)
 
 
 def preview_watermark(pdf_canvas):
