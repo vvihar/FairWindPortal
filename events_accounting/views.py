@@ -4,8 +4,8 @@ import os
 
 from django.conf import settings
 from django.contrib import messages
-from django.http import FileResponse
-from django.shortcuts import get_object_or_404, redirect, render
+from django.http import FileResponse, Http404
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import (
     CreateView,
@@ -28,7 +28,7 @@ from reportlab.platypus import Paragraph, Table, TableStyle
 from events.models import Event
 
 from .forms import BillForm, BillingItemFormset, BillingItemUpdateFormset
-from .models import Bill, BillingItem
+from .models import Bill
 
 # Create your views here.
 
@@ -165,6 +165,19 @@ class BillUpdate(UpdateView):
         kwargs["event"] = Event.objects.get(pk=self.kwargs["id"])
         return kwargs
 
+    def get(self, request, *args, **kwargs):
+        # TODO: 発行済みの請求書は編集できないようにする
+        # self.object = self.get_object()
+        # if self.object.is_issued:
+        #    messages.error(self.request, "発行済みの請求書は編集できません")
+        #    return redirect("events:bill_detail", pk=self.object.pk, id=self.kwargs["id"])
+        event = Event.objects.get(pk=self.kwargs["id"])
+        bill = Bill.objects.get(pk=self.kwargs["pk"])
+        if bill.event != event:
+            messages.error(self.request, "不正なアクセスです")
+            raise Http404
+        return super().get(request, *args, **kwargs)
+
 
 class BillDelete(DeleteView):
     model = Bill
@@ -189,10 +202,21 @@ class BillDelete(DeleteView):
         messages.success(request, "請求書を削除しました")
         return super().delete(request, *args, **kwargs)
 
+    def get(self, request, *args, **kwargs):
+        event = Event.objects.get(pk=self.kwargs["id"])
+        bill = Bill.objects.get(pk=self.kwargs["pk"])
+        if bill.event != event:
+            messages.error(self.request, "不正なアクセスです")
+            raise Http404
+        return super().get(request, *args, **kwargs)
+
 
 def download_bill(request, id, pk):
     """請求書をPDFでダウンロードする"""
     bill = Bill.objects.get(pk=pk)
+    event = Event.objects.get(pk=id)
+    if bill.event != event:
+        raise Http404
     if not bill.is_issued:
         bill.is_issued = True
         bill.save()
@@ -203,6 +227,9 @@ def download_bill(request, id, pk):
 def preview_bill(request, id, pk):
     """請求書をPDFでプレビューする"""
     bill = Bill.objects.get(pk=pk)
+    event = Event.objects.get(pk=id)
+    if bill.event != event:
+        raise Http404
     if bill.is_issued:
         # redirect to download_bill
         return redirect("events:bill_download", id=id, pk=pk)
