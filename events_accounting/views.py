@@ -1,6 +1,6 @@
+import io
 import locale
 import os
-import tempfile
 
 from django.conf import settings
 from django.contrib import messages
@@ -210,25 +210,28 @@ def preview_bill(request, id, pk):
 
 
 def make_bill_pdf(bill, preview=False):
-    with tempfile.TemporaryDirectory() as tmpdir:
-        if preview:
-            filename = os.path.join(tmpdir, bill.bill_number + "-preview.pdf")
-            title = f"【プレビュー】御請求書（{bill.event.name}）"
-        else:
-            filename = os.path.join(tmpdir, bill.bill_number + ".pdf")
-            title = f"御請求書（{bill.event.name}）"
-        pdf_canvas = canvas.Canvas(filename=filename)
-        pdf_canvas.setAuthor("FairWind")
-        pdf_canvas.setTitle(title)
-        pdf_canvas.setSubject(title)
-        print_strings(pdf_canvas, bill)
-        if preview:
-            preview_watermark(pdf_canvas)
-        pdf_canvas.save()
-        return FileResponse(
-            open(filename, "rb"),
-            # as_attachment=True, #TODO: ダウンロードさせる
-        )
+    buffer = io.BytesIO()
+    if preview:
+        filename = bill.bill_number + "-preview.pdf"
+        title = f"【プレビュー】御請求書（{bill.event.name}）"
+    else:
+        filename = bill.bill_number + ".pdf"
+        title = f"御請求書（{bill.event.name}）"
+    pdf_canvas = canvas.Canvas(buffer)
+    pdf_canvas.setAuthor("FairWind")
+    pdf_canvas.setTitle(title)
+    pdf_canvas.setSubject(title)
+    print_strings(pdf_canvas, bill)
+    if preview:
+        preview_watermark(pdf_canvas)
+    pdf_canvas.showPage()
+    pdf_canvas.save()
+    buffer.seek(0)
+    return FileResponse(
+        buffer,
+        filename=filename
+        # as_attachment=True, #TODO: ダウンロードさせる
+    )
 
 
 def preview_watermark(pdf_canvas):
