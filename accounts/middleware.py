@@ -9,6 +9,7 @@ class LoginRequiredMiddleware(MiddlewareMixin):
             not request.user.is_authenticated
             and request.path != reverse("accounts:login")
             and request.path != reverse("home")
+            and not request.path.startswith("/admin/")
         ):
             return HttpResponseRedirect(
                 reverse("accounts:login") + "?next=" + request.path
