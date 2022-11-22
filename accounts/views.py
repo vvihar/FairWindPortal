@@ -6,8 +6,7 @@ from datetime import datetime
 # Create your views here.
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.db.models import Q
 from django.http import JsonResponse
@@ -36,7 +35,7 @@ class StaffRequiredMixin(UserPassesTestMixin):
         return redirect(f"{reverse(settings.LOGIN_URL)}?next={self.request.path}")
 
 
-class Home(LoginRequiredMixin, TemplateView):
+class Home(TemplateView):
     """ホーム画面"""
 
     template_name = "accounts/index.html"
@@ -88,7 +87,7 @@ class PasswordChange(PasswordChangeView):
         return super().form_valid(form)
 
 
-class UserUpdate(LoginRequiredMixin, UpdateView):
+class UserUpdate(UpdateView):
     """ユーザー編集画面"""
 
     model = User
@@ -302,7 +301,6 @@ class UserImport(StaffRequiredMixin, FormView):
         return super().form_valid(form)
 
 
-@login_required
 def api_members_get(request):
     """サジェスト候補のメンバーを JSON で返す。"""
     keyword = request.GET.get("keyword")

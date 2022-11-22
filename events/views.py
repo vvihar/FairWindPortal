@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
@@ -49,7 +49,7 @@ class OnlyEventAdminMixin(UserPassesTestMixin):
         return redirect(f"{reverse(settings.LOGIN_URL)}?next={self.request.path}")
 
 
-class Home(LoginRequiredMixin, ListView):
+class Home(ListView):
     """ホーム画面"""
 
     model = Event
@@ -77,7 +77,7 @@ class Home(LoginRequiredMixin, ListView):
         return Event.objects.exclude(status="アーカイブ").order_by("start_datetime")
 
 
-class EventListAll(LoginRequiredMixin, ListView):
+class EventListAll(ListView):
     """全ての企画のリスト"""
 
     model = Event
@@ -116,7 +116,7 @@ class EventListAll(LoginRequiredMixin, ListView):
         """
 
 
-class EventCreate(LoginRequiredMixin, CreateView):
+class EventCreate(CreateView):
     """企画作成"""
 
     template_name = "events/create.html"
@@ -174,7 +174,7 @@ class EventUpdate(UserPassesTestMixin, UpdateView):
         return redirect(f"{reverse(settings.LOGIN_URL)}?next={self.request.path}")
 
 
-class EventDetail(LoginRequiredMixin, DetailView, edit.ModelFormMixin):
+class EventDetail(DetailView, edit.ModelFormMixin):
     """企画詳細"""
 
     template_name = "events/detail.html"
@@ -230,7 +230,7 @@ class EventDetail(LoginRequiredMixin, DetailView, edit.ModelFormMixin):
         return context
 
 
-class EventParticipants(LoginRequiredMixin, ListView):
+class EventParticipants(ListView):
     """企画の参加者・打診状況一覧"""
 
     template_name = "events/participants.html"
@@ -294,7 +294,7 @@ class EventMakeInvitation(OnlyEventAdminMixin, FormView):
         return super().form_valid(form)
 
 
-class EventReplyInvitation(LoginRequiredMixin, UpdateView):
+class EventReplyInvitation(UpdateView):
     """企画への打診を回答する"""
 
     template_name = "events/reply_invitation.html"

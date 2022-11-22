@@ -4,18 +4,10 @@ import os
 
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 from django.http import FileResponse, Http404
 from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
-from django.views.generic import (
-    CreateView,
-    DeleteView,
-    DetailView,
-    FormView,
-    ListView,
-    UpdateView,
-)
+from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import ParagraphStyle
@@ -226,7 +218,6 @@ class BillList(OnlyEventAdminMixin, ListView):
         return context
 
 
-@login_required
 def issue_bill(request, pk, id):
     bill = Bill.objects.get(pk=pk)
     event = Event.objects.get(pk=id)
@@ -241,7 +232,6 @@ def issue_bill(request, pk, id):
     return redirect("events:bill_list", id=id)
 
 
-@login_required
 def download_bill(request, id, pk):
     """請求書をPDFでダウンロードする"""
     bill = Bill.objects.get(pk=pk)

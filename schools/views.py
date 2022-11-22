@@ -4,8 +4,6 @@ import re
 from urllib import request
 
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.http import JsonResponse
 from django.urls import reverse_lazy
@@ -19,7 +17,7 @@ from .models import School
 # Create your views here.
 
 
-class SchoolList(LoginRequiredMixin, ListView):
+class SchoolList(ListView):
     """学校一覧"""
 
     model = School
@@ -42,7 +40,7 @@ class SchoolList(LoginRequiredMixin, ListView):
         return object_list
 
 
-class SchoolDetailView(LoginRequiredMixin, DetailView):
+class SchoolDetailView(DetailView):
     """学校詳細"""
 
     model = School
@@ -50,7 +48,7 @@ class SchoolDetailView(LoginRequiredMixin, DetailView):
     form_class = SchoolDetailUpdateForm
 
 
-class SchoolDetailUpdate(LoginRequiredMixin, UpdateView):
+class SchoolDetailUpdate(UpdateView):
     """学校詳細の編集画面。学校に関するデータを蓄積する"""
 
     model = School
@@ -221,7 +219,6 @@ class MakeSchoolDB(StaffRequiredMixin, FormView):
         return super().form_valid(form)
 
 
-@login_required
 def api_schools_get(request):
     """サジェスト候補の学校を JSON で返す。"""
     keyword = request.GET.get("keyword")
