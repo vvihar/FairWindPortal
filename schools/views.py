@@ -5,10 +5,13 @@ from urllib import request
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, FormView, ListView, UpdateView
+
+from accounts.views import StaffRequiredMixin
 
 from .forms import MakeSchoolDBForm, SchoolDetailUpdateForm
 from .models import School
@@ -16,7 +19,7 @@ from .models import School
 # Create your views here.
 
 
-class SchoolList(ListView):
+class SchoolList(LoginRequiredMixin, ListView):
     """学校一覧"""
 
     model = School
@@ -39,7 +42,7 @@ class SchoolList(ListView):
         return object_list
 
 
-class SchoolDetailView(DetailView):
+class SchoolDetailView(LoginRequiredMixin, DetailView):
     """学校詳細"""
 
     model = School
@@ -47,7 +50,7 @@ class SchoolDetailView(DetailView):
     form_class = SchoolDetailUpdateForm
 
 
-class SchoolDetailUpdate(UpdateView):
+class SchoolDetailUpdate(LoginRequiredMixin, UpdateView):
     """学校詳細の編集画面。学校に関するデータを蓄積する"""
 
     model = School
@@ -58,7 +61,7 @@ class SchoolDetailUpdate(UpdateView):
         return reverse_lazy("schools:school_detail", kwargs={"pk": self.kwargs["pk"]})
 
 
-class MakeSchoolDB(FormView):
+class MakeSchoolDB(StaffRequiredMixin, FormView):
     """学校データベースのDBを作成・更新する"""
 
     template_name = "schools/db_update.html"
