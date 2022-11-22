@@ -2,11 +2,12 @@ import csv
 
 from django.contrib import messages
 from django.http import HttpResponse
-from django.shortcuts import redirect
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, TemplateView, UpdateView
 
 from events.models import Event
+from shortener.models import ShortURL
 
 from .forms import EventRecruitmentForm
 from .models import EventRecruitment
@@ -86,7 +87,10 @@ class EventRecruitmentList(ListView):
             ("no", "×"),
         )
         context["is_admin"] = self.request.user in context["event"].admin.all()
-        context["hashid"] = self.request.GET.get("hashid")
+        hashid = self.request.GET.get("hashid")
+        if hashid:
+            get_object_or_404(ShortURL, hashid=hashid)  # 短縮URLのhashidが有効かチェック
+        context["hashid"] = hashid
         return context
 
 
