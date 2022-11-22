@@ -1,6 +1,8 @@
 import csv
 
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
@@ -15,7 +17,7 @@ from .models import EventRecruitment
 # Create your views here.
 
 
-class EventRecruitmentHome(TemplateView):
+class EventRecruitmentHome(LoginRequiredMixin, TemplateView):
     """出欠掲示板の本体のページ"""
 
     template_name = "recruitments/index.html"
@@ -39,7 +41,7 @@ class EventRecruitmentHome(TemplateView):
         return context
 
 
-class EventRecruitmentUpdate(UpdateView):
+class EventRecruitmentUpdate(LoginRequiredMixin, UpdateView):
     """出欠掲示板の更新を受け付ける。GETリクエストは受け付けない"""
 
     model = EventRecruitment
@@ -69,7 +71,7 @@ class EventRecruitmentUpdate(UpdateView):
         return redirect("events:recruitment_list", id=self.kwargs["id"])
 
 
-class EventRecruitmentList(ListView):
+class EventRecruitmentList(LoginRequiredMixin, ListView):
     model = EventRecruitment
     template_name = "recruitments/list.html"
     # FIXME: すでに打診されたメンバーは別枠で表示する
@@ -94,6 +96,7 @@ class EventRecruitmentList(ListView):
         return context
 
 
+@login_required
 def event_recruitment_csv(request, id):
     """出欠掲示板のCSVをダウンロードする"""
 
