@@ -25,7 +25,7 @@ urlpatterns = (
         path("admin/", admin.site.urls),
         path("", Home.as_view(), name="home"),
         path("accounts/", include("accounts.urls")),
-        path("events/", include("events.urls")),  # 出欠掲示板もこれで管理
+        path("events/", include("events.urls")),  # 出欠掲示板, 請求書もこれで管理
         path("schools/", include("schools.urls")),
         path("s/", include("shortener.urls")),
     ]
