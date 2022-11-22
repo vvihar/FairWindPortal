@@ -12,6 +12,7 @@
     {% breadcrumb "出欠掲示板" "events:recruitment" %}
 {% endblock breadcrumbs %}
 {% block content %}
+    <!--TODO: 出欠掲示板をevent appのトップの企画一覧に統合する-->
     {% for event, recruitment, has_answered in events %}
         <div class="card mb-3">
             <div class="card-body">

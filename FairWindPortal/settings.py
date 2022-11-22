@@ -59,6 +59,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "accounts.middleware.LoginRequiredMiddleware",  # ログイン画面とホーム画面以外はログインを要求する
 ]
 
 ROOT_URLCONF = "FairWindPortal.urls"

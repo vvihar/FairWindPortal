@@ -4,11 +4,12 @@ import re
 from urllib import request
 
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, FormView, ListView, UpdateView
+
+from accounts.views import StaffRequiredMixin
 
 from .forms import MakeSchoolDBForm, SchoolDetailUpdateForm
 from .models import School
@@ -58,7 +59,7 @@ class SchoolDetailUpdate(UpdateView):
         return reverse_lazy("schools:school_detail", kwargs={"pk": self.kwargs["pk"]})
 
 
-class MakeSchoolDB(FormView):
+class MakeSchoolDB(StaffRequiredMixin, FormView):
     """学校データベースのDBを作成・更新する"""
 
     template_name = "schools/db_update.html"
@@ -218,7 +219,6 @@ class MakeSchoolDB(FormView):
         return super().form_valid(form)
 
 
-@login_required
 def api_schools_get(request):
     """サジェスト候補の学校を JSON で返す。"""
     keyword = request.GET.get("keyword")

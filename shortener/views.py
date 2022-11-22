@@ -1,14 +1,9 @@
 import datetime
 
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.exceptions import BadRequest
-from django.core.validators import URLValidator
 from django.http import Http404
 from django.shortcuts import redirect
 from django.utils.timezone import make_aware
-from django.views import View
-from django.views.generic.edit import FormMixin
 
 from .models import ShortURL
 
