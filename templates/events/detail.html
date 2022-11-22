@@ -36,15 +36,15 @@
 
         編集</a>
     {% endif %}
-    {% if object.status|stringformat:"s" != "参加者募集中" %}
-        <a href="{% url 'events:event_participants' event.pk %}"
-           class="btn btn-dark btn-sm">参加者一覧</a>
-    {% endif %}
     {% if object.status|stringformat:"s" == "参加者募集中" or object.status|stringformat:"s" == "参加者打診中" %}
         {% if user in event.admin.all %}
             <a href="{% url 'events:recruitment_list' event.pk %}"
                class="btn btn-dark btn-sm">出欠一覧</a>
         {% endif %}
+    {% endif %}
+    {% if object.status|stringformat:"s" != "参加者募集中" %}
+        <a href="{% url 'events:event_participants' event.pk %}"
+           class="btn btn-dark btn-sm">参加者一覧</a>
     {% endif %}
     {% if object.status|stringformat:"s" == "参加者募集中" %}
         <a href="{% url 'events:recruitment' %}"
