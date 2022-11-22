@@ -48,7 +48,7 @@
     {% endif %}
     {% if object.status|stringformat:"s" == "参加者募集中" %}
         <a href="{% url 'events:recruitment' %}"
-           class="btn btn-primary  btn-sm"
+           class="btn btn-warning  btn-sm"
            tabindex="-1"
            role="button"
            aria-disabled="true">出欠掲示板</a>

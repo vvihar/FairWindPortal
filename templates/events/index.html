@@ -9,6 +9,12 @@
 {% block content %}
     <a href="{% url 'events:event_create' %}"
        class="btn btn-primary mb-3">新規登録</a>
+    {% if recruitment_not_submitted > 0 %}
+        <a href="{% url 'events:recruitment' %}"
+           class="btn btn-warning mb-3">出欠掲示板
+            <span class="badge bg-dark rounded-pill">{{ recruitment_not_submitted }}</span>
+        </a>
+    {% endif %}
     {% for event in object_list %}
 
         {% include 'events/event_list_component.html' %}
