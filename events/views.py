@@ -66,7 +66,7 @@ class Home(ListView):
         return context
 
     def get_queryset(self):
-        return Event.objects.all().order_by("start_datetime")
+        return Event.objects.exclude(status="アーカイブ").order_by("start_datetime")
 
 
 class EventListAll(ListView):
