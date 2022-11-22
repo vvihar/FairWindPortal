@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import FileResponse, Http404
 from django.shortcuts import redirect
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.views.generic import (
     CreateView,
     DeleteView,
@@ -233,7 +233,7 @@ def issue_bill(request, pk, id):
     if bill.event != event:  # 請求書が紐づけられている企画と、URLから取得した企画が一致しない場合は不正なアクセスとみなす
         raise Http404
     if request.user not in event.admin.all():
-        raise Http404
+        return redirect(reverse("accounts:login") + f"?next={request.path}")
     if not bill.is_issued:
         bill.is_issued = True
         bill.save()
@@ -249,7 +249,7 @@ def download_bill(request, id, pk):
     if bill.event != event:  # 請求書が紐づけられている企画と、URLから取得した企画が一致しない場合は不正なアクセスとみなす
         raise Http404
     if request.user not in event.admin.all():
-        raise Http404
+        return redirect(reverse("accounts:login") + f"?next={request.path}")
     if bill.is_issued:
         return make_bill_pdf(bill)
     else:
