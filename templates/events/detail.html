@@ -6,48 +6,8 @@
 {% load django_bootstrap5 %}
 
 {% block head %}
-    <style>
-        .table > tbody > tr > * {
-            padding-top: .75rem !important;
-            padding-bottom: .75rem !important;
-        }
-
-        .table > tbody > tr:last-child > * {
-            border-bottom: 0;
-        }
-
-        .table {
-            margin-bottom: 0;
-        }
-
-        tr > th {
-            width: 1px;
-            white-space: nowrap;
-        }
-
-        #id_status {
-            --bs-bg-opacity: 1;
-            display: block;
-            width: 100%;
-            padding: .275rem 2.25rem .275rem .75rem;
-            -moz-padding-start: calc(0.75rem - 3px);
-            font-size: 0.9rem;
-            font-weight: 400;
-            line-height: 1.5;
-            color: #212529;
-            background-color: rgba(var(--bs-light-rgb),var(--bs-bg-opacity)) !important;
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right .75rem center;
-            background-size: 16px 12px;
-            border: 0;
-            border-radius: 50px;
-            transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-        }
-    </style>
+    <link rel="stylesheet"
+          href="{% static 'events/event_detail.css' %}"/>
 {% endblock head %}
 {% block breadcrumbs %}
     {{ block.super }}
@@ -58,12 +18,12 @@
     <div class="mb-3">
         <span class="badge rounded-pill bg-light border border-dark text-dark px-3 py-2 fw-normal">{{ event.type }}</span>
         {% if user in event.admin.all or user.is_staff %}
-            <span class="badge rounded-pill bg-light border border-dark text-dark p-0 fw-normal">
+            <div class="badge rounded-pill bg-light border border-dark text-dark p-0 fw-normal">
                 <form method="post">
                     {% csrf_token %}
                     {{ form.status }}
                 </form>
-            </span>
+            </div>
         {% else %}
             <span class="badge rounded-pill bg-light border border-dark text-dark px-3 py-2 fw-normal">{{ event.status }}</span>
         {% endif %}
@@ -76,14 +36,32 @@
 
         編集</a>
     {% endif %}
-    <a href="{% url 'events:event_participants' event.pk %}"
-       class="btn btn-dark btn-sm">参加者一覧</a>
+    {% if object.status|stringformat:"s" == "参加者募集中" or object.status|stringformat:"s" == "参加者打診中" %}
+        {% if user in event.admin.all %}
+            <a href="{% url 'events:recruitment_list' event.pk %}"
+               class="btn btn-dark btn-sm">出欠一覧</a>
+        {% endif %}
+    {% endif %}
+    {% if object.status|stringformat:"s" != "参加者募集中" %}
+        <a href="{% url 'events:event_participants' event.pk %}"
+           class="btn btn-dark btn-sm">参加者
+            {% if object.status|stringformat:"s" == "参加者打診中" %}
+                ・打診
+            {% endif %}
+        一覧</a>
+    {% endif %}
     {% if object.status|stringformat:"s" == "参加者募集中" %}
         <a href="{% url 'events:recruitment' %}"
-           class="btn btn-primary  btn-sm"
+           class="btn btn-warning  btn-sm"
            tabindex="-1"
            role="button"
            aria-disabled="true">出欠掲示板</a>
+    {% endif %}
+    {% if user in event.admin.all %}
+        {% if object.status|stringformat:"s" != "参加者募集中" and object.status|stringformat:"s" != "参加者打診中" %}
+            <a href="{% url 'events:bill_list' event.pk %}"
+               class="btn btn-dark btn-sm">請求書</a>
+        {% endif %}
     {% endif %}
     {% if is_invited %}
         <a href="{% url 'events:event_reply_invitation' event.pk %}"

@@ -1,9 +1,13 @@
+import csv
+
 from django.contrib import messages
-from django.shortcuts import redirect
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, TemplateView, UpdateView
 
 from events.models import Event
+from shortener.models import ShortURL
 
 from .forms import EventRecruitmentForm
 from .models import EventRecruitment
@@ -62,7 +66,7 @@ class EventRecruitmentUpdate(UpdateView):
         return super().form_valid(form)
 
     def get(self, request, *args, **kwargs):
-        return redirect("events:recruitment")
+        return redirect("events:recruitment_list", id=self.kwargs["id"])
 
 
 class EventRecruitmentList(ListView):
@@ -83,5 +87,37 @@ class EventRecruitmentList(ListView):
             ("no", "×"),
         )
         context["is_admin"] = self.request.user in context["event"].admin.all()
-        context["hashid"] = self.request.GET.get("hashid")
+        hashid = self.request.GET.get("hashid")
+        if hashid:
+            get_object_or_404(ShortURL, hashid=hashid)  # 短縮URLのhashidが有効かチェック
+        context["hashid"] = hashid
         return context
+
+
+def event_recruitment_csv(request, id):
+    """出欠掲示板のCSVをダウンロードする"""
+
+    event = Event.objects.get(pk=id)
+    if request.user not in event.admin.all():
+        return redirect("events:recruitment")
+    response = HttpResponse(content_type="text/csv", charset="CP932")
+    response["Content-Disposition"] = 'attachment; filename="event.csv"'
+    writer = csv.writer(response)
+    writer.writerow(["名前", "期", "科類", "学部", "学科", "出欠", "コメント"])
+    for recruitment in EventRecruitment.objects.filter(event=event):
+        writer.writerow(
+            [
+                recruitment.member.last_name + recruitment.member.first_name,
+                recruitment.member.grade,
+                recruitment.member.course,
+                (str(recruitment.member.faculty) if recruitment.member.faculty else ""),
+                (
+                    str(recruitment.member.department)
+                    if recruitment.member.department
+                    else ""
+                ),
+                recruitment.get_preference_display(),
+                recruitment.comment,
+            ]
+        )
+    return response

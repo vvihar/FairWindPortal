@@ -11,10 +11,16 @@
             border-bottom: 0;
         }
 
-        tr > td:first-child {
+        tr > td:first-child, tr > td:last-child {
             width: 1px;
             white-space: nowrap;
             padding-right: 1em;
+        }
+
+        tr > td > svg {
+            width: 1em;
+            height: 1em;
+            margin-bottom: 3px;
         }
     </style>
     <link rel="stylesheet"
@@ -57,7 +63,14 @@
                                         → {{ participation.participant.faculty }}{{ participation.participant.department|default_if_none:"" }}
                                     {% endif %}
                                 </td>
-                                <td></td>
+                                <td class="align-middle">
+                                    {% if participation.message_from_participant %}
+
+                                        {% include 'components/message_svg.html' %}
+
+                                        {{ participation.message_from_participant }}
+                                    {% endif %}
+                                </td>
                             </tr>
                         {% endif %}
                     {% endfor %}
@@ -131,7 +144,7 @@
             <div class="card-body py-0">
                 <table class="table mb-0">
                     <tbody>
-                        <!--参加辞退者-->
+                        <!--参加辞退���-->
                         {% for participation in object_list %}
                             {% if participation.status|stringformat:"s" == "辞退" %}
                                 <tr>
@@ -152,7 +165,14 @@
                                             ��� {{ participation.participant.faculty }}{{ participation.participant.department|default_if_none:"" }}
                                         {% endif %}
                                     </td>
-                                    <td class="align-middle"></td>
+                                    <td class="align-middle">
+                                        {% if participation.message_from_participant %}
+
+                                            {% include 'components/message_svg.html' %}
+
+                                            {{ participation.message_from_participant }}
+                                        {% endif %}
+                                    </td>
                                 </tr>
                             {% endif %}
                         {% endfor %}

@@ -1,10 +1,19 @@
 """EventsのURLを管理する"""
 from django.urls import path
 
+from events_accounting.views import (
+    BillCreate,
+    BillDelete,
+    BillList,
+    BillUpdate,
+    download_bill,
+    issue_bill,
+)
 from events_recruitment.views import (
     EventRecruitmentHome,
     EventRecruitmentList,
     EventRecruitmentUpdate,
+    event_recruitment_csv,
 )
 
 from .views import (
@@ -45,15 +54,26 @@ urlpatterns = [
         EventReplyInvitation.as_view(),
         name="event_reply_invitation",
     ),
+    # 出欠掲示板（event_recruitment）
     path("recruitments/", EventRecruitmentHome.as_view(), name="recruitment"),
+    path(
+        "<int:id>/recruit/list/event.csv", event_recruitment_csv, name="recruitment_csv"
+    ),  # event.csvというファイルの実体がここにあるわけではない（URLのパターンを指定しているだけ）
+    path(
+        "<int:id>/recruit/",
+        EventRecruitmentList.as_view(),
+        name="recruitment_list",
+    ),
     path(
         "<int:id>/recruit/submit/",
         EventRecruitmentUpdate.as_view(),
         name="recruitment_update",
     ),
-    path(
-        "<int:id>/recruit/list/",
-        EventRecruitmentList.as_view(),
-        name="recruitment_list",
-    ),
+    # 請求書（event_accounting）
+    path("<int:id>/bill/create", BillCreate.as_view(), name="bill_create"),
+    path("<int:id>/bill/", BillList.as_view(), name="bill_list"),
+    path("<int:id>/bill/<int:pk>/update", BillUpdate.as_view(), name="bill_update"),
+    path("<int:id>/bill/<int:pk>/delete", BillDelete.as_view(), name="bill_delete"),
+    path("<int:id>/bill/<int:pk>/download", download_bill, name="bill_download"),
+    path("<int:id>/bill/<int:pk>/issue", issue_bill, name="bill_issue"),
 ]

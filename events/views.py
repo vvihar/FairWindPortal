@@ -57,16 +57,24 @@ class Home(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        events = Event.objects.exclude(status="アーカイブ").order_by("-start_datetime")
+        events = Event.objects.exclude(status="アーカイブ")
+        recruitment_not_submitted = 0
         for event in events:
             if self.request.user.pk in event.participation.filter(
                 status="回答待ち"
             ).values_list("participant", flat=True):
                 messages.info(self.request, f"{event}に打診されています")
+            if (
+                self.request.user.pk
+                not in event.recruitment.values_list("member", flat=True)
+                and event.status == "参加者募集中"
+            ):
+                recruitment_not_submitted += 1
+        context["recruitment_not_submitted"] = recruitment_not_submitted
         return context
 
     def get_queryset(self):
-        return Event.objects.all().order_by("start_datetime")
+        return Event.objects.exclude(status="アーカイブ").order_by("start_datetime")
 
 
 class EventListAll(ListView):
