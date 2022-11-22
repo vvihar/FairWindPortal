@@ -44,7 +44,11 @@
     {% endif %}
     {% if object.status|stringformat:"s" != "参加者募集中" %}
         <a href="{% url 'events:event_participants' event.pk %}"
-           class="btn btn-dark btn-sm">参加者一覧</a>
+           class="btn btn-dark btn-sm">参加者
+            {% if object.status|stringformat:"s" == "参加者打診中" %}
+                ・打診
+            {% endif %}
+        一覧</a>
     {% endif %}
     {% if object.status|stringformat:"s" == "参加者募集中" %}
         <a href="{% url 'events:recruitment' %}"
