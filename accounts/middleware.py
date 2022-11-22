@@ -8,6 +8,7 @@ class LoginRequiredMiddleware(MiddlewareMixin):
         if (
             not request.user.is_authenticated
             and request.path != reverse("accounts:login")
+            and request.path != reverse("accounts:logout")
             and request.path != reverse("home")
             and not request.path.startswith("/admin/")
         ):
