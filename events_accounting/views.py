@@ -295,7 +295,7 @@ def print_strings(pdf_canvas, bill):
     )
     pdfmetrics.registerFont(TTFont("ipaexg", font_url))
     width, height = A4
-    locale.setlocale(locale.LC_TIME, "Japanese_Japan.UTF-8")
+    locale.setlocale(locale.LC_TIME, "ja_JP.UTF-8")
 
     page_width = 210 * mm - 2 * 60
 
