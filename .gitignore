@@ -189,3 +189,5 @@ env
 .vscode
 
 media/
+
+django_psdb_engine/
