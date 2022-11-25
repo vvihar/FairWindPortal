@@ -23,7 +23,9 @@ class ShortURL(models.Model):
         editable=False,
         primary_key=True,
     )
-    redirect_to = models.TextField(verbose_name="リダイレクト先のパス", unique=True)
+    redirect_to = models.CharField(
+        max_length=255, verbose_name="リダイレクト先のパス", unique=True
+    )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="作成日時")
 
     class Meta:
