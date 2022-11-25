@@ -28,7 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.environ.get("DEBUG", "RENDER" not in os.environ)
 
 
 # Application definition
@@ -181,9 +181,6 @@ BOOTSTRAP5 = {
     "error_css_class": "is-invalid",
     "success_css_class": "is-valid",
 }
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = "RENDER" not in os.environ
 
 RENDER_EXTERNAL_HOSTNAME = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
 if RENDER_EXTERNAL_HOSTNAME:
