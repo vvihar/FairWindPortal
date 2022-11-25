@@ -64,7 +64,7 @@ class MakeSchoolDB(StaffRequiredMixin, FormView):
 
     template_name = "schools/db_update.html"
     form_class = MakeSchoolDBForm
-    success_url = reverse_lazy("schools:school_list")
+    success_url = reverse_lazy("schools:")
 
     def form_valid(self, form):
         """フォームが有効な場合"""
