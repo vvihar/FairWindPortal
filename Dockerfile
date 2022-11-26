@@ -3,7 +3,6 @@
 # python:3.9.13の公式 image をベースの image として設定
 FROM python:3.9.13
 
-WORKDIR /usr/src/FairWindPortal
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
@@ -28,7 +27,6 @@ ADD . /code
 # pipでrequirements.txtに指定されているパッケージを追加する
 RUN --mount=type=secret,id=_env,dst=/etc/secrets/.env cat /etc/secrets/.env
 RUN python -m pip install --upgrade pip
-COPY ./requirements.txt /usr/src/FairWindPortal/requirements.txt
 RUN pip install -r requirements.txt
 RUN python manage.py migrate
 
