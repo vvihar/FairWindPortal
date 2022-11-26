@@ -31,9 +31,5 @@ RUN python manage.py collectstatic --no-input
 RUN python manage.py migrate
 
 # 起動
-<<<<<<< HEAD
-CMD gunicorn FairWindPortal.wsgi:application
-=======
 RUN mkdir -p /var/run/gunicorn
 CMD ["gunicorn", "FairWindPortal.wsgi", "--bind=unix:/var/run/gunicorn/gunicorn.sock"]
->>>>>>> dev
