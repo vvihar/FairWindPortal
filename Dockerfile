@@ -28,7 +28,7 @@ ADD . /code
 # pipでrequirements.txtに指定されているパッケージを追加する
 RUN --mount=type=secret,id=_env,dst=/etc/secrets/.env cat /etc/secrets/.env
 RUN python -m pip install --upgrade pip
-COPY ./requirements.txt /usr/src/app/requirements.txt
+COPY ./requirements.txt /usr/src/FairWindPortal/requirements.txt
 RUN pip install -r requirements.txt
 RUN python manage.py migrate
 
