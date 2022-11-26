@@ -29,8 +29,8 @@ ADD . /code
 RUN --mount=type=secret,id=_env,dst=/etc/secrets/.env cat /etc/secrets/.env
 RUN python -m pip install --upgrade pip
 COPY ./requirements.txt /usr/src/app/requirements.txt
-RUN pip install -r requirements.txt \
-    && python manage.py migrate
+RUN pip install -r requirements.txt
+RUN python manage.py migrate
 
 # 起動
 RUN mkdir -p /var/run/gunicorn
