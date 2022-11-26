@@ -28,6 +28,9 @@ ADD . /code
 RUN --mount=type=secret,id=_env,dst=/etc/secrets/.env cat /etc/secrets/.env
 RUN python -m pip install --upgrade pip
 RUN pip install -r requirements.txt
+
+COPY . /code/
+RUN python manage.py collectstatic --no-input
 RUN python manage.py migrate
 
 # 起動
