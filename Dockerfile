@@ -22,6 +22,8 @@ ADD . /code
 # pipでrequirements.txtに指定されているパッケージを追加する
 RUN python -m pip install --upgrade pip
 RUN pip install -r requirements.txt
+RUN python manage.py collectstatic --no-input
+RUN python manage.py migrate
 
-# 起動（コンテナのポート8002番で受け付けるように起動する）
-CMD python3 manage.py runserver 0.0.0.0:8002
+# 起動
+CMD gunicorn FairWindPortal.wsgi:application
