@@ -3,7 +3,6 @@
 set -o errexit
 
 # generate locale
-apt-get install language-pack-ja-base language-pack-ja
 locale-gen ja_JP.UTF-8
 
 # upgrade pip
