@@ -83,55 +83,66 @@ class MakeSchoolDB(StaffRequiredMixin, FormView):
 
         schools = []
 
-        prefectures = (
-            ("01", "北海道"),
-            ("02", "青森県"),
-            ("03", "岩手県"),
-            ("04", "宮城県"),
-            ("05", "秋田県"),
-            ("06", "山形県"),
-            ("07", "福島県"),
-            ("08", "茨城県"),
-            ("09", "栃木県"),
-            ("10", "群馬県"),
-            ("11", "埼玉県"),
-            ("12", "千葉県"),
-            ("13", "東京都"),
-            ("14", "神奈川県"),
-            ("15", "新潟県"),
-            ("16", "富山県"),
-            ("17", "石川県"),
-            ("18", "福井県"),
-            ("19", "山梨県"),
-            ("20", "長野県"),
-            ("21", "岐阜県"),
-            ("22", "静岡県"),
-            ("23", "愛知県"),
-            ("24", "三重県"),
-            ("25", "滋賀県"),
-            ("26", "京都府"),
-            ("27", "大阪府"),
-            ("28", "兵庫県"),
-            ("29", "奈良県"),
-            ("30", "和歌山県"),
-            ("31", "鳥取県"),
-            ("32", "島根県"),
-            ("33", "岡山県"),
-            ("34", "広島県"),
-            ("35", "山口県"),
-            ("36", "徳島県"),
-            ("37", "香川県"),
-            ("38", "愛媛県"),
-            ("39", "高知県"),
-            ("40", "福岡県"),
-            ("41", "佐賀県"),
-            ("42", "長崎県"),
-            ("43", "熊本県"),
-            ("44", "大分県"),
-            ("45", "宮崎県"),
-            ("46", "鹿児島県"),
-            ("47", "沖縄県"),
-        )
+        school_types = {
+            "C1": "中学校",
+            "C2": "義務教育学校",
+            "D1": "高等学校",
+            "D2": "中等教育学校",
+        }
+        establisher_types = {
+            "1": "国立",
+            "2": "公立",
+            "3": "私立",
+        }
+        prefectures = {
+            "01": "北海道",
+            "02": "青森県",
+            "03": "岩手県",
+            "04": "宮城県",
+            "05": "秋田県",
+            "06": "山形県",
+            "07": "福島県",
+            "08": "茨城県",
+            "09": "栃木県",
+            "10": "群馬県",
+            "11": "埼玉県",
+            "12": "千葉県",
+            "13": "東京都",
+            "14": "神奈川県",
+            "15": "新潟県",
+            "16": "富山県",
+            "17": "石川県",
+            "18": "福井県",
+            "19": "山梨県",
+            "20": "長野県",
+            "21": "岐阜県",
+            "22": "静岡県",
+            "23": "愛知県",
+            "24": "三重県",
+            "25": "滋賀県",
+            "26": "京都府",
+            "27": "大阪府",
+            "28": "兵庫県",
+            "29": "奈良県",
+            "30": "和歌山県",
+            "31": "鳥取県",
+            "32": "島根県",
+            "33": "岡山県",
+            "34": "広島県",
+            "35": "山口県",
+            "36": "徳島県",
+            "37": "香川県",
+            "38": "愛媛県",
+            "39": "高知県",
+            "40": "福岡県",
+            "41": "佐賀県",
+            "42": "長崎県",
+            "43": "熊本県",
+            "44": "大分県",
+            "45": "宮崎県",
+            "46": "鹿児島県",
+            "47": "沖縄県",
+        }
 
         number = 1
 
@@ -144,68 +155,41 @@ class MakeSchoolDB(StaffRequiredMixin, FormView):
             except UnicodeDecodeError:
                 messages.error(self.request, "ファイルの文字コードが不正です。")
                 return super().form_invalid(form)
-            for row_raw in reader:
-                row = []
-                for col in row_raw:
-                    col = re.sub(r"\(.+?\)", "", col)
-                    row.append(col)
-                school_data = {
-                    "学校コード": row[0],
-                    "学校種": row[1],
-                    "都道府県": row[2],
-                    "設置区分": row[3],
-                    "本分校": row[4],
-                    "学校名": row[5],
-                }
+            for row in reader:
+                if not re.fullmatch(r"[A-H]\d{12}", row[0]):
+                    continue
+                for col in row:
+                    if "(" in col:
+                        col = col[: col.find("(")]
                 if (
-                    not school_data["学校コード"]
-                    or school_data["本分校"] == "9"
-                    or not school_data["学校種"] in valid_school_type_code
+                    not row[0]
+                    or row[4] == "9"  # 本分校が9は廃校
+                    or not row[1] in valid_school_type_code  # 学校種
                 ):
-                    continue  # 本分校が9は廃校
-                if school_data["学校種"] == "C1":
-                    school_data["学校種"] = "中学校"
-                elif school_data["学校種"] == "C2":
-                    school_data["学校種"] = "義務教育学校"
-                elif school_data["学校種"] == "D1":
-                    school_data["学校種"] = "高等学校"
-                elif school_data["学校種"] == "D2":
-                    school_data["学校種"] = "中等教育学校"
+                    continue
 
-                if school_data["設置区分"] == "1":
-                    school_data["設置区分"] = "国立"
-                elif school_data["設置区分"] == "2":
-                    school_data["設置区分"] = "公立"
-                elif school_data["設置区分"] == "3":
-                    school_data["設置区分"] = "私立"
+                # コードから文字情報に変換
+                row[1] = school_types[row[1]]  # 学校種
+                row[2] = prefectures[row[2]]  # 都道府県
+                row[3] = establisher_types[row[3]]  # 設置区分
 
-                if school_data["本分校"] == "1":
-                    school_data["本分校"] = "本校"
-                elif school_data["本分校"] == "2":
-                    school_data["本分校"] = "分校"
-
-                for prefecture in prefectures:
-                    if school_data["都道府県"] == prefecture[0]:
-                        school_data["都道府県"] = prefecture[1]
-                        break
-
-                if school_data["学校コード"] in existing_schoolcodes:
+                if row[0] in existing_schoolcodes:  # 学校コード
                     school = existing_schools[
-                        existing_schoolcodes.index(school_data["学校コード"])
+                        existing_schoolcodes.index(row[0])  # 学校コード
                     ]
-                    school.type = school_data["学校種"]
-                    school.prefecture = school_data["都道府県"]
-                    school.establisher = school_data["設置区分"]
-                    school.name = school_data["学校名"]
-                    school.number = number
+                    school.type = row[1]  # 学校種
+                    school.prefecture = row[2]  # 都道府県
+                    school.establisher = row[3]  # 設置区分
+                    school.name = row[5]  # 学校名
+                    school.number = number  # 通し番号
                 else:
                     school = School(
-                        code=school_data["学校コード"],
-                        type=school_data["学校種"],
-                        prefecture=school_data["都道府県"],
-                        establisher=school_data["設置区分"],
-                        name=school_data["学校名"],
-                        number=number,
+                        code=row[0],  # 学校コード
+                        type=row[1],  # 学校種
+                        prefecture=row[2],  # 都道府県
+                        establisher=row[3],  # 設置区分
+                        name=row[5],  # 学校名
+                        number=number,  # 通し番号
                     )
                     schools.append(school)
 
@@ -222,8 +206,8 @@ class MakeSchoolDB(StaffRequiredMixin, FormView):
 def api_schools_get(request):
     """サジェスト候補の学校を JSON で返す。"""
     keyword = request.GET.get("keyword")
-    keyword = keyword.replace("高校", "高等学校")
     if keyword:
+        keyword = keyword.replace("高校", "高等学校")
         school_list = [
             {"pk": school.pk, "name": f"{school.name}（{school.prefecture}）"}
             for school in School.objects.filter(
