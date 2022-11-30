@@ -182,10 +182,13 @@ BOOTSTRAP5 = {
     "success_css_class": "is-valid",
 }
 
+fw_address = os.environ.get("FW_ADDRESS")
+FW_ADDRESS = list(fw_address.split(",")) if fw_address else None
+FW_BANK_ACCOUNT = os.environ.get("FW_BANK_ACCOUNT")
+
 RENDER_EXTERNAL_HOSTNAME = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
-
 
 # 最後に書く
 try:
