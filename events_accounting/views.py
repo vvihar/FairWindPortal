@@ -1,5 +1,4 @@
 import io
-import locale
 import os
 
 from django.conf import settings
@@ -7,6 +6,8 @@ from django.contrib import messages
 from django.http import FileResponse, Http404
 from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
+from django.utils import translation
+from django.utils.formats import date_format
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
@@ -295,7 +296,7 @@ def print_strings(pdf_canvas, bill):
     )
     pdfmetrics.registerFont(TTFont("ipaexg", font_url))
     width, height = A4
-    locale.setlocale(locale.LC_TIME, "ja_JP.UTF-8")
+    translation.activate("ja")
 
     page_width = 210 * mm - 2 * 60
 
@@ -325,10 +326,13 @@ def print_strings(pdf_canvas, bill):
 
     # 納期、支払条件、有効期限
     font_size = 12
+    payment_deadline_day = date_format(bill.payment_deadline, "D")
     pdf_canvas.setFont("ipaexg", font_size)
     pdf_canvas.drawString(60, 615, "お支払い期限:")
     pdf_canvas.drawString(
-        150, 615, f"{bill.payment_deadline.strftime('%Y年%m月%d日（%a）')}"
+        150,
+        615,
+        f"{bill.payment_deadline.strftime('%Y年%m月%d日')}（{payment_deadline_day}）",
     )
 
     if bill.display_bank_account:
