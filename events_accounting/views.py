@@ -326,7 +326,7 @@ def print_strings(pdf_canvas, bill):
 
     # 納期、支払条件、有効期限
     font_size = 12
-    payment_deadline_day = date_format(bill.payment_deadline, "D")
+    payment_deadline_day = date_format(bill.payment_deadline, "D")  # 曜日を漢字一文字で
     pdf_canvas.setFont("ipaexg", font_size)
     pdf_canvas.drawString(60, 615, "お支払い期限:")
     pdf_canvas.drawString(
