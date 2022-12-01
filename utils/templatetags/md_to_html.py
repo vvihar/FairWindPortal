@@ -1,5 +1,6 @@
 import markdown
 from django import template
+from django.utils.safestring import mark_safe
 
 register = template.Library()
 
@@ -27,4 +28,4 @@ def md_to_html(text):
         },
     )
     html = html.replace("<table", '<table class="table"')
-    return html
+    return mark_safe(html)
