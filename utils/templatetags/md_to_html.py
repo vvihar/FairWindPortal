@@ -26,4 +26,5 @@ def md_to_html(text):
             },
         },
     )
+    html = html.replace("<table", '<table class="table"')
     return html

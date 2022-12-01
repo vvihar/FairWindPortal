@@ -1,3 +1,7 @@
+.table {
+    width: auto !important;
+}
+
 .editor-preview pre,
 .editor-preview-side pre {
     padding: 1rem !important;
