@@ -25,6 +25,10 @@ def md_to_html(text):
                 "new_tab": "on",
                 "no_referrer": "external_only",
             },
+            "codehilite": {
+                "pygments_style": "monokai",
+                "noclasses": True,
+            },
         },
     )
     html = html.replace("<table", '<table class="table"')
