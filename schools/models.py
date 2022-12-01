@@ -1,4 +1,3 @@
-import markdown
 from django.db import models
 
 # Create your models here.
@@ -84,21 +83,6 @@ class School(models.Model):
     name = models.CharField(max_length=50, verbose_name="学校名")
 
     memo = models.TextField(verbose_name="メモ", default="", blank=True, null=False)
-
-    def get_memo_html(self):
-        return markdown.markdown(
-            self.memo,
-            extensions=[
-                "nl2br",
-                "fenced_code",
-                "codehilite",
-                "tables",
-                "toc",
-                "sane_lists",
-                "smarty",
-                "wikilinks",
-            ],
-        )
 
     # TODO: 新規作成＆編集画面を実装する
 
