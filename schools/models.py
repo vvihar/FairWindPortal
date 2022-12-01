@@ -83,7 +83,7 @@ class School(models.Model):
     name = models.CharField(max_length=50, verbose_name="学校名")
 
     memo = models.TextField(verbose_name="メモ", default="", blank=True, null=False)
-    # TODO: Markdown を導入する
+
     # TODO: 新規作成＆編集画面を実装する
 
     last_updated = models.DateTimeField(auto_now=True, verbose_name="最終更新日時")
