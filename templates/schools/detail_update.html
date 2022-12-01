@@ -8,7 +8,6 @@
 {% block head %}
     <link rel="stylesheet"
           href="{% static 'utils/css/highlight.css' %}"/>
-    <style>form{visibility:hidden;}</style>
 {% endblock head %}
 {% block breadcrumbs %}
     {{ block.super }}
@@ -18,7 +17,8 @@
 {% block content %}
     <h1 class="mb-3 fs-4">{{ object.school.name }}</h1>
     <form method="post"
-          id="form">
+          id="form"
+          style="visibility:hidden">
         {% csrf_token %}
         {{ form.memo }}
         {% bootstrap_button "更新" button_type="submit" %}
