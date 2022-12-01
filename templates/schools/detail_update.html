@@ -5,6 +5,11 @@
 {% load django_bootstrap5 %}
 {% load static %}
 
+{% block head %}
+    <link rel="stylesheet"
+          href="{% static 'utils/css/highlight.css' %}"/>
+    <style>form{visibility:hidden;}</style>
+{% endblock head %}
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb object.name "schools:school_detail" object.pk %}
@@ -12,9 +17,17 @@
 {% endblock breadcrumbs %}
 {% block content %}
     <h1 class="mb-3 fs-4">{{ object.school.name }}</h1>
-    <form method="post">
+    <form method="post"
+          id="form">
         {% csrf_token %}
-        {% bootstrap_form form layout="floating" %}
+        {{ form.memo }}
         {% bootstrap_button "更新" button_type="submit" %}
     </form>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css"/>
+    <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/highlight.js/latest/highlight.min.js"></script>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/styles/monokai.min.css"/>
+    <script src="{% static 'utils/js/simplemde-customize.js' %}"></script>
 {% endblock content %}
