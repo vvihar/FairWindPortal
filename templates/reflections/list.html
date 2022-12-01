@@ -1,0 +1,36 @@
+{% extends "recruitments/base.html" %}
+
+{% load static %}
+
+{% load django_bootstrap5 %}
+{% load django_bootstrap_breadcrumbs %}
+
+{% block head %}
+{% endblock head %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb event.name "events:event_detail" event.pk %}
+    {% breadcrumb "振り返り" "events:recruitment_list" %}
+{% endblock breadcrumbs %}
+{% block content %}
+    <h4 class="mb-3">{{ event.name }}</h4>
+    <div class="mb-3">
+        <form method="post">
+            {% csrf_token %}
+            {% bootstrap_form form layout="floating" %}
+            {% bootstrap_button "送信" button_type="submit" %}
+        </form>
+    </div>
+    {% for reflection in object_list %}
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ reflection.user }}</h5>
+                <p class="card-text">{{ reflection.reflection }}</p>
+                <a href="#"
+                   class="card-link">Card link</a>
+                <a href="#"
+                   class="card-link">Another link</a>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock content %}

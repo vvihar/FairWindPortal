@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "schools.apps.SchoolsConfig",
     "shortener.apps.ShortenerConfig",
     "events_accounting.apps.EventsAccountingConfig",
+    "events_reflection.apps.EventsReflectionConfig",
 ]
 
 MIDDLEWARE = [
