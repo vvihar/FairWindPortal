@@ -10,10 +10,10 @@ def md_to_html(text):
     html = markdown.markdown(
         text,
         extensions=[
+            "extra",
             "nl2br",
             "fenced_code",
             "codehilite",
-            "tables",
             "toc",
             "sane_lists",
             "smarty",
