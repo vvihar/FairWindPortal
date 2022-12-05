@@ -8,10 +8,16 @@ from events.models import Event
 
 class EventReflection(models.Model):
     event = models.ForeignKey(
-        Event, on_delete=models.CASCADE, related_name="reflections", verbose_name="イベント"
+        Event,
+        on_delete=models.CASCADE,
+        related_name="reflections",
+        verbose_name="イベント",
     )
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="reflections", verbose_name="ユーザー"
+        User,
+        on_delete=models.CASCADE,
+        related_name="reflections",
+        verbose_name="ユーザー",
     )
     reflection = models.TextField(blank=True, null=True, verbose_name="振り返り")
     updated_at = models.DateTimeField(auto_now=True)
