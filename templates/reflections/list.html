@@ -1,0 +1,53 @@
+{% extends "recruitments/base.html" %}
+
+{% load static %}
+
+{% load django_bootstrap5 %}
+{% load django_bootstrap_breadcrumbs %}
+
+{% block head %}
+{% endblock head %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb event.name "events:event_detail" event.pk %}
+    {% breadcrumb "振り返り" "events:reflection_list" event.pk %}
+{% endblock breadcrumbs %}
+{% block content %}
+    <h4 class="mb-3">{{ event.name }}</h4>
+    <div class="mb-3">
+        <form method="post">
+            {% csrf_token %}
+            {% bootstrap_form form layout="floating" %}
+            {% bootstrap_button "送信" button_type="submit" %}
+            <button class="btn btn-secondary"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapseTemplate"
+                    aria-expanded="false"
+                    aria-controls="collapseTemplate">
+                テンプレート
+            </button>
+        </form>
+        <div class="collapse mt-3"
+             id="collapseTemplate">
+            <div class="card card-body bg-light">
+                <textarea class="form-control bg-light" placeholder="Leave a comment here" id="floatingTextarea2" readonly onfocus="this.select()">{{template.reflection}}</textarea>
+                {% if user in event.admin.all %}
+                    <div class="mt-3">
+                        <a class="btn btn-danger btn-sm"
+                           href="{% url 'events:reflection_template' event.pk %}"
+                           role="button">テンプレートの編集</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% for reflection in object_list %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">{{ reflection.user }}</h5>
+                <p class="card-text">{{ reflection.reflection }}</p>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock content %}
