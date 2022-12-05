@@ -1,0 +1,29 @@
+.table {
+    width: auto !important;
+}
+
+.editor-preview pre,
+.editor-preview-side pre {
+    padding: 1rem !important;
+    border-radius: 0.5rem !important;
+    margin-bottom: 1rem !important;
+    background: #272822 !important;
+}
+
+.editor-preview pre code,
+.editor-preview-side pre code {
+    display: block;
+    overflow-x: auto;
+    color: #ddd;
+}
+
+.codehilite {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.codehilite pre {
+    margin-bottom: 0;
+    line-height: inherit !important;
+}
