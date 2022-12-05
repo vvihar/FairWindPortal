@@ -40,8 +40,11 @@ class EventReflectionList(ListView, FormMixin):
             event_reflection = EventReflection.objects.get(
                 event=event, user=self.request.user
             )
-            event_reflection.reflection = message
-            event_reflection.save()
+            if not message:
+                event_reflection.delete()
+            else:
+                event_reflection.reflection = message
+                event_reflection.save()
         except EventReflection.DoesNotExist:
             EventReflection.objects.create(
                 event=event, user=self.request.user, reflection=message
