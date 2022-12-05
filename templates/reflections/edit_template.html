@@ -1,0 +1,25 @@
+{% extends "recruitments/base.html" %}
+
+{% load static %}
+
+{% load django_bootstrap5 %}
+{% load django_bootstrap_breadcrumbs %}
+
+{% block head %}
+{% endblock head %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb event.name "events:event_detail" event.pk %}
+    {% breadcrumb "振り返り" "events:reflection_list" event.pk %}
+    {% breadcrumb "テンプレート" "events:reflection_template" event.pk %}
+{% endblock breadcrumbs %}
+{% block content %}
+    <h4 class="mb-3">{{ event.name }}</h4>
+    <div>
+        <form method="post">
+            {% csrf_token %}
+            {% bootstrap_form form layout="floating" %}
+            {% bootstrap_button "保存" button_type="submit" %}
+        </form>
+    </div>
+{% endblock content %}
