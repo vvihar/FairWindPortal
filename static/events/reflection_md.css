@@ -1,0 +1,36 @@
+.card-text>*:last-child {
+    margin-bottom: 0;
+}
+
+.card-text h1,
+.editor-preview h1,
+.editor-preview-side h1 {
+    font-size: 1.5rem;
+}
+
+.card-text h2,
+.editor-preview h2,
+.editor-preview-side h2 {
+    font-size: 1.3rem;
+}
+
+.card-text h3,
+.editor-preview h3,
+.editor-preview-side h3 {
+    font-size: 1.2rem;
+}
+
+.card-text h4,
+.editor-preview h4,
+.editor-preview-side h4 {
+    font-size: 1.1rem;
+}
+
+.card-text h5,
+.editor-preview h5,
+.editor-preview-side h5,
+.card-text h6,
+.editor-preview h6,
+.editor-preview-side h6 {
+    font-size: 1rem;
+}
