@@ -10,6 +10,7 @@ from django.views.generic import (
 from django.views.generic.edit import FormMixin
 
 from events.models import Event
+from events.views import OnlyEventAdminMixin
 
 from .forms import EventReflectionForm
 from .models import EventReflection, EventReflectionGeneral, EventReflectionTemplate
@@ -74,7 +75,7 @@ class EventReflectionList(ListView, FormMixin):
             return self.form_invalid(form)
 
 
-class EventReflectionTemplateCreateUpdate(UpdateView):
+class EventReflectionTemplateCreateUpdate(OnlyEventAdminMixin, UpdateView):
     template_name = "reflections/edit_template.html"
     model = EventReflectionTemplate
     fields = ("reflection",)

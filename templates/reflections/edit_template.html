@@ -6,6 +6,8 @@
 {% load django_bootstrap_breadcrumbs %}
 
 {% block head %}
+    <link rel="stylesheet"
+          href="{% static 'events/reflection_md.css' %}"/>
 {% endblock head %}
 {% block breadcrumbs %}
     {{ block.super }}
@@ -16,10 +18,29 @@
 {% block content %}
     <h4 class="mb-3">{{ event.name }}</h4>
     <div>
-        <form method="post">
+        <form method="post"
+              id="form"
+              style="visibility:hidden">
             {% csrf_token %}
-            {% bootstrap_form form layout="floating" %}
+            {{ form.reflection }}
             {% bootstrap_button "保存" button_type="submit" %}
         </form>
     </div>
+
+    {% include "components/simplemde.html" %}
+
+    <script>
+        const simplemde = new SimpleMDE({
+            element: document.getElementById("id_reflection"),
+            renderingConfig: {
+                codeSyntaxHighlighting: true,
+            },
+            toolbar: ["bold", "italic", "heading", "|", "quote", "unordered-list", "ordered-list", "|", "link", "table", "horizontal-rule", "|", "preview", "side-by-side", "fullscreen", "|", "guide"],
+            tabSize: 4,
+        });
+        const form = document.getElementById("form");
+        window.onload = () => {
+            form.style.visibility = "visible";
+        };
+    </script>
 {% endblock content %}
