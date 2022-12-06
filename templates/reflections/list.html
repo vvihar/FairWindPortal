@@ -2,10 +2,18 @@
 
 {% load static %}
 
+{% load md_to_html %}
 {% load django_bootstrap5 %}
 {% load django_bootstrap_breadcrumbs %}
 
 {% block head %}
+    <link rel="stylesheet"
+          href="{% static 'utils/css/markdown.css' %}"/>
+    <style>
+    .card-text > *:last-child {
+        margin-bottom: 0;
+    }
+    </style>
 {% endblock head %}
 {% block breadcrumbs %}
     {{ block.super }}
@@ -15,9 +23,11 @@
 {% block content %}
     <h4 class="mb-3">{{ event.name }}</h4>
     <div class="mb-3">
-        <form method="post">
+        <form method="post"
+              id="form"
+              style="visibility:hidden">
             {% csrf_token %}
-            {% bootstrap_form form layout="floating" %}
+            {{ form.reflection }}
             {% bootstrap_button "送信" button_type="submit" %}
             <button class="btn btn-secondary"
                     type="button"
@@ -46,8 +56,25 @@
         <div class="card mb-3">
             <div class="card-body">
                 <h5 class="card-title">{{ reflection.user }}</h5>
-                <p class="card-text">{{ reflection.reflection }}</p>
+                <div class="card-text">{{ reflection.reflection|md_to_html }}</div>
             </div>
         </div>
     {% endfor %}
+
+    {% include "components/simplemde.html" %}
+
+    <script>
+        const simplemde = new SimpleMDE({
+            element: document.getElementById("id_reflection"),
+            renderingConfig: {
+                codeSyntaxHighlighting: true,
+            },
+            toolbar: ["bold", "italic", "heading", "|", "quote", "unordered-list", "ordered-list", "|", "link", "table", "horizontal-rule", "|", "preview", "side-by-side", "fullscreen", "|", "guide"],
+            tabSize: 4,
+        });
+        const form = document.getElementById("form");
+        window.onload = () => {
+            form.style.visibility = "visible";
+        };
+    </script>
 {% endblock content %}
