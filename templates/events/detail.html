@@ -57,8 +57,10 @@
            role="button"
            aria-disabled="true">出欠掲示板</a>
     {% endif %}
-    {% if user in event.admin.all %}
-        {% if object.status|stringformat:"s" != "参加者募集中" and object.status|stringformat:"s" != "参加者打診中" %}
+    {% if object.status|stringformat:"s" != "参加者募集中" and object.status|stringformat:"s" != "参加者打診中" %}
+        <a href="{% url 'events:reflection_list' event.pk %}"
+           class="btn btn-dark btn-sm">振り返り</a>
+        {% if user in event.admin.all %}
             <a href="{% url 'events:bill_list' event.pk %}"
                class="btn btn-dark btn-sm">請求書</a>
         {% endif %}
