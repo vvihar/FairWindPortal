@@ -13,6 +13,21 @@
     .card-text > *:last-child {
         margin-bottom: 0;
     }
+    .card-text h1 {
+        font-size: 1.5rem;
+    }
+    .card-text h2 {
+        font-size: 1.3rem;
+    }
+    .card-text h3 {
+        font-size: 1.2rem;
+    }
+    .card-text h4 {
+        font-size: 1.1rem;
+    }
+    .card-text h5, .card-text h6 {
+        font-size: 1rem;
+    }
     </style>
 {% endblock head %}
 {% block breadcrumbs %}
@@ -54,8 +69,8 @@
     </div>
     {% for reflection in object_list %}
         <div class="card mb-3">
+            <div class="card-header">{{ reflection.user }}</div>
             <div class="card-body">
-                <h5 class="card-title">{{ reflection.user }}</h5>
                 <div class="card-text">{{ reflection.reflection|md_to_html }}</div>
             </div>
         </div>
