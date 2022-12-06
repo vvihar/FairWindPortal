@@ -11,10 +11,11 @@
           href="{% static 'utils/css/markdown.css' %}"/>
     <link rel="stylesheet"
           href="{% static 'events/reflection_md.css' %}"/>
+    <link rel="stylesheet"
+          href="{% static 'utils/css/card-scrollable.css' %}"/>
     <style>
-        .reflection {
+        .scrollable {
             max-height: 360px;
-            overflow-y: auto;
         }
     </style>
 {% endblock head %}
@@ -31,7 +32,7 @@
     {% for reflection in object_list %}
         <div class="card mb-3">
             <div class="card-header">{{ reflection.user }}</div>
-            <div class="card-body reflection">
+            <div class="card-body scrollable">
                 <div class="card-text">{{ reflection.reflection|md_to_html }}</div>
             </div>
         </div>
