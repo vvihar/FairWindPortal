@@ -1,0 +1,77 @@
+{% extends "recruitments/base.html" %}
+
+{% load static %}
+
+{% load md_to_html %}
+{% load django_bootstrap5 %}
+{% load django_bootstrap_breadcrumbs %}
+
+{% block head %}
+    <link rel="stylesheet"
+          href="{% static 'utils/css/markdown.css' %}"/>
+    <link rel="stylesheet"
+          href="{% static 'events/reflection_md.css' %}"/>
+{% endblock head %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb event.name "events:event_detail" event.pk %}
+    {% breadcrumb "振り返り" "events:reflection_list" event.pk %}
+{% endblock breadcrumbs %}
+{% block content %}
+    <h4 class="mb-3">{{ event.name }}</h4>
+    <div class="mb-3">
+        <form method="post"
+              id="form"
+              style="visibility:hidden">
+            {% csrf_token %}
+            {{ form.reflection }}
+            {% bootstrap_button "送信" button_type="submit" %}
+            <button class="btn btn-secondary"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapseTemplate"
+                    aria-expanded="false"
+                    aria-controls="collapseTemplate">
+                テンプレート
+            </button>
+        </form>
+        <div class="collapse mt-3"
+             id="collapseTemplate">
+            <div class="card card-body bg-light">
+                <textarea class="form-control bg-light" placeholder="Leave a comment here" id="floatingTextarea2" readonly onfocus="this.select()">{{template.reflection}}</textarea>
+                {% if user in event.admin.all %}
+                    <div class="mt-3">
+                        <a class="btn btn-danger btn-sm"
+                           href="{% url 'events:reflection_template' event.pk %}"
+                           role="button">テンプレートの編集</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% for reflection in object_list %}
+        <div class="card mb-3">
+            <div class="card-header">{{ reflection.user }}</div>
+            <div class="card-body">
+                <div class="card-text">{{ reflection.reflection|md_to_html }}</div>
+            </div>
+        </div>
+    {% endfor %}
+
+    {% include "components/simplemde.html" %}
+
+    <script>
+        const simplemde = new SimpleMDE({
+            element: document.getElementById("id_reflection"),
+            renderingConfig: {
+                codeSyntaxHighlighting: true,
+            },
+            toolbar: ["bold", "italic", "heading", "|", "quote", "unordered-list", "ordered-list", "|", "link", "table", "horizontal-rule", "|", "preview", "side-by-side", "fullscreen", "|", "guide"],
+            tabSize: 4,
+        });
+        const form = document.getElementById("form");
+        window.onload = () => {
+            form.style.visibility = "visible";
+        };
+    </script>
+{% endblock content %}
