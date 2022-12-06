@@ -17,6 +17,10 @@
             padding-right: 1em;
         }
 
+        tr > td:not(:first-child):not(:last-child) {
+            min-width: 15em;
+        }
+
         tr > td > svg {
             width: 1em;
             height: 1em;
@@ -25,6 +29,8 @@
     </style>
     <link rel="stylesheet"
           href="{% static 'events/badge.css' %}"/>
+    <link rel="stylesheet"
+          href="{% static 'utils/css/table-responsive.css' %}"/>
 {% endblock head %}
 {% block breadcrumbs %}
     {{ block.super }}
@@ -39,7 +45,7 @@
             <h2 class="fs-5 fw-bold mb-0">参加者</h2>
             <span class="badge rounded-pill bg-dark ms-2">{{ counter_participate }}</span>
         </div>
-        <div class="card-body py-0">
+        <div class="card-body py-0 table-responsive">
             <table class="table caption-top mb-0">
                 <tbody>
                     <!--参加決定者-->
@@ -91,7 +97,7 @@
                 {% endif %}
             </div>
         </div>
-        <div class="card-body py-0">
+        <div class="card-body py-0 table-responsive">
             <table class="table caption-top mb-0">
                 <tbody>
                     <!--参加打診者-->
@@ -141,7 +147,7 @@
             <div class="card-header border-bottom d-flex align-items-center justify-content-between">
                 <h2 class="fs-5 fw-bold mb-0">参加辞退者</h2>
             </div>
-            <div class="card-body py-0">
+            <div class="card-body py-0 table-responsive">
                 <table class="table mb-0">
                     <tbody>
                         <!--参加辞退���-->
