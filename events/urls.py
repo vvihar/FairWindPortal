@@ -16,6 +16,7 @@ from events_recruitment.views import (
     event_recruitment_csv,
 )
 from events_reflection.views import (
+    EventReflectionCreateUpdate,
     EventReflectionList,
     EventReflectionTemplateCreateUpdate,
 )
@@ -82,6 +83,11 @@ urlpatterns = [
     path("<int:id>/bill/<int:pk>/issue", issue_bill, name="bill_issue"),
     # 振り返り（events_reflection）
     path("<int:id>/reflection/", EventReflectionList.as_view(), name="reflection_list"),
+    path(
+        "<int:id>/reflection/post/",
+        EventReflectionCreateUpdate.as_view(),
+        name="reflection_post",
+    ),
     path(
         "<int:id>/reflection/template/",
         EventReflectionTemplateCreateUpdate.as_view(),
