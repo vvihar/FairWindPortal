@@ -1,3 +1,5 @@
+from django.contrib import messages
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import (
@@ -7,7 +9,6 @@ from django.views.generic import (
     ListView,
     UpdateView,
 )
-from django.views.generic.edit import FormMixin
 
 from events.models import Event
 from events.views import OnlyEventAdminMixin
@@ -18,15 +19,28 @@ from .models import EventReflection, EventReflectionGeneral, EventReflectionTemp
 # Create your views here.
 
 
-class EventReflectionList(ListView, FormMixin):
+class EventReflectionList(ListView):
+    # TODO: 企画の参加者のみ
     template_name = "reflections/list.html"
+    model = EventReflection
+    form_class = EventReflectionForm
+
+    def get_queryset(self):
+        return EventReflection.objects.filter(event=self.kwargs["id"]).order_by("user")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["event"] = Event.objects.get(pk=self.kwargs["id"])
+        return context
+
+
+class EventReflectionCreateUpdate(UpdateView):
+    template_name = "reflections/edit.html"
+    model = EventReflection
     form_class = EventReflectionForm
 
     def get_success_url(self):
         return reverse_lazy("events:reflection_list", kwargs={"id": self.kwargs["id"]})
-
-    def get_queryset(self):
-        return EventReflection.objects.filter(event=self.kwargs["id"]).order_by("user")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -41,20 +55,11 @@ class EventReflectionList(ListView, FormMixin):
 
     def form_valid(self, form):
         message = form.cleaned_data["reflection"]
-        event = self.get_context_data()["event"]
-        try:
-            event_reflection = EventReflection.objects.get(
-                event=event, user=self.request.user
-            )
-            if not message:
-                event_reflection.delete()
-            else:
-                event_reflection.reflection = message
-                event_reflection.save()
-        except EventReflection.DoesNotExist:
-            EventReflection.objects.create(
-                event=event, user=self.request.user, reflection=message
-            )
+        if not message:
+            # if message is empty, delete the reflection
+            event_reflection = self.get_object()
+            event_reflection.delete()
+            return HttpResponseRedirect(self.get_success_url())
         return super().form_valid(form)
 
     def get_initial(self):
@@ -72,13 +77,15 @@ class EventReflectionList(ListView, FormMixin):
             except EventReflectionTemplate.DoesNotExist:
                 return {"reflection": ""}
 
-    def post(self, request, *args, **kwargs):
-        self.object_list = self.get_queryset()
-        form = self.get_form()
-        if form.is_valid():
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
+    def get_object(self, queryset=None):
+        try:
+            return EventReflection.objects.get(
+                event=self.kwargs["id"], user=self.request.user
+            )
+        except EventReflection.DoesNotExist:
+            return EventReflection(
+                event=Event.objects.get(pk=self.kwargs["id"]), user=self.request.user
+            )
 
 
 class EventReflectionTemplateCreateUpdate(OnlyEventAdminMixin, UpdateView):
