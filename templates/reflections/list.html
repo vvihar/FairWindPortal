@@ -25,36 +25,9 @@
 {% endblock breadcrumbs %}
 {% block content %}
     <h4 class="mb-3">{{ event.name }}</h4>
-    <div class="mb-3">
-        <form method="post"
-              id="form"
-              style="visibility:hidden">
-            {% csrf_token %}
-            {{ form.reflection }}
-            {% bootstrap_button "保存" button_type="submit" %}
-            <button class="btn btn-secondary"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#collapseTemplate"
-                    aria-expanded="false"
-                    aria-controls="collapseTemplate">
-                テンプレート
-            </button>
-        </form>
-        <div class="collapse mt-3"
-             id="collapseTemplate">
-            <div class="card card-body bg-light">
-                <textarea class="form-control bg-light" placeholder="振り返りのテンプレート" id="floatingTextarea2" readonly onfocus="this.select()">{{template.reflection}}</textarea>
-                {% if user in event.admin.all %}
-                    <div class="mt-3">
-                        <a class="btn btn-danger btn-sm"
-                           href="{% url 'events:reflection_template' event.pk %}"
-                           role="button">テンプレートの編集</a>
-                    </div>
-                {% endif %}
-            </div>
-        </div>
-    </div>
+    <!-- Button trigger modal -->
+    <a href="{% url 'events:reflection_post' event.pk %}"
+       class="btn btn-primary mb-3">編集</a>
     {% for reflection in object_list %}
         <div class="card mb-3">
             <div class="card-header">{{ reflection.user }}</div>
@@ -63,21 +36,4 @@
             </div>
         </div>
     {% endfor %}
-
-    {% include "components/simplemde.html" %}
-
-    <script>
-        const simplemde = new SimpleMDE({
-            element: document.getElementById("id_reflection"),
-            renderingConfig: {
-                codeSyntaxHighlighting: true,
-            },
-            toolbar: ["bold", "italic", "heading", "|", "quote", "unordered-list", "ordered-list", "|", "link", "table", "horizontal-rule", "|", "preview", "side-by-side", "fullscreen", "|", "guide"],
-            tabSize: 4,
-        });
-        const form = document.getElementById("form");
-        window.onload = () => {
-            form.style.visibility = "visible";
-        };
-    </script>
 {% endblock content %}
