@@ -50,7 +50,7 @@ class EventReflectionTemplate(models.Model):
         verbose_name_plural = "振り返りテンプレート"
 
     def __str__(self):
-        return self.event
+        return str(self.event)
 
 
 class EventReflectionGeneral(EventReflectionTemplate):
