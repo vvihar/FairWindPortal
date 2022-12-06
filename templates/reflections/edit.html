@@ -15,6 +15,9 @@
             max-height: 360px;
             overflow-y: auto;
         }
+        #description .badge {
+            width:2.5rem;
+        }
     </style>
 {% endblock head %}
 {% block breadcrumbs %}
@@ -25,6 +28,15 @@
 {% endblock breadcrumbs %}
 {% block content %}
     <h4 class="mb-3">{{ event.name }}</h4>
+    <p id="description">
+        <code>[o]</code>で
+        <span class="badge bg-success rounded-pill me-1">○</span>
+        <code>[/]</code>で
+        <span class="badge bg-warning text-dark rounded-pill me-1">△</span>
+        <code>[x]</code>で
+        <span class="badge bg-danger rounded-pill me-1">×</span>
+        を入力することができます。
+    </p>
     <button class="btn btn-secondary mb-3"
             type="button"
             data-bs-toggle="collapse"
