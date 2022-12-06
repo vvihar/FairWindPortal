@@ -11,6 +11,12 @@
           href="{% static 'utils/css/markdown.css' %}"/>
     <link rel="stylesheet"
           href="{% static 'events/reflection_md.css' %}"/>
+    <style>
+        .reflection {
+            max-height: 360px;
+            overflow-y: auto;
+        }
+    </style>
 {% endblock head %}
 {% block breadcrumbs %}
     {{ block.super }}
@@ -52,7 +58,7 @@
     {% for reflection in object_list %}
         <div class="card mb-3">
             <div class="card-header">{{ reflection.user }}</div>
-            <div class="card-body">
+            <div class="card-body reflection">
                 <div class="card-text">{{ reflection.reflection|md_to_html }}</div>
             </div>
         </div>
@@ -75,4 +81,3 @@
         };
     </script>
 {% endblock content %}
-# TODO: 長い振り返りはスクロールにする
