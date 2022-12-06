@@ -19,6 +19,7 @@ from .models import EventReflection, EventReflectionGeneral, EventReflectionTemp
 
 
 class EventReflectionList(ListView, FormMixin):
+    # TODO: 企画の参加者のみ
     template_name = "reflections/list.html"
     form_class = EventReflectionForm
 
