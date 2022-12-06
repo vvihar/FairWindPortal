@@ -31,9 +31,12 @@ class EventReflectionList(ListView, FormMixin):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["event"] = Event.objects.get(pk=self.kwargs["id"])
-        context["template"] = EventReflectionTemplate.objects.get(
-            event=self.kwargs["id"]
-        )
+        try:
+            context["template"] = EventReflectionTemplate.objects.get(
+                event=self.kwargs["id"]
+            )
+        except EventReflectionTemplate.DoesNotExist:
+            context["template"] = None
         return context
 
     def form_valid(self, form):
@@ -61,10 +64,13 @@ class EventReflectionList(ListView, FormMixin):
             )
             return {"reflection": event_reflection.reflection}
         except EventReflection.DoesNotExist:
-            event_template = EventReflectionTemplate.objects.get(
-                event=self.kwargs["id"]
-            )
-            return {"reflection": event_template.reflection}
+            try:
+                event_template = EventReflectionTemplate.objects.get(
+                    event=self.kwargs["id"]
+                )
+                return {"reflection": event_template.reflection}
+            except EventReflectionTemplate.DoesNotExist:
+                return {"reflection": ""}
 
     def post(self, request, *args, **kwargs):
         self.object_list = self.get_queryset()
