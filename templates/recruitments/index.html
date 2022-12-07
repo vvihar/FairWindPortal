@@ -105,7 +105,9 @@
                                     </option>
                                     {% for option in options %}
                                         <option value="{{ option.0 }}"
-                                                {% ifequal option.0 recruitment.preference %}selected=""{% endifequal %}>
+                                                {% ifequal option.0 recruitment.preference %}
+                                                    selected=""
+                                                {% endifequal %}>
                                             {{ option.1 }}
                                         </option>
                                     {% endfor %}
@@ -133,5 +135,7 @@
                 </div>
             </div>
         </div>
+    {% empty %}
+        現在、参加者募集中の企画はありません。
     {% endfor %}
 {% endblock content %}

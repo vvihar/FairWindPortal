@@ -85,9 +85,9 @@ urlpatterns = [
     # 振り返り（events_reflection）
     path("<int:id>/reflection/", EventReflectionList.as_view(), name="reflection_list"),
     path(
-        "<int:id>/reflection/post/",
+        "<int:id>/reflection/individual/",
         EventReflectionCreateUpdate.as_view(),
-        name="reflection_post",
+        name="reflection_individual",
     ),
     path(
         "<int:id>/reflection/general/",
