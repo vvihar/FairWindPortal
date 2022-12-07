@@ -14,7 +14,7 @@
     {% breadcrumb "ログイン" "accounts:login" %}
 {% endblock breadcrumbs %}
 {% block content %}
-    <main class="form-signin">
+    <div class="form-signin">
         {{ context }}
         <form method="post">
             {% csrf_token %}
@@ -28,5 +28,5 @@
                    value="{{ next }}"/>
             {% bootstrap_button content="ログイン" button_type="submit" extra_classes="w-100 btn-lg" %}
         </form>
-    </main>
+    </div>
 {% endblock content %}

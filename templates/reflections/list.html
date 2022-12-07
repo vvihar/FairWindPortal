@@ -11,10 +11,11 @@
           href="{% static 'utils/css/markdown.css' %}"/>
     <link rel="stylesheet"
           href="{% static 'events/reflection_md.css' %}"/>
+    <link rel="stylesheet"
+          href="{% static 'utils/css/card-scrollable.css' %}"/>
     <style>
-        .reflection {
+        .scrollable {
             max-height: 360px;
-            overflow-y: auto;
         }
     </style>
 {% endblock head %}
@@ -26,14 +27,29 @@
 {% block content %}
     <h4 class="mb-3">{{ event.name }}</h4>
     <!-- Button trigger modal -->
-    <a href="{% url 'events:reflection_post' event.pk %}"
-       class="btn btn-primary mb-3">編集</a>
+    {% if user.pk in event.get_participants %}
+        <a href="{% url 'events:reflection_general' event.pk %}"
+           class="btn btn-secondary mb-3">全体の振り返り</a>
+        <a href="{% url 'events:reflection_individual' event.pk %}"
+           class="btn btn-primary mb-3">個人の振り返り</a>
+    {% endif %}
+    {% if reflection_general %}
+        <h5 class="mb-3">全体の振り返り</h5>
+        <div class="card mb-3">
+            <div class="card-body reflection">
+                <div class="card-text">{{ reflection_general.reflection|md_to_html }}</div>
+            </div>
+        </div>
+    {% endif %}
+    {% if object_list %}<h5 class="my-3">個人の振り返り</h5>{% endif %}
     {% for reflection in object_list %}
         <div class="card mb-3">
             <div class="card-header">{{ reflection.user }}</div>
-            <div class="card-body reflection">
+            <div class="card-body scrollable">
                 <div class="card-text">{{ reflection.reflection|md_to_html }}</div>
             </div>
         </div>
+    {% empty %}
+        <p>まだ振り返りがありません。</p>
     {% endfor %}
 {% endblock content %}
