@@ -160,14 +160,13 @@ class MakeSchoolDB(StaffRequiredMixin, FormView):
                     continue
                 for col in row:
                     if "(" in col:
-                        col = col[: col.find("(")]
+                        row[row.index(col)] = col.split("(")[0]
                 if (
                     not row[0]
                     or row[4] == "9"  # 本分校が9は廃校
                     or not row[1] in valid_school_type_code  # 学校種
                 ):
                     continue
-
                 # コードから文字情報に変換
                 row[1] = school_types[row[1]]  # 学校種
                 row[2] = prefectures[row[2]]  # 都道府県
