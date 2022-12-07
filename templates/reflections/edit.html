@@ -24,7 +24,7 @@
     {{ block.super }}
     {% breadcrumb event.name "events:event_detail" event.pk %}
     {% breadcrumb "振り返り" "events:reflection_list" event.pk %}
-    {% breadcrumb "編集" "events:reflection_post" event.pk %}
+    {% breadcrumb "編集" "events:reflection_individual" event.pk %}
 {% endblock breadcrumbs %}
 {% block content %}
     <h4 class="mb-3">{{ event.name }}</h4>

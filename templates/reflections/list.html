@@ -30,7 +30,7 @@
     {% if user.pk in event.get_participants %}
         <a href="{% url 'events:reflection_general' event.pk %}"
            class="btn btn-secondary mb-3">全体の振り返り</a>
-        <a href="{% url 'events:reflection_post' event.pk %}"
+        <a href="{% url 'events:reflection_individual' event.pk %}"
            class="btn btn-primary mb-3">個人の振り返り</a>
     {% endif %}
     {% if reflection_general %}
