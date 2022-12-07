@@ -37,5 +37,7 @@
                 <div class="card-text">{{ reflection.reflection|md_to_html }}</div>
             </div>
         </div>
+    {% empty %}
+        <p>まだ振り返りがありません。</p>
     {% endfor %}
 {% endblock content %}
