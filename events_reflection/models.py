@@ -53,8 +53,17 @@ class EventReflectionTemplate(models.Model):
         return str(self.event)
 
 
-class EventReflectionGeneral(EventReflectionTemplate):
+class EventReflectionGeneral(models.Model):
     """全体振り返り（直後反省等）。一つの企画あたり一つだけ作成可能"""
+
+    event = models.OneToOneField(
+        Event,
+        on_delete=models.CASCADE,
+        related_name="reflection_general",
+        verbose_name="イベント",
+    )
+
+    reflection = models.TextField(blank=True, null=True, verbose_name="振り返り")
 
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -62,5 +71,5 @@ class EventReflectionGeneral(EventReflectionTemplate):
         verbose_name = "全体振り返り"
         verbose_name_plural = "全体振り返り"
 
-
-# TODO: 直後反省も
+    def __str__(self):
+        return str(self.event)

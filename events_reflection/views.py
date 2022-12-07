@@ -30,6 +30,12 @@ class EventReflectionList(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["event"] = Event.objects.get(pk=self.kwargs["id"])
+        try:
+            context["reflection_general"] = EventReflectionGeneral.objects.get(
+                event=self.kwargs["id"]
+            )
+        except EventReflectionGeneral.DoesNotExist:
+            context["reflection_general"] = None
         return context
 
 
@@ -107,6 +113,36 @@ class EventReflectionTemplateCreateUpdate(OnlyEventAdminMixin, UpdateView):
             return EventReflectionTemplate(
                 event=Event.objects.get(pk=self.kwargs["id"])
             )
+
+
+class EventReflectionGeneralCreateUpdate(OnlyEventParticipantMixin, UpdateView):
+    template_name = "reflections/edit.html"
+    model = EventReflectionGeneral
+    fields = ("reflection",)
+
+    def get_success_url(self):
+        return reverse_lazy("events:reflection_list", kwargs={"id": self.kwargs["id"]})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["event"] = Event.objects.get(pk=self.kwargs["id"])
+        context["general"] = True
+        return context
+
+    def form_valid(self, form):
+        message = form.cleaned_data["reflection"]
+        if not message:
+            # if message is empty, delete the reflection
+            event_reflection = self.get_object()
+            event_reflection.delete()
+            return HttpResponseRedirect(self.get_success_url())
+        return super().form_valid(form)
+
+    def get_object(self, queryset=None):
+        try:
+            return EventReflectionGeneral.objects.get(event=self.kwargs["id"])
+        except EventReflectionGeneral.DoesNotExist:
+            return EventReflectionGeneral(event=Event.objects.get(pk=self.kwargs["id"]))
 
 
 # 直後反省の入力ページをつくる
