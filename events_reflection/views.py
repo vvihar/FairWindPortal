@@ -11,7 +11,7 @@ from django.views.generic import (
 )
 
 from events.models import Event
-from events.views import OnlyEventAdminMixin
+from events.views import OnlyEventAdminMixin, OnlyEventParticipantMixin
 
 from .forms import EventReflectionForm
 from .models import EventReflection, EventReflectionGeneral, EventReflectionTemplate
@@ -20,7 +20,6 @@ from .models import EventReflection, EventReflectionGeneral, EventReflectionTemp
 
 
 class EventReflectionList(ListView):
-    # TODO: 企画の参加者のみ
     template_name = "reflections/list.html"
     model = EventReflection
     form_class = EventReflectionForm
@@ -34,7 +33,7 @@ class EventReflectionList(ListView):
         return context
 
 
-class EventReflectionCreateUpdate(UpdateView):
+class EventReflectionCreateUpdate(OnlyEventParticipantMixin, UpdateView):
     template_name = "reflections/edit.html"
     model = EventReflection
     form_class = EventReflectionForm

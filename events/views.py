@@ -49,6 +49,31 @@ class OnlyEventAdminMixin(UserPassesTestMixin):
         return redirect(f"{reverse(settings.LOGIN_URL)}?next={self.request.path}")
 
 
+class OnlyEventParticipantMixin(UserPassesTestMixin):
+    """
+    企画の管理者と管理者、参加者のみがアクセスできるMixin
+    eventは <int:id> で指定する
+    """
+
+    raise_exception = True
+
+    def test_func(self):
+        user = self.request.user
+        event = get_object_or_404(Event, pk=self.kwargs["id"])
+        event_admin = event.admin.all()
+        event_participant = event.get_participants()
+        if user in event_admin or user in event_participant:
+            return True
+        elif user.is_staff:
+            messages.error(self.request, "企画の管理者や参加者ではなく、サイトの管理者としてこのページにアクセスしています")
+            return True
+        else:
+            return False
+
+    def handle_no_permission(self):
+        return redirect(f"{reverse(settings.LOGIN_URL)}?next={self.request.path}")
+
+
 class Home(ListView):
     """ホーム画面"""
 

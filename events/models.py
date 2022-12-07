@@ -95,6 +95,16 @@ class Event(models.Model):
                 event_name += school.name + " "
             return f"{event_name}{self.type}"
 
+    def get_participants(self):
+        """参加者を取得する"""
+        participants = (
+            self.participation.filter(status="参加")
+            .all()
+            .values_list("participant", flat=True)
+        )
+        admin = self.admin.all().values_list("id", flat=True)
+        return participants.union(admin)
+
 
 class EventParticipation(models.Model):
     """企画への参加者の情報を管理する"""
