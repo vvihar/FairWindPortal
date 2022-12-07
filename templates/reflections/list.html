@@ -28,9 +28,20 @@
     <h4 class="mb-3">{{ event.name }}</h4>
     <!-- Button trigger modal -->
     {% if user.pk in event.get_participants %}
+        <a href="{% url 'events:reflection_general' event.pk %}"
+           class="btn btn-secondary mb-3">全体の振り返り</a>
         <a href="{% url 'events:reflection_post' event.pk %}"
-           class="btn btn-primary mb-3">編集</a>
+           class="btn btn-primary mb-3">個人の振り返り</a>
     {% endif %}
+    {% if reflection_general %}
+        <h5 class="mb-3">全体の振り返り</h5>
+        <div class="card mb-3">
+            <div class="card-body reflection">
+                <div class="card-text">{{ reflection_general.reflection|md_to_html }}</div>
+            </div>
+        </div>
+    {% endif %}
+    {% if object_list %}<h5 class="my-3">個人の振り返り</h5>{% endif %}
     {% for reflection in object_list %}
         <div class="card mb-3">
             <div class="card-header">{{ reflection.user }}</div>
