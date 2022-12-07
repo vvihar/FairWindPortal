@@ -28,6 +28,13 @@
 {% endblock breadcrumbs %}
 {% block content %}
     <h4 class="mb-3">{{ event.name }}</h4>
+    <h5 class="mb-3">
+        {% if general %}
+            全体の振り返り
+        {% else %}
+            個人の振り返り
+        {% endif %}
+    </h5>
     <p id="description">
         <code>[o]</code>で
         <span class="badge bg-success rounded-pill me-1">○</span>
