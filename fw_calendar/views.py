@@ -1,9 +1,11 @@
 import datetime
-import io
-from calendar import Calendar
+import uuid
 
+from accounts.models import User
+from django.contrib import messages
 from django.http import HttpResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse_lazy
 from django.utils.timezone import make_aware
 from django.views import generic
 from events.models import Event
@@ -147,14 +149,24 @@ class MonthWithFormsCalendar(mixins.MonthWithFormsMixin, generic.View):
 class CalendarIntegration(generic.TemplateView):
     template_name = "calendar/integration.html"
 
+    def post(self, request, **kwargs):
+        user = request.user
+        user.calendar_uuid = uuid.uuid4()
+        user.save()
+        messages.success(request, "照会カレンダーのURLをリセットしました")
+        return redirect("calendar:integration")
 
-def ics_calendar(request):
+
+def ics_calendar(request, **kwargs):
     """スケジュールをiCalendar形式でダウンロードする"""
 
     response = HttpResponse(
         content_type="text/calendar",
         headers={"Content-Disposition": 'attachment; filename="myfwcalendar.ics"'},
     )
+
+    calendar_uuid = kwargs.get("uuid")
+    user = get_object_or_404(User, calendar_uuid=calendar_uuid)
 
     cal = IcsCalendar()  # Calendarクラスをインスタンス化
     cal.add("prodid", "-//MyFWCalendar//MyFWCalendar//EN")

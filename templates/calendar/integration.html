@@ -3,6 +3,7 @@
 {% load static %}
 
 {% load django_bootstrap_breadcrumbs %}
+{% load django_bootstrap5 %}
 
 {% block head %}
 {% endblock head %}
@@ -12,10 +13,16 @@
 {% block content %}
     <h5 class="mb-3">カレンダー照会</h5>
     <p>次のURLのカレンダーを照会すると、自分の端末のカレンダーに自動でFairWindの予定が同期されます。</p>
-    <input class="form-control"
-           type="text"
-           value="{{ request.scheme }}://{{ request.get_host }}{% url 'calendar:ics' %}"
-           aria-label="readonly"
-           readonly
-           onFocus="javascript:this.select()"/>
+    <form method="post">
+        {% csrf_token %}
+        <div class="input-group mb-3">
+            <input class="form-control"
+                   type="text"
+                   value="{{ request.scheme }}://{{ request.get_host }}{% url 'calendar:ics' %}"
+                   aria-label="readonly"
+                   readonly
+                   onFocus="javascript:this.select()"/>
+            {% bootstrap_button "更新" button_type="submit" button_class="btn-danger" %}
+        </div>
+    </form>
 {% endblock content %}

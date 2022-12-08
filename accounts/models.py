@@ -1,5 +1,6 @@
 """Accountsのモデルを管理"""
 # Create your models here.
+import uuid
 from datetime import datetime
 
 from django.contrib.auth.models import AbstractUser
@@ -154,6 +155,11 @@ class User(AbstractUser):
         null=True,
         blank=True,
         related_name="division_members",
+    )
+
+    calendar_uuid = models.UUIDField(
+        verbose_name="カレンダーUUID",
+        default=uuid.uuid4,
     )
 
     REQUIRED_FIELDS = [
