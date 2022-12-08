@@ -10,6 +10,7 @@ class LoginRequiredMiddleware(MiddlewareMixin):
             and request.path != reverse("accounts:login")
             and request.path != reverse("accounts:logout")
             and request.path != reverse("home")
+            and request.path != reverse("calendar:ics")
             and not request.path.startswith("/admin/")
         ):
             return HttpResponseRedirect(

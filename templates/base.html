@@ -88,28 +88,37 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle"
                                href="#"
-                               id="navbarDropdown"
+                               id="navbarCalendar"
                                role="button"
                                data-bs-toggle="dropdown"
                                aria-expanded="false">
-                                Dropdown
+                                カレンダー
                             </a>
                             <ul class="dropdown-menu dropdown-menu-dark"
-                                aria-labelledby="navbarDropdown">
+                                aria-labelledby="navbarCalendar">
                                 <li>
                                     <a class="dropdown-item"
-                                       href="#">Action</a>
+                                       href="{% url 'calendar:month' %}">月間カレンダー</a>
                                 </li>
                                 <li>
                                     <a class="dropdown-item"
-                                       href="#">Another action</a>
-                                </li>
-                                <li>
-                                    <hr class="dropdown-divider"/>
+                                       href="{% url 'calendar:week' %}">週間カレンダー</a>
                                 </li>
                                 <li>
                                     <a class="dropdown-item"
-                                       href="#">Something else here</a>
+                                       href="{% url 'calendar:month_with_schedule' %}">スケジュール付き月間カレンダー</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item"
+                                       href="{% url 'calendar:week_with_schedule' %}">スケジュール付き週間カレンダー</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item"
+                                       href="{% url 'calendar:mycalendar' %}">登録機能付き月間・週間カレンダー</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item"
+                                       href="{% url 'calendar:month_with_forms' %}">一括登録付き月間カレンダー</a>
                                 </li>
                             </ul>
                         </li>
@@ -131,7 +140,7 @@
                                     さん
                                 {% else %}
                                     {{ user.username }}
-                                    さん
+                                    さ���
                                 {% endif %}
                             </a>
                         {% endif %}

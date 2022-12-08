@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "shortener.apps.ShortenerConfig",
     "events_accounting.apps.EventsAccountingConfig",
     "events_reflection.apps.EventsReflectionConfig",
+    "fw_calendar.apps.FwCalendarConfig",
 ]
 
 MIDDLEWARE = [

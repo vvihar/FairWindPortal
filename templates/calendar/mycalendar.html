@@ -1,0 +1,26 @@
+{% extends "calendar/base.html" %}
+
+{% load django_bootstrap5 %}
+
+{% block content %}
+    {{ block.super }}
+    <div class="row">
+        <div class="col-md-3">
+
+            {% include "calendar/includes/month.html" %}
+
+            <!--TODO: 選択した日をハイライト-->
+            <hr/>
+            <form method="post">
+                {% bootstrap_form form layout="floating" %}
+                {% csrf_token %}
+                {% bootstrap_button "送信" button_type="submit" button_class="btn-primary btn-block" %}
+            </form>
+        </div>
+        <div class="col-md-9">
+
+            {% include "calendar/includes/week.html" %}
+
+        </div>
+    </div>
+{% endblock content %}
