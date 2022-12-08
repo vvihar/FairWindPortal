@@ -4,7 +4,7 @@ from django.shortcuts import redirect, render
 from django.views import generic
 
 from . import mixins
-from .forms import BS4ScheduleForm, SimpleScheduleForm
+from .forms import ScheduleForm, SimpleScheduleForm
 from .models import Schedule
 
 # Create your views here.
@@ -70,7 +70,7 @@ class MyCalendar(
     template_name = "calendar/mycalendar.html"
     model = Schedule
     date_field = "date"
-    form_class = BS4ScheduleForm
+    form_class = ScheduleForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

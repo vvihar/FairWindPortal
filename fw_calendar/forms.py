@@ -3,7 +3,7 @@ from django import forms
 from .models import Schedule
 
 
-class BS4ScheduleForm(forms.ModelForm):
+class ScheduleForm(forms.ModelForm):
     """Bootstrapに対応するためのModelForm"""
 
     class Meta:

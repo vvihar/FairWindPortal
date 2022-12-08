@@ -1,5 +1,7 @@
 {% extends "calendar/base.html" %}
 
+{% load django_bootstrap5 %}
+
 {% block content %}
     {{ block.super }}
     <style>
@@ -41,7 +43,9 @@
                                         {% else %}
                                             {{ day.day }}
                                         {% endif %}
-                                        {% for form in forms %}{{ form.as_p }}{% endfor %}
+                                        {% for form in forms %}
+                                            {% bootstrap_form form %}
+                                        {% endfor %}
                                     </div>
                                 </td>
                             {% endif %}

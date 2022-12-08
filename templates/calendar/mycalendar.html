@@ -1,5 +1,7 @@
 {% extends "calendar/base.html" %}
 
+{% load django_bootstrap5 %}
+
 {% block content %}
     {{ block.super }}
     <div class="row">
@@ -7,22 +9,12 @@
 
             {% include "calendar/includes/month.html" %}
 
+            <!--TODO: 選択した日をハイライト-->
             <hr/>
             <form method="post">
-                {{ form.non_field_errors }}
-                {% for field in form %}
-                    <div class="form-group row">
-                        <label for="{{ field.id_for_label }}"
-                               class="col-sm-4 col-form-label">{{ field.label_tag }}</label>
-                        <div class="col-sm-8">
-                            {{ field }}
-                            {{ field.errors }}
-                        </div>
-                    </div>
-                {% endfor %}
+                {% bootstrap_form form layout="floating" %}
                 {% csrf_token %}
-                <button type="submit"
-                        class="btn btn-primary btn-block">送信</button>
+                {% bootstrap_button "送信" button_type="submit" button_class="btn-primary btn-block" %}
             </form>
         </div>
         <div class="col-md-9">
