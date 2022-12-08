@@ -172,6 +172,5 @@ def ics_calendar(request):
         event.add("dtend", make_aware(end_datetime))
         event.add("description", schedule.description)
         cal.add_component(event)
-    # add calendar metadata to cal
     response.write(cal.to_ical())
     return response
