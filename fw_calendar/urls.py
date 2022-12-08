@@ -50,4 +50,5 @@ urlpatterns = [
         views.MonthWithFormsCalendar.as_view(),
         name="month_with_forms",
     ),
+    path("myfwcalendar.ics", views.ics_calendar, name="ics"),
 ]

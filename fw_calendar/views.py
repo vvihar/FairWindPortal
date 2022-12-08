@@ -1,7 +1,14 @@
 import datetime
+import io
+from calendar import Calendar
 
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
+from django.utils.timezone import make_aware
 from django.views import generic
+from events.models import Event
+from icalendar import Calendar as IcsCalendar
+from icalendar import Event as IcsEvent
 
 from . import mixins
 from .forms import ScheduleForm, SimpleScheduleForm
@@ -126,3 +133,45 @@ class MonthWithFormsCalendar(mixins.MonthWithFormsMixin, generic.View):
             return redirect("calendar:month_with_forms")
 
         return render(request, self.template_name, context)
+
+
+def ics_calendar(request):
+    """スケジュールをiCalendar形式でダウンロードする"""
+
+    response = HttpResponse(
+        content_type="text/calendar",
+        headers={"Content-Disposition": 'attachment; filename="myfwcalendar.ics"'},
+    )
+
+    cal = IcsCalendar()  # Calendarクラスをインスタンス化
+    cal.add("prodid", "-//MyFWCalendar//MyFWCalendar//EN")
+    cal.add("version", "2.0")
+    cal.add("method", "PUBLISH")
+    cal.add("x-wr-calname", "MyFWCalendar")
+    cal.add("x-wr-caldesc", "FairWindのカレンダー")
+    cal.add("x-wr-timezone", "Asia/Tokyo")
+
+    # get all schedules after a year ago before a year later
+    schedules = Schedule.objects.filter(
+        date__gte=datetime.date.today() - datetime.timedelta(days=365),
+        date__lte=datetime.date.today() + datetime.timedelta(days=365),
+    )
+    # get all events starting after a year ago and ending before a year later
+    events = Event.objects.filter(
+        start_datetime__gte=make_aware(datetime.datetime.now())
+        - datetime.timedelta(days=365),
+        end_datetime__lte=make_aware(datetime.datetime.now())
+        + datetime.timedelta(days=365),
+    )
+    for schedule in schedules:
+        event = IcsEvent()  # Eventクラスをインスタンス化
+        event.add("summary", schedule.summary)
+        start_datetime = datetime.datetime.combine(schedule.date, schedule.start_time)
+        end_datetime = datetime.datetime.combine(schedule.date, schedule.end_time)
+        event.add("dtstart", make_aware(start_datetime))
+        event.add("dtend", make_aware(end_datetime))
+        event.add("description", schedule.description)
+        cal.add_component(event)
+    # add calendar metadata to cal
+    response.write(cal.to_ical())
+    return response
