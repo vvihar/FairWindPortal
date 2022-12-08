@@ -6,8 +6,16 @@
     <tbody>
         <tr>
             {% for day in week_days %}
-                {% if now == day %}
-                    <td class="table-success">
+                {% if selected_date == day %}
+                    <td class="table-primary">
+                        {% if week_first.month != day.month %}
+                            {{ day | date:"m/d" }}
+                        {% else %}
+                            {{ day.day }}
+                        {% endif %}
+                    </td>
+                {% elif now == day %}
+                    <td class="table-danger">
                         {% if week_first.month != day.month %}
                             {{ day | date:"m/d" }}
                         {% else %}

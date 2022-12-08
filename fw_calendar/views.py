@@ -78,6 +78,16 @@ class MyCalendar(
         month_calendar_context = self.get_month_calendar()
         context.update(week_calendar_context)
         context.update(month_calendar_context)
+        month, year, day = (
+            self.kwargs.get("month"),
+            self.kwargs.get("year"),
+            self.kwargs.get("day"),
+        )
+        if month and year and day:
+            date = datetime.date(year=int(year), month=int(month), day=int(day))
+        else:
+            date = datetime.date.today()
+        context["selected_date"] = date
         return context
 
     def form_valid(self, form):

@@ -12,8 +12,12 @@
         {% for week in month_days %}
             <tr>
                 {% for day in week %}
-                    {% if now == day %}
-                        <td class="table-success">
+                    {% if selected_date == day %}
+                        <td class="table-primary">
+                            <a href="{% url "calendar:mycalendar" day.year day.month day.day %}">{{ day.day }}</a>
+                        </td>
+                    {% elif now == day %}
+                        <td class="table-danger">
                             <a href="{% url "calendar:mycalendar" day.year day.month day.day %}">{{ day.day }}</a>
                         </td>
                     {% else %}

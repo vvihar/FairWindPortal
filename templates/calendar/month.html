@@ -11,7 +11,7 @@
                 <tr>
                     {% for day in week %}
                         {% if now == day %}
-                            <td class="table-success">
+                            <td class="table-danger">
                                 {% if month_current.month != day.month %}
                                     {{ day | date:"m/d" }}
                                 {% else %}

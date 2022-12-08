@@ -28,7 +28,7 @@
                 <tr>
                     {% for day, schedules in week_day_schedles.items %}
                         {% if now == day %}
-                            <td class="table-success">
+                            <td class="table-danger">
                                 <div>
                                     {% if month_current.month != day.month %}
                                         {{ day | date:"m/d" }}
