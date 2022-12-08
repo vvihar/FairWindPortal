@@ -147,7 +147,7 @@ def ics_calendar(request):
     cal.add("prodid", "-//MyFWCalendar//MyFWCalendar//EN")
     cal.add("version", "2.0")
     cal.add("method", "PUBLISH")
-    cal.add("x-wr-calname", "MyFWCalendar")
+    cal.add("x-wr-calname", "FairWind")
     cal.add("x-wr-caldesc", "FairWindのカレンダー")
     cal.add("x-wr-timezone", "Asia/Tokyo")
 
