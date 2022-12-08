@@ -32,7 +32,9 @@
                                         {% else %}
                                             {{ day.day }}
                                         {% endif %}
-                                        {% for form in forms %}{{ form.as_p }}{% endfor %}
+                                        {% for form in forms %}
+                                            {% bootstrap_form form layout="floating" %}
+                                        {% endfor %}
                                     </div>
                                 </td>
                             {% else %}
@@ -44,7 +46,7 @@
                                             {{ day.day }}
                                         {% endif %}
                                         {% for form in forms %}
-                                            {% bootstrap_form form %}
+                                            {% bootstrap_form form layout="floating" %}
                                         {% endfor %}
                                     </div>
                                 </td>
