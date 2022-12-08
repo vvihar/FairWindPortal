@@ -112,6 +112,15 @@ class MyCalendar(
             "calendar:mycalendar", year=date.year, month=date.month, day=date.day
         )
 
+    def get_initial(self):
+        start_time = datetime.datetime.strftime(datetime.datetime.now(), "%H:%M")
+        end_time = datetime.datetime.strftime(
+            datetime.datetime.now() + datetime.timedelta(hours=1), "%H:%M"
+        )
+        if end_time < start_time:
+            end_time = datetime.time.strftime(datetime.time(23, 59), "%H:%M")
+        return {"start_time": start_time, "end_time": end_time}
+
 
 class MonthWithFormsCalendar(mixins.MonthWithFormsMixin, generic.View):
     """フォーム付きの月間カレンダーを表示するビュー"""
@@ -133,6 +142,10 @@ class MonthWithFormsCalendar(mixins.MonthWithFormsMixin, generic.View):
             return redirect("calendar:month_with_forms")
 
         return render(request, self.template_name, context)
+
+
+class CalendarIntegration(generic.TemplateView):
+    template_name = "calendar/integration.html"
 
 
 def ics_calendar(request):
