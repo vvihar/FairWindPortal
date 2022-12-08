@@ -1,9 +1,11 @@
 import datetime
-import io
-from calendar import Calendar
+import uuid
 
+from accounts.models import User
+from django.contrib import messages
 from django.http import HttpResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse_lazy
 from django.utils.timezone import make_aware
 from django.views import generic
 from events.models import Event
@@ -112,6 +114,15 @@ class MyCalendar(
             "calendar:mycalendar", year=date.year, month=date.month, day=date.day
         )
 
+    def get_initial(self):
+        start_time = datetime.datetime.strftime(datetime.datetime.now(), "%H:%M")
+        end_time = datetime.datetime.strftime(
+            datetime.datetime.now() + datetime.timedelta(hours=1), "%H:%M"
+        )
+        if end_time < start_time:
+            end_time = datetime.time.strftime(datetime.time(23, 59), "%H:%M")
+        return {"start_time": start_time, "end_time": end_time}
+
 
 class MonthWithFormsCalendar(mixins.MonthWithFormsMixin, generic.View):
     """フォーム付きの月間カレンダーを表示するビュー"""
@@ -135,7 +146,18 @@ class MonthWithFormsCalendar(mixins.MonthWithFormsMixin, generic.View):
         return render(request, self.template_name, context)
 
 
-def ics_calendar(request):
+class CalendarIntegration(generic.TemplateView):
+    template_name = "calendar/integration.html"
+
+    def post(self, request, **kwargs):
+        user = request.user
+        user.calendar_uuid = uuid.uuid4()
+        user.save()
+        messages.success(request, "照会カレンダーのURLをリセットしました")
+        return redirect("calendar:integration")
+
+
+def ics_calendar(request, **kwargs):
     """スケジュールをiCalendar形式でダウンロードする"""
 
     response = HttpResponse(
@@ -143,11 +165,14 @@ def ics_calendar(request):
         headers={"Content-Disposition": 'attachment; filename="myfwcalendar.ics"'},
     )
 
+    calendar_uuid = kwargs.get("uuid")
+    user = get_object_or_404(User, calendar_uuid=calendar_uuid)
+
     cal = IcsCalendar()  # Calendarクラスをインスタンス化
     cal.add("prodid", "-//MyFWCalendar//MyFWCalendar//EN")
     cal.add("version", "2.0")
     cal.add("method", "PUBLISH")
-    cal.add("x-wr-calname", "MyFWCalendar")
+    cal.add("x-wr-calname", "FairWind")
     cal.add("x-wr-caldesc", "FairWindのカレンダー")
     cal.add("x-wr-timezone", "Asia/Tokyo")
 
@@ -172,6 +197,5 @@ def ics_calendar(request):
         event.add("dtend", make_aware(end_datetime))
         event.add("description", schedule.description)
         cal.add_component(event)
-    # add calendar metadata to cal
     response.write(cal.to_ical())
     return response

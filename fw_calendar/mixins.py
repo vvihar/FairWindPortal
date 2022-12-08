@@ -202,7 +202,7 @@ class MonthWithFormsMixin(MonthCalendarMixin):
         queryset = self.model.objects.filter(**lookup)
         days_count = sum(len(week) for week in days)
         FormClass = forms.modelformset_factory(
-            self.model, self.form_class, extra=days_count
+            self.model, self.form_class, extra=days_count, can_delete=True
         )
         if self.request.method == "POST":
             formset = self.month_formset = FormClass(
