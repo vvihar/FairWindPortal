@@ -206,5 +206,12 @@ def ics_calendar(request, **kwargs):
         event.add("dtend", make_aware(end_datetime))
         event.add("description", schedule.description)
         cal.add_component(event)
+    for fw_event in events:
+        event = IcsEvent()  # Eventクラスをインスタンス化
+        event.add("summary", fw_event.name)
+        event.add("dtstart", fw_event.start_datetime)
+        event.add("dtend", fw_event.end_datetime)
+        event.add("location", fw_event.venue)
+        cal.add_component(event)
     response.write(cal.to_ical())
     return response
