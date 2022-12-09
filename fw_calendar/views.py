@@ -3,6 +3,7 @@ import uuid
 
 from accounts.models import User
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
@@ -146,7 +147,7 @@ class MonthWithFormsCalendar(mixins.MonthWithFormsMixin, generic.View):
         return render(request, self.template_name, context)
 
 
-class CalendarIntegration(generic.TemplateView):
+class CalendarIntegration(LoginRequiredMixin, generic.TemplateView):
     template_name = "calendar/integration.html"
 
     def post(self, request, **kwargs):
@@ -156,16 +157,24 @@ class CalendarIntegration(generic.TemplateView):
         messages.success(request, "照会カレンダーのURLをリセットしました")
         return redirect("calendar:integration")
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        context["calendar_uuid"] = user.calendar_uuid
+        return context
+
 
 def ics_calendar(request, **kwargs):
     """スケジュールをiCalendar形式でダウンロードする"""
 
     response = HttpResponse(
         content_type="text/calendar",
-        headers={"Content-Disposition": 'attachment; filename="myfwcalendar.ics"'},
+        headers={"Content-Disposition": 'attachment; filename="fwcal.ics"'},
     )
 
     calendar_uuid = kwargs.get("uuid")
+    users = User.objects.filter(calendar_uuid=calendar_uuid)
+    print(users)
     user = get_object_or_404(User, calendar_uuid=calendar_uuid)
 
     cal = IcsCalendar()  # Calendarクラスをインスタンス化
