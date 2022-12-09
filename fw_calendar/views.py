@@ -173,8 +173,6 @@ def ics_calendar(request, **kwargs):
     )
 
     calendar_uuid = kwargs.get("uuid")
-    users = User.objects.filter(calendar_uuid=calendar_uuid)
-    print(users)
     user = get_object_or_404(User, calendar_uuid=calendar_uuid)
 
     cal = IcsCalendar()  # Calendarクラスをインスタンス化
