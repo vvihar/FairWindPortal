@@ -138,6 +138,7 @@ class MonthWithFormsCalendar(mixins.MonthWithFormsMixin, generic.View):
         return render(request, self.template_name, context)
 
     def post(self, request, **kwargs):
+        # FIXME: 時刻を設定できるようにする
         context = self.get_month_calendar()
         formset = context["month_formset"]
         if formset.is_valid():
