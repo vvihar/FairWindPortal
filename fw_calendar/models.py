@@ -17,3 +17,7 @@ class Schedule(models.Model):
 
     def __str__(self):
         return self.summary
+
+    class Meta:
+        verbose_name = "スケジュール"
+        verbose_name_plural = "スケジュール"
