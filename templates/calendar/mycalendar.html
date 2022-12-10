@@ -60,6 +60,23 @@
         .calendar-event:hover {
             background-color: #dee2e6;
         }
+        .calendar-day-link > div > div {
+            border-radius: 50%;
+            width: 2rem;
+            height: 2rem;
+            line-height: 2rem;
+            text-align: center;
+            font-weight: bold;
+            margin-left: auto;
+        }
+        .calendar-day-link > div > div.calendar-today {
+            background-color: var(--bs-danger);
+            color: #fff;
+            text-decoration: none;
+        }
+        #calendar-day-link-today {
+            text-decoration: none;
+        }
     </style>
 {% endblock head %}
 {% block content %}
@@ -98,12 +115,19 @@
                                 <a class="calendar-day-link"
                                    data-bs-toggle="modal"
                                    href="#dayEventModal"
-                                   data-bs-day="{{ day | date:"Y/m/d" }}">
+                                   data-bs-day="{{ day | date:"Y/m/d" }}"
+                                   {% if now == day %}
+                                       id="calendar-day-link-today"
+                                   {% endif %}>
                                     <div>
                                         {% if month_current.month != day.month %}
-                                            {{ day | date:"m/d" }}
+                                            <div>{{ day | date:"m/d" }}</div>
                                         {% else %}
-                                            {{ day.day }}
+                                            {% if now == day %}
+                                                <div class="calendar-today">{{ day.day }}</div>
+                                            {% else %}
+                                                <div>{{ day.day }}</div>
+                                            {% endif %}
                                         {% endif %}
                                     </div>
                                 </a>
