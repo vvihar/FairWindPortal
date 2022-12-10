@@ -9,6 +9,10 @@ class ScheduleForm(forms.ModelForm):
     class Meta:
         model = Schedule
         fields = ("summary", "description", "start_time", "end_time")
+        widgets = {
+            "start_time": forms.widgets.TimeInput(attrs={"type": "time"}),
+            "end_time": forms.widgets.TimeInput(attrs={"type": "time"}),
+        }
 
     def clean_end_time(self):
         start_time = self.cleaned_data["start_time"]

@@ -18,11 +18,11 @@
         <div class="input-group mb-3">
             <input class="form-control"
                    type="text"
-                   value="{{ request.scheme }}://{{ request.get_host }}{% url 'calendar:ics' %}"
+                   value="{{ request.scheme }}://{{ request.get_host }}{% url 'calendar:ics' calendar_uuid %}"
                    aria-label="readonly"
                    readonly
                    onFocus="javascript:this.select()"/>
-            {% bootstrap_button "更新" button_type="submit" button_class="btn-danger" %}
+            {% bootstrap_button "リセット" button_type="submit" button_class="btn-danger" %}
         </div>
     </form>
 {% endblock content %}

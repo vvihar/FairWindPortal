@@ -10,8 +10,8 @@ class Schedule(models.Model):
 
     summary = models.CharField("概要", max_length=50)
     description = models.TextField("詳細な説明", blank=True)
-    start_time = models.TimeField("開始時間")
-    end_time = models.TimeField("終了時間")
+    start_time = models.TimeField("開始時刻")
+    end_time = models.TimeField("終了時刻")
     date = models.DateField("日付")
     created_at = models.DateTimeField("作成日", default=timezone.now)
 

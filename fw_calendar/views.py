@@ -3,6 +3,7 @@ import uuid
 
 from accounts.models import User
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
@@ -71,9 +72,7 @@ class MonthWithScheduleCalendar(mixins.MonthWithScheduleMixin, generic.TemplateV
         return context
 
 
-class MyCalendar(
-    mixins.MonthCalendarMixin, mixins.WeekWithScheduleMixin, generic.CreateView
-):
+class MyCalendar(mixins.MonthWithScheduleMixin, generic.CreateView):
     """月間カレンダー、週間カレンダー、スケジュール登録画面のある欲張りビュー"""
 
     template_name = "calendar/mycalendar.html"
@@ -83,9 +82,7 @@ class MyCalendar(
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        week_calendar_context = self.get_week_calendar()
         month_calendar_context = self.get_month_calendar()
-        context.update(week_calendar_context)
         context.update(month_calendar_context)
         month, year, day = (
             self.kwargs.get("month"),
@@ -137,6 +134,7 @@ class MonthWithFormsCalendar(mixins.MonthWithFormsMixin, generic.View):
         return render(request, self.template_name, context)
 
     def post(self, request, **kwargs):
+        # FIXME: 時刻を設定できるようにする
         context = self.get_month_calendar()
         formset = context["month_formset"]
         if formset.is_valid():
@@ -146,7 +144,7 @@ class MonthWithFormsCalendar(mixins.MonthWithFormsMixin, generic.View):
         return render(request, self.template_name, context)
 
 
-class CalendarIntegration(generic.TemplateView):
+class CalendarIntegration(LoginRequiredMixin, generic.TemplateView):
     template_name = "calendar/integration.html"
 
     def post(self, request, **kwargs):
@@ -156,13 +154,28 @@ class CalendarIntegration(generic.TemplateView):
         messages.success(request, "照会カレンダーのURLをリセットしました")
         return redirect("calendar:integration")
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        context["calendar_uuid"] = user.calendar_uuid
+        return context
+
+
+def delete_schedule(request, **kwargs):
+    """スケジュールを削除する"""
+
+    schedule_id = kwargs.get("pk")
+    schedule = get_object_or_404(Schedule, id=schedule_id)
+    schedule.delete()
+    return redirect(request.META.get("HTTP_REFERER"))
+
 
 def ics_calendar(request, **kwargs):
     """スケジュールをiCalendar形式でダウンロードする"""
 
     response = HttpResponse(
         content_type="text/calendar",
-        headers={"Content-Disposition": 'attachment; filename="myfwcalendar.ics"'},
+        headers={"Content-Disposition": 'attachment; filename="fwcal.ics"'},
     )
 
     calendar_uuid = kwargs.get("uuid")
@@ -196,6 +209,13 @@ def ics_calendar(request, **kwargs):
         event.add("dtstart", make_aware(start_datetime))
         event.add("dtend", make_aware(end_datetime))
         event.add("description", schedule.description)
+        cal.add_component(event)
+    for fw_event in events:
+        event = IcsEvent()  # Eventクラスをインスタンス化
+        event.add("summary", fw_event.name)
+        event.add("dtstart", fw_event.start_datetime)
+        event.add("dtend", fw_event.end_datetime)
+        event.add("location", fw_event.venue)
         cal.add_component(event)
     response.write(cal.to_ical())
     return response
