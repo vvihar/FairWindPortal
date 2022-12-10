@@ -72,9 +72,7 @@ class MonthWithScheduleCalendar(mixins.MonthWithScheduleMixin, generic.TemplateV
         return context
 
 
-class MyCalendar(
-    mixins.MonthCalendarMixin, mixins.WeekWithScheduleMixin, generic.CreateView
-):
+class MyCalendar(mixins.MonthWithScheduleMixin, generic.CreateView):
     """月間カレンダー、週間カレンダー、スケジュール登録画面のある欲張りビュー"""
 
     template_name = "calendar/mycalendar.html"
@@ -84,9 +82,7 @@ class MyCalendar(
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        week_calendar_context = self.get_week_calendar()
         month_calendar_context = self.get_month_calendar()
-        context.update(week_calendar_context)
         context.update(month_calendar_context)
         month, year, day = (
             self.kwargs.get("month"),
@@ -163,6 +159,15 @@ class CalendarIntegration(LoginRequiredMixin, generic.TemplateView):
         user = self.request.user
         context["calendar_uuid"] = user.calendar_uuid
         return context
+
+
+def delete_schedule(request, **kwargs):
+    """スケジュールを削除する"""
+
+    schedule_id = kwargs.get("pk")
+    schedule = get_object_or_404(Schedule, id=schedule_id)
+    schedule.delete()
+    return redirect(request.META.get("HTTP_REFERER"))
 
 
 def ics_calendar(request, **kwargs):
