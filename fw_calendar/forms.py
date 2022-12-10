@@ -8,7 +8,7 @@ class ScheduleForm(forms.ModelForm):
 
     class Meta:
         model = Schedule
-        fields = ("summary", "description", "start_time", "end_time")
+        fields = ("summary", "description", "start_time", "end_time", "location")
         widgets = {
             "start_time": forms.widgets.TimeInput(attrs={"type": "time"}),
             "end_time": forms.widgets.TimeInput(attrs={"type": "time"}),

@@ -56,9 +56,27 @@
             padding: 0.25rem;
             margin-top: 0.25rem;
             transition: background-color 0.2s ease-in-out;
+            font-size: 0.9rem;
         }
         .calendar-event:hover {
             background-color: #dee2e6;
+        }
+        .calendar-day-link > div > div {
+            border-radius: 50%;
+            width: 2rem;
+            height: 2rem;
+            line-height: 2rem;
+            text-align: center;
+            font-weight: bold;
+            margin-left: auto;
+        }
+        .calendar-day-link > div > div.calendar-today {
+            background-color: var(--bs-danger);
+            color: #fff;
+            text-decoration: none;
+        }
+        #calendar-day-link-today {
+            text-decoration: none;
         }
     </style>
 {% endblock head %}
@@ -98,32 +116,39 @@
                                 <a class="calendar-day-link"
                                    data-bs-toggle="modal"
                                    href="#dayEventModal"
-                                   data-bs-day="{{ day | date:"Y/m/d" }}">
+                                   data-bs-day="{{ day | date:"Y/m/d" }}"
+                                   {% if now == day %}
+                                       id="calendar-day-link-today"
+                                   {% endif %}>
                                     <div>
                                         {% if month_current.month != day.month %}
-                                            {{ day | date:"m/d" }}
+                                            <div>{{ day | date:"m/d" }}</div>
                                         {% else %}
-                                            {{ day.day }}
+                                            {% if now == day %}
+                                                <div class="calendar-today">{{ day.day }}</div>
+                                            {% else %}
+                                                <div>{{ day.day }}</div>
+                                            {% endif %}
                                         {% endif %}
                                     </div>
                                 </a>
                                 {% for schedule in schedules %}
-                                    <a href="#scheduleModal{{ schedule.pk }}"
+                                    <a href="#scheduleModal-{{ schedule.pk }}"
                                        class="calendar-event-link"
                                        data-bs-toggle="modal">
                                         <div class="calendar-event">{{ schedule.summary }}</div>
                                     </a>
                                     <!-- Modal -->
                                     <div class="modal fade"
-                                         id="scheduleModal{{ schedule.pk }}"
+                                         id="scheduleModal-{{ schedule.pk }}"
                                          tabindex="-1"
-                                         aria-labelledby="scheduleModal{{ schedule.pk }}Label"
+                                         aria-labelledby="scheduleModal-{{ schedule.pk }}Label"
                                          aria-hidden="true">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h5 class="modal-title"
-                                                        id="scheduleModal{{ schedule.pk }}Label">{{ schedule.summary }}</h5>
+                                                        id="scheduleModal-{{ schedule.pk }}Label">{{ schedule.summary }}</h5>
                                                     <button type="button"
                                                             class="btn-close"
                                                             data-bs-dismiss="modal"
@@ -136,11 +161,13 @@
                                                     </ul>
                                                     <div>{{ schedule.description }}</div>
                                                 </div>
-                                                <div class="modal-footer">
-                                                    <a href="{% url 'calendar:delete' schedule.pk %}"
-                                                       class="btn btn-danger">削除</a>
-                                                    <!--TODO: 編集画面も実装する-->
-                                                </div>
+                                                {% if not schedule.no_delete %}
+                                                    <div class="modal-footer">
+                                                        <a href="{% url 'calendar:delete' schedule.pk %}"
+                                                           class="btn btn-danger">削除</a>
+                                                        <!--TODO: 編集画面も実装する-->
+                                                    </div>
+                                                {% endif %}
                                             </div>
                                         </div>
                                     </div>
