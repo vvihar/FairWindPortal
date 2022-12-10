@@ -5,7 +5,7 @@ from django.utils import timezone
 
 
 class Schedule(models.Model):
-    """スケジュール"""
+    """スケジュール。`summary`, `description`, `start_time`, `end_time`, `date`, `location`"""
 
     summary = models.CharField("概要", max_length=50)
     description = models.TextField("詳細な説明", blank=True)
@@ -14,6 +14,8 @@ class Schedule(models.Model):
     date = models.DateField("日付")
     location = models.CharField("場所", max_length=100, blank=True)
     created_at = models.DateTimeField("作成日", default=timezone.now)
+
+    no_delete = models.BooleanField("削除不可", default=False)
 
     def __str__(self):
         return self.summary

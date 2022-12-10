@@ -2,8 +2,14 @@ import calendar
 import datetime
 import itertools
 from collections import deque
+from uuid import uuid4
 
 from django import forms
+from django.utils.timezone import make_aware
+
+from events.models import Event
+
+from .models import Schedule
 
 
 class BaseCalendarMixin:
@@ -159,11 +165,66 @@ class MonthWithScheduleMixin(MonthCalendarMixin):
             "{}__range".format(self.date_field): (start, end)
         }
         # 例えば、Schedule.objects.filter(date__range=(1日, 31日)) になる
-        queryset = self.model.objects.filter(**lookup)
+        schedule_queryset = self.model.objects.filter(**lookup)
+        schedule_list = []
+        for schedule in schedule_queryset:
+            schedule_list.append(schedule)
+
+        event_queryset = Event.objects.filter(
+            start_datetime__lte=make_aware(
+                datetime.datetime.combine(end, datetime.time(23, 59, 59))
+            ),
+            end_datetime__gte=make_aware(
+                datetime.datetime.combine(start, datetime.time(0, 0, 0))
+            ),
+        )
+
+        event_list = []
+        for event in event_queryset:
+            # split event into days at 00:00 and append to event_list
+            if event.start_datetime.date() == event.end_datetime.date():
+                schedule = Schedule(
+                    summary=event.name,
+                    date=event.start_datetime.date(),
+                    start_time=event.start_datetime.astimezone(
+                        datetime.timezone(datetime.timedelta(hours=9))
+                    ).time(),
+                    end_time=event.end_datetime.astimezone(
+                        datetime.timezone(datetime.timedelta(hours=9))
+                    ).time(),
+                    location=event.venue,
+                    no_delete=True,
+                    pk=uuid4(),
+                )
+                event_list.append(schedule)
+            else:
+                start_day = event.start_datetime.date()
+                end_day = event.end_datetime.date()
+                for day in range((end_day - start_day).days + 1):
+                    schedule = Schedule(
+                        summary=event.name,
+                        date=start_day + datetime.timedelta(days=day),
+                        location=event.venue,
+                        no_delete=True,
+                        pk=uuid4(),
+                    )
+                    if day == 0:
+                        schedule.start_time = event.start_datetime.time()
+                        schedule.end_time = datetime.time(23, 59)
+                    elif day == (end_day - start_day).days:
+                        schedule.start_time = datetime.time(0, 0)
+                        schedule.end_time = event.end_datetime.time()
+                    else:
+                        schedule.start_time = datetime.time(0, 0)
+                        schedule.end_time = datetime.time(23, 59)
+                    event_list.append(schedule)
+
+        # combine lists
+        query_list = schedule_list + event_list
 
         # {1日のdatetime: 1日のスケジュール全て, 2日のdatetime: 2日の全て...}のような辞書を作る
         day_schedules = {day: [] for week in days for day in week}
-        for schedule in queryset:
+        for schedule in query_list:
             schedule_date = getattr(schedule, self.date_field)
             day_schedules[schedule_date].append(schedule)
 
