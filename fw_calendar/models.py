@@ -12,6 +12,7 @@ class Schedule(models.Model):
     start_time = models.TimeField("開始時刻")
     end_time = models.TimeField("終了時刻")
     date = models.DateField("日付")
+    location = models.CharField("場所", max_length=100, blank=True)
     created_at = models.DateTimeField("作成日", default=timezone.now)
 
     def __str__(self):
