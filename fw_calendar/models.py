@@ -3,6 +3,8 @@ from datetime import datetime, timedelta
 from django.db import models
 from django.utils import timezone
 
+from accounts.models import User
+
 
 class Schedule(models.Model):
     """スケジュール。`summary`, `description`, `start_time`, `end_time`, `date`, `location`"""
@@ -16,6 +18,13 @@ class Schedule(models.Model):
     created_at = models.DateTimeField("作成日", default=timezone.now)
 
     no_delete = models.BooleanField("削除不可", default=False)
+
+    paritipants = models.ManyToManyField(
+        User,
+        verbose_name="参加者",
+        related_name="participating_schedules",
+        blank=True,
+    )
 
     def __str__(self):
         return self.summary
