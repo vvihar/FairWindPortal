@@ -84,15 +84,7 @@
     {{ block.super }}
     <div class="row">
         <div class="col-md-2">
-            <ul>
-                <li>
-                    {% if request.GET.events|stringformat:"s" == "all" %}
-                        <a href="{% url 'calendar:mycalendar' %}">自分が参加する企画のみ表示</a>
-                    {% else %}
-                        <a href="?events=all">全ての企画を表示</a>
-                    {% endif %}
-                </li>
-            </ul>
+            スペース
         </div>
         <div class="col-md-10">
             <div class="d-flex justify-content-between mb-3">

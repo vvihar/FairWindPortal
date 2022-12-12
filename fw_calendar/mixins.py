@@ -180,9 +180,6 @@ class MonthWithScheduleMixin(MonthCalendarMixin):
 
         event_list = []
         for event in event_queryset:
-            if self.request.GET.get("events") != "all":
-                if not self.request.user.id in event.get_participants():
-                    continue
             # split event into days at 00:00 and append to event_list
             if event.start_datetime.date() == event.end_datetime.date():
                 schedule = Schedule(
