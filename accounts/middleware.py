@@ -11,6 +11,7 @@ class LoginRequiredMiddleware(MiddlewareMixin):
             and request.path != reverse("accounts:logout")
             and request.path != reverse("home")
             and not request.path.startswith(reverse("calendar:integration"))
+            and request.path != reverse("calendar:integration")
             and not request.path.startswith("/admin/")
         ):
             return HttpResponseRedirect(

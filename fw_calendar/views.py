@@ -3,7 +3,6 @@ import uuid
 
 from accounts.models import User
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
@@ -144,7 +143,7 @@ class MonthWithFormsCalendar(mixins.MonthWithFormsMixin, generic.View):
         return render(request, self.template_name, context)
 
 
-class CalendarIntegration(LoginRequiredMixin, generic.TemplateView):
+class CalendarIntegration(generic.TemplateView):
     template_name = "calendar/integration.html"
 
     def post(self, request, **kwargs):
