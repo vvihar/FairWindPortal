@@ -160,12 +160,11 @@ class MonthWithScheduleMixin(MonthCalendarMixin):
 
     def get_month_schedules(self, start, end, days):
         """それぞれの日とスケジュールを返す"""
-        lookup = {
-            # '例えば、date__range: (1日, 31日)'を動的に作る
-            "{}__range".format(self.date_field): (start, end)
-        }
+
         # 例えば、Schedule.objects.filter(date__range=(1日, 31日)) になる
-        schedule_queryset = self.model.objects.filter(**lookup)
+        schedule_queryset = self.model.objects.filter(
+            date__range=(start, end), participants__in=[self.request.user]
+        )
         schedule_list = []
         for schedule in schedule_queryset:
             schedule_list.append(schedule)
@@ -181,6 +180,9 @@ class MonthWithScheduleMixin(MonthCalendarMixin):
 
         event_list = []
         for event in event_queryset:
+            if self.request.GET.get("events") != "all":
+                if not self.request.user.id in event.get_participants():
+                    continue
             # split event into days at 00:00 and append to event_list
             if event.start_datetime.date() == event.end_datetime.date():
                 schedule = Schedule(

@@ -19,7 +19,7 @@ class Schedule(models.Model):
 
     no_delete = models.BooleanField("削除不可", default=False)
 
-    paritipants = models.ManyToManyField(
+    participants = models.ManyToManyField(
         User,
         verbose_name="参加者",
         related_name="participating_schedules",

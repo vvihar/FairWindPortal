@@ -83,15 +83,18 @@
 {% block content %}
     {{ block.super }}
     <div class="row">
-        <div class="col-md-3">
-            <h5 class="mb-3">{{ selected_date | date:"Y年m月d日" }}</h5>
-            <form method="post">
-                {% bootstrap_form form layout="floating" %}
-                {% csrf_token %}
-                {% bootstrap_button "送信" button_type="submit" button_class="btn-primary btn-block" %}
-            </form>
+        <div class="col-md-2">
+            <ul>
+                <li>
+                    {% if request.GET.events|stringformat:"s" == "all" %}
+                        <a href="{% url 'calendar:mycalendar' %}">自分が参加する企画のみ表示</a>
+                    {% else %}
+                        <a href="?events=all">全ての企画を表示</a>
+                    {% endif %}
+                </li>
+            </ul>
         </div>
-        <div class="col-md-9">
+        <div class="col-md-10">
             <div class="d-flex justify-content-between mb-3">
                 <h4 class="mb-0">{{ month_current | date:"Y年m月" }}</h4>
                 <div>

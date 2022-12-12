@@ -106,6 +106,9 @@ class MyCalendar(mixins.MonthWithScheduleMixin, generic.CreateView):
         schedule = form.save(commit=False)
         schedule.date = date
         schedule.save()
+        # set current user to participants field
+        schedule.participants.add(self.request.user)
+        schedule.save()
         return redirect(
             "calendar:mycalendar", year=date.year, month=date.month, day=date.day
         )
