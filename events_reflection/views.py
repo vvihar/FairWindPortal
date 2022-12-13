@@ -1,20 +1,15 @@
-from django.contrib import messages
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import (
-    CreateView,
-    DeleteView,
-    DetailView,
-    ListView,
-    UpdateView,
-)
-
+from django.views.generic import ListView, UpdateView
 from events.models import Event
 from events.views import OnlyEventAdminMixin, OnlyEventParticipantMixin
 
 from .forms import EventReflectionForm
-from .models import EventReflection, EventReflectionGeneral, EventReflectionTemplate
+from .models import (
+    EventReflection,
+    EventReflectionGeneral,
+    EventReflectionTemplate,
+)
 
 # Create your views here.
 
@@ -25,7 +20,9 @@ class EventReflectionList(ListView):
     form_class = EventReflectionForm
 
     def get_queryset(self):
-        return EventReflection.objects.filter(event=self.kwargs["id"]).order_by("user")
+        return EventReflection.objects.filter(
+            event=self.kwargs["id"]
+        ).order_by("user")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -45,7 +42,9 @@ class EventReflectionCreateUpdate(OnlyEventParticipantMixin, UpdateView):
     form_class = EventReflectionForm
 
     def get_success_url(self):
-        return reverse_lazy("events:reflection_list", kwargs={"id": self.kwargs["id"]})
+        return reverse_lazy(
+            "events:reflection_list", kwargs={"id": self.kwargs["id"]}
+        )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -89,7 +88,8 @@ class EventReflectionCreateUpdate(OnlyEventParticipantMixin, UpdateView):
             )
         except EventReflection.DoesNotExist:
             return EventReflection(
-                event=Event.objects.get(pk=self.kwargs["id"]), user=self.request.user
+                event=Event.objects.get(pk=self.kwargs["id"]),
+                user=self.request.user,
             )
 
 
@@ -99,7 +99,9 @@ class EventReflectionTemplateCreateUpdate(OnlyEventAdminMixin, UpdateView):
     fields = ("reflection",)
 
     def get_success_url(self):
-        return reverse_lazy("events:reflection_list", kwargs={"id": self.kwargs["id"]})
+        return reverse_lazy(
+            "events:reflection_list", kwargs={"id": self.kwargs["id"]}
+        )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -115,13 +117,17 @@ class EventReflectionTemplateCreateUpdate(OnlyEventAdminMixin, UpdateView):
             )
 
 
-class EventReflectionGeneralCreateUpdate(OnlyEventParticipantMixin, UpdateView):
+class EventReflectionGeneralCreateUpdate(
+    OnlyEventParticipantMixin, UpdateView
+):
     template_name = "reflections/edit.html"
     model = EventReflectionGeneral
     fields = ("reflection",)
 
     def get_success_url(self):
-        return reverse_lazy("events:reflection_list", kwargs={"id": self.kwargs["id"]})
+        return reverse_lazy(
+            "events:reflection_list", kwargs={"id": self.kwargs["id"]}
+        )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -142,7 +148,9 @@ class EventReflectionGeneralCreateUpdate(OnlyEventParticipantMixin, UpdateView):
         try:
             return EventReflectionGeneral.objects.get(event=self.kwargs["id"])
         except EventReflectionGeneral.DoesNotExist:
-            return EventReflectionGeneral(event=Event.objects.get(pk=self.kwargs["id"]))
+            return EventReflectionGeneral(
+                event=Event.objects.get(pk=self.kwargs["id"])
+            )
 
 
 # 直後反省の入力ページをつくる
