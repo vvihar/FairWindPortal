@@ -43,7 +43,9 @@ class WeekCalendar(mixins.WeekCalendarMixin, generic.TemplateView):
         return context
 
 
-class WeekWithScheduleCalendar(mixins.WeekWithScheduleMixin, generic.TemplateView):
+class WeekWithScheduleCalendar(
+    mixins.WeekWithScheduleMixin, generic.TemplateView
+):
     """スケジュール付きの週間カレンダーを表示するビュー"""
 
     template_name = "calendar/week_with_schedule.html"
@@ -57,7 +59,9 @@ class WeekWithScheduleCalendar(mixins.WeekWithScheduleMixin, generic.TemplateVie
         return context
 
 
-class MonthWithScheduleCalendar(mixins.MonthWithScheduleMixin, generic.TemplateView):
+class MonthWithScheduleCalendar(
+    mixins.MonthWithScheduleMixin, generic.TemplateView
+):
     """スケジュール付きの月間カレンダーを表示するビュー"""
 
     template_name = "calendar/month_with_schedule.html"
@@ -89,7 +93,9 @@ class MyCalendar(mixins.MonthWithScheduleMixin, generic.CreateView):
             self.kwargs.get("day"),
         )
         if month and year and day:
-            date = datetime.date(year=int(year), month=int(month), day=int(day))
+            date = datetime.date(
+                year=int(year), month=int(month), day=int(day)
+            )
         else:
             date = datetime.date.today()
         context["selected_date"] = date
@@ -100,7 +106,9 @@ class MyCalendar(mixins.MonthWithScheduleMixin, generic.CreateView):
         year = self.kwargs.get("year")
         day = self.kwargs.get("day")
         if month and year and day:
-            date = datetime.date(year=int(year), month=int(month), day=int(day))
+            date = datetime.date(
+                year=int(year), month=int(month), day=int(day)
+            )
         else:
             date = datetime.date.today()
         schedule = form.save(commit=False)
@@ -110,11 +118,16 @@ class MyCalendar(mixins.MonthWithScheduleMixin, generic.CreateView):
         schedule.participants.add(self.request.user)
         schedule.save()
         return redirect(
-            "calendar:mycalendar", year=date.year, month=date.month, day=date.day
+            "calendar:mycalendar",
+            year=date.year,
+            month=date.month,
+            day=date.day,
         )
 
     def get_initial(self):
-        start_time = datetime.datetime.strftime(datetime.datetime.now(), "%H:%M")
+        start_time = datetime.datetime.strftime(
+            datetime.datetime.now(), "%H:%M"
+        )
         end_time = datetime.datetime.strftime(
             datetime.datetime.now() + datetime.timedelta(hours=1), "%H:%M"
         )
@@ -168,7 +181,10 @@ def delete_schedule(request, **kwargs):
 
     schedule_id = kwargs.get("pk")
     schedule = get_object_or_404(Schedule, id=schedule_id)
-    if request.user not in schedule.participants.all():
+    if (
+        request.user not in schedule.participants.all()
+        and not schedule.is_public
+    ):
         return HttpResponseForbidden()
     schedule.delete()
     return redirect(request.META.get("HTTP_REFERER"))
@@ -208,8 +224,12 @@ def ics_calendar(request, **kwargs):
     for schedule in schedules:
         event = IcsEvent()  # Eventクラスをインスタンス化
         event.add("summary", schedule.summary)
-        start_datetime = datetime.datetime.combine(schedule.date, schedule.start_time)
-        end_datetime = datetime.datetime.combine(schedule.date, schedule.end_time)
+        start_datetime = datetime.datetime.combine(
+            schedule.date, schedule.start_time
+        )
+        end_datetime = datetime.datetime.combine(
+            schedule.date, schedule.end_time
+        )
         event.add("dtstart", make_aware(start_datetime))
         event.add("dtend", make_aware(end_datetime))
         event.add("description", schedule.description)

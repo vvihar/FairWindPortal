@@ -5,6 +5,7 @@ from collections import deque
 from uuid import uuid4
 
 from django import forms
+from django.db.models import Q
 from django.utils.timezone import make_aware
 
 from accounts.models import User
@@ -101,12 +102,16 @@ class WeekCalendarMixin(BaseCalendarMixin):
         year = self.kwargs.get("year")
         day = self.kwargs.get("day")
         if month and year and day:
-            date = datetime.date(year=int(year), month=int(month), day=int(day))
+            date = datetime.date(
+                year=int(year), month=int(month), day=int(day)
+            )
         else:
             date = datetime.date.today()
 
         for week in self._calendar.monthdatescalendar(date.year, date.month):
-            if date in week:  # 週ごとに取り出され、中身は全てdatetime.date型。該当の日が含まれていれば、それが今回表示すべき週です
+            if (
+                date in week
+            ):  # 週ごとに取り出され、中身は全てdatetime.date型。該当の日が含まれていれば、それが今回表示すべき週です
                 return week
 
     def get_week_calendar(self):
@@ -164,7 +169,10 @@ class MonthWithScheduleMixin(MonthCalendarMixin):
 
         # 例えば、Schedule.objects.filter(date__range=(1日, 31日)) になる
         schedule_queryset = self.model.objects.filter(
-            date__range=(start, end), participants__in=[self.request.user]
+            # date__range=(start, end), participants__in=[self.request.user]
+            Q(date__range=(start, end))
+            & Q(participants__in=[self.request.user])
+            | Q(is_public=True)
         )
         schedule_list = []
         for schedule in schedule_queryset:
@@ -296,7 +304,10 @@ class MonthWithFormsMixin(MonthCalendarMixin):
         # day_forms辞書を、周毎に分割する。[{1日: 1日のフォーム...}, {8日: 8日のフォーム...}, ...]
         # 7個ずつ取り出して分割しています。
         return [
-            {key: day_forms[key] for key in itertools.islice(day_forms, i, i + 7)}
+            {
+                key: day_forms[key]
+                for key in itertools.islice(day_forms, i, i + 7)
+            }
             for i in range(0, days_count, 7)
         ]
 
