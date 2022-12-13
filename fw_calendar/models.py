@@ -25,6 +25,7 @@ class Schedule(models.Model):
         related_name="participating_schedules",
         blank=True,
     )
+    is_public = models.BooleanField("公開する", default=False)
 
     # OneToOneFieldでは1種類のモデルしか紐付けられないので、モデルの種類とpkをそれぞれ明示的に保存する
     MODEL_TYPE_CHOICES = (("event", "企画"),)  # 今後、他のモデルを追加する場合は、ここに追加する
