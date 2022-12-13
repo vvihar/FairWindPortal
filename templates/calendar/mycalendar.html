@@ -154,11 +154,21 @@
                                                     </ul>
                                                     <div>{{ schedule.description }}</div>
                                                 </div>
-                                                {% if not schedule.no_delete %}
+                                                {% if not schedule.no_delete or schedule.model_type %}
                                                     <div class="modal-footer">
-                                                        <a href="{% url 'calendar:delete' schedule.pk %}"
-                                                           class="btn btn-danger">削除</a>
-                                                        <!--TODO: 編集画面も実装する-->
+                                                        {% if schedule.model_type %}
+                                                            {% with type=schedule.model_type|stringformat:"s" %}
+                                                                {% if type == "event" %}
+                                                                    <a href="{% url 'events:event_detail' schedule.model_pk %}"
+                                                                       class="btn btn-secondary">企画詳細</a>
+                                                                {% endif %}
+                                                            {% endwith %}
+                                                            <!--TODO: 編集画面も実装する-->
+                                                        {% endif %}
+                                                        {% if not schedule.no_delete %}
+                                                            <a href="{% url 'calendar:delete' schedule.pk %}"
+                                                               class="btn btn-danger">削除</a>
+                                                        {% endif %}
                                                     </div>
                                                 {% endif %}
                                             </div>

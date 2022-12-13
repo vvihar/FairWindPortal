@@ -7,6 +7,7 @@ from uuid import uuid4
 from django import forms
 from django.utils.timezone import make_aware
 
+from accounts.models import User
 from events.models import Event
 
 from .models import Schedule
@@ -194,6 +195,8 @@ class MonthWithScheduleMixin(MonthCalendarMixin):
                     location=event.venue,
                     no_delete=True,
                     pk=uuid4(),
+                    model_type="event",
+                    model_pk=event.pk,
                 )
                 event_list.append(schedule)
             else:
@@ -206,6 +209,8 @@ class MonthWithScheduleMixin(MonthCalendarMixin):
                         location=event.venue,
                         no_delete=True,
                         pk=uuid4(),
+                        model_type="event",
+                        model_pk=event.pk,
                     )
                     if day == 0:
                         schedule.start_time = event.start_datetime.time()
