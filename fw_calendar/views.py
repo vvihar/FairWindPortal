@@ -3,7 +3,7 @@ import uuid
 
 from accounts.models import User
 from django.contrib import messages
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.utils.timezone import make_aware
@@ -168,6 +168,8 @@ def delete_schedule(request, **kwargs):
 
     schedule_id = kwargs.get("pk")
     schedule = get_object_or_404(Schedule, id=schedule_id)
+    if request.user not in schedule.participants.all():
+        return HttpResponseForbidden()
     schedule.delete()
     return redirect(request.META.get("HTTP_REFERER"))
 
