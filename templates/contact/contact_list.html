@@ -1,0 +1,23 @@
+{% extends "contact/base.html" %}
+
+{% load static %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% load django_bootstrap5 %}
+
+{% block head %}
+{% endblock head %}
+{% block breadcrumbs %}
+    {{ block.super }}
+{% endblock breadcrumbs %}
+{% block content %}
+    <a href="{% url 'contact:contact_create' %}">新規作成</a>
+    {% for contact in object_list %}
+        <a href="{% url 'contact:thread' contact.pk %}">{{ contact.person }}</a>
+    {% endfor %}
+    {% if object_list|length > 10 %}
+
+        {% include "components/pagination.html" %}
+
+    {% endif %}
+{% endblock content %}

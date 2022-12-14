@@ -3,6 +3,7 @@ from django.urls import path
 
 from .views import (
     ContactCreate,
+    ContactList,
     ContactThreadList,
     ContactThreadPost,
     ContactThreadUpdate,
@@ -12,6 +13,7 @@ from .views import (
 app_name = "contact"
 
 urlpatterns = [
+    path("", ContactList.as_view(), name=""),
     path("create/", ContactCreate.as_view(), name="contact_create"),
     path("<int:pk>/", ContactThreadList.as_view(), name="thread"),
     path("<int:pk>/update/", ContactUpdate.as_view(), name="contact_update"),

@@ -2,7 +2,7 @@ import datetime
 
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DetailView, UpdateView
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
 from .forms import ContactForm, ContactThreadForm
 from .models import Contact, ContactItem
@@ -29,6 +29,14 @@ class ContactUpdate(UpdateView):
 
     def get_success_url(self):
         return reverse_lazy("contact:thread", kwargs={"pk": self.object.pk})
+
+
+class ContactList(ListView):
+    """連絡一覧"""
+
+    template_name = "contact/contact_list.html"
+    model = Contact
+    paginate_by = 10
 
 
 class ContactThreadList(DetailView):
@@ -73,6 +81,7 @@ class ContactThreadPost(CreateView):
         senders = posts.values_list("sender", flat=True)
         recipients = posts.values_list("recipient", flat=True)
         context["datalist"] = list(senders) + list(recipients)
+        context["thread"] = Contact.objects.get(pk=self.kwargs["pk"])
         return context
 
 
@@ -109,4 +118,5 @@ class ContactThreadUpdate(UpdateView):
         senders = posts.values_list("sender", flat=True)
         recipients = posts.values_list("recipient", flat=True)
         context["datalist"] = list(senders) + list(recipients)
+        context["thread"] = self.get_object().contact
         return context

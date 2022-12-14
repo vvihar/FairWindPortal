@@ -11,11 +11,15 @@
         .message {
             overflow-y: auto;
             max-height: 280px;
-            }
+        }
+        .message > p:last-child {
+            margin-bottom: 0;
+        }
     </style>
 {% endblock head %}
 {% block breadcrumbs %}
     {{ block.super }}
+    {% breadcrumb object.person "contact:thread" object.pk %}
 {% endblock breadcrumbs %}
 {% block content %}
     <h1 class="fs-4">

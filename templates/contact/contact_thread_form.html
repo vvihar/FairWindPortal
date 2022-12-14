@@ -9,6 +9,12 @@
 {% endblock head %}
 {% block breadcrumbs %}
     {{ block.super }}
+    {% breadcrumb thread.person "contact:thread" thread.pk %}
+    {% if object %}
+        {% breadcrumb "メッセージを編集" "contact:thread" thread.pk object.pk %}
+    {% else %}
+        {% breadcrumb "新規メッセージ" "contact:thread_create" %}
+    {% endif %}
 {% endblock breadcrumbs %}
 {% block content %}
     <form method="post">
