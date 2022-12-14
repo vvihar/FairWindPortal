@@ -29,6 +29,7 @@ urlpatterns = (
         path("schools/", include("schools.urls")),
         path("s/", include("shortener.urls")),
         path("calendar/", include("fw_calendar.urls")),
+        path("contact/", include("contact.urls")),
     ]
     + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

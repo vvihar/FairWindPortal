@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     "events_accounting.apps.EventsAccountingConfig",
     "events_reflection.apps.EventsReflectionConfig",
     "fw_calendar.apps.FwCalendarConfig",
+    "contact.apps.ContactConfig",
 ]
 
 MIDDLEWARE = [

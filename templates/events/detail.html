@@ -118,6 +118,18 @@
                         <th scope="row">参加者</th>
                         <td>{{ participants }}</td>
                     </tr>
+                    {% if event.contacts.all %}
+                        <tr>
+                            <th scope="row">連絡共有</th>
+                            <td>
+                                {% for contact in event.contacts.all %}
+                                    <li class="list-inline-item">
+                                        <a href="{% url 'contact:thread' contact.pk %}">{{ contact.person }}</a>
+                                    </li>
+                                {% endfor %}
+                            </td>
+                        </tr>
+                    {% endif %}
                 </tbody>
             </table>
         </div>
