@@ -13,7 +13,7 @@
     {% if object %}
         {% breadcrumb "メッセージを編集" "contact:thread" thread.pk object.pk %}
     {% else %}
-        {% breadcrumb "新規メッセージ" "contact:thread_create" %}
+        {% breadcrumb "新規メッセージ" "contact:message_post" %}
     {% endif %}
 {% endblock breadcrumbs %}
 {% block content %}

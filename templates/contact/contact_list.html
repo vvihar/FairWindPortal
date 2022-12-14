@@ -11,7 +11,7 @@
     {{ block.super }}
 {% endblock breadcrumbs %}
 {% block content %}
-    <a href="{% url 'contact:contact_create' %}">新規作成</a>
+    <a href="{% url 'contact:thread_create' %}">新規作成</a>
     {% for contact in object_list %}
         <a href="{% url 'contact:thread' contact.pk %}">{{ contact.person }}{{ contact.last_posted }}</a>
     {% endfor %}
