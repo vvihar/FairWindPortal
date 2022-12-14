@@ -24,7 +24,13 @@
                     <td>
                         <a href="{% url 'contact:thread' thread.pk %}">{{ thread.person }}</a>
                     </td>
-                    <td>{{ thread.last_posted|date:"Y年m月d日" }}</td>
+                    <td>
+                        {% if thread.items.all %}
+                            {{ thread.last_posted|date:"Y年m月d日" }}
+                        {% else %}
+                            投稿なし
+                        {% endif %}
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>
