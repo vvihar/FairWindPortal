@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% load django_bootstrap_breadcrumbs %}
+
+{% block customcss %}
+{% endblock customcss %}
+{% block title %}
+    FairWind Portal
+{% endblock title %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb "連絡" "contact:" %}
+{% endblock breadcrumbs %}
+{% block content %}
+{% endblock content %}

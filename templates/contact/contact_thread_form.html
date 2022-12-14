@@ -1,0 +1,22 @@
+{% extends "contact/base.html" %}
+
+{% load static %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% load django_bootstrap5 %}
+
+{% block head %}
+{% endblock head %}
+{% block breadcrumbs %}
+    {{ block.super }}
+{% endblock breadcrumbs %}
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        {% bootstrap_form form layout="floating" %}
+        <datalist id="people">
+            {% for item in datalist %}<option value="{{ item }}"/>{% endfor %}
+        </datalist>
+        {% bootstrap_button "保存" button_type="submit" %}
+    </form>
+{% endblock content %}

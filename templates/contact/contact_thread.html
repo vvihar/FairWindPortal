@@ -1,0 +1,46 @@
+{% extends "contact/base.html" %}
+
+{% load md_to_html %}
+
+{% load static %}
+{% load django_bootstrap_breadcrumbs %}
+{% load django_bootstrap5 %}
+
+{% block head %}
+    <style>
+        .message {
+            overflow-y: auto;
+            max-height: 280px;
+            }
+    </style>
+{% endblock head %}
+{% block breadcrumbs %}
+    {{ block.super }}
+{% endblock breadcrumbs %}
+{% block content %}
+    <h1 class="fs-4">
+        {% if object.person %}{{ object.person }}{% endif %}
+        {% if object.school %}{{ object.school }}{% endif %}
+    </h1>
+    <div class="my-3">
+        <a href="{% url "contact:thread_create" object.pk %}"
+           class="btn btn-primary">新規メッセージ</a>
+        <a href="{% url 'contact:contact_update' object.pk %}"
+           class="btn btn-secondary">編集</a>
+    </div>
+    {% for contact in contact_items %}
+        <h2 class="fs-5 border-bottom py-2 mb-3">
+            {{ contact.date|date:"m/d" }}　{{ contact.sender }}→{{ contact.recipient }}
+        </h2>
+        {{ contact.summary|md_to_html }}
+        <div class="bg-light border rounded p-2 message mb-1">{{ contact.text|linebreaks }}</div>
+        <div class="d-flex justify-content-between">
+            <div>
+                <small><a href="{% url 'contact:thread_update' object.pk contact.pk %}">編集</a></small>
+            </div>
+            <p class="text-end text-muted">
+                <small>{{ contact.updated_at|date:"Y/m/d H:i" }} {{ contact.person_updated }}</small>
+            </p>
+        </div>
+    {% endfor %}
+{% endblock content %}
