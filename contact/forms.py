@@ -1,4 +1,5 @@
 from django import forms
+from django.core.exceptions import ValidationError
 
 from .models import Contact, ContactItem
 
@@ -20,3 +21,15 @@ class ContactForm(forms.ModelForm):
     class Meta:
         model = Contact
         fields = ("person",)
+
+
+class ContactLinkToEventForm(forms.ModelForm):
+    """企画と連絡共有を紐づけるフォーム"""
+
+    class Meta:
+        model = Contact
+        fields = ("event",)
+
+    def __init__(self, event_options, *args, **kwargs):
+        super(ContactLinkToEventForm, self).__init__(*args, **kwargs)
+        self.fields["event"].queryset = event_options

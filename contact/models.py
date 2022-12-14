@@ -12,11 +12,11 @@ class Contact(models.Model):
 
     person = models.CharField("相手", max_length=100)
 
-    event = models.OneToOneField(
+    event = models.ForeignKey(
         Event,
         verbose_name="企画",
         on_delete=models.CASCADE,
-        related_name="contact",
+        related_name="contacts",
         null=True,
         blank=True,
         help_text="企画ページに連絡共有を表示する場合は、企画を選択してください。",

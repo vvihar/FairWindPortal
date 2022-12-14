@@ -9,17 +9,24 @@
 {% endblock head %}
 {% block breadcrumbs %}
     {{ block.super }}
-    {% if object %}
+    {% if is_link_to_event %}
         {% breadcrumb object.person "contact:thread" object.pk %}
-        {% breadcrumb "編集" "contact:contact_update" object.pk %}
+        {% breadcrumb "企画と紐付け" "contact:thread_link_to_event" object.pk %}
+    {% elif object %}
+        {% breadcrumb object.person "contact:thread" object.pk %}
+        {% breadcrumb "編集" "contact:thread_update" object.pk %}
     {% else %}
-        {% breadcrumb "新規作成" "contact:contact_create" %}
+        {% breadcrumb "新規作成" "contact:thread_create" %}
     {% endif %}
 {% endblock breadcrumbs %}
 {% block content %}
     <form method="post">
         {% csrf_token %}
         {% bootstrap_form form layout="floating" %}
+        {% if is_thread_update %}
+            <a class="btn btn-secondary"
+               href="{% url 'contact:thread_link_to_event' object.pk %}">企画と紐づける</a>
+        {% endif %}
         {% bootstrap_button "保存" button_type="submit" %}
     </form>
 {% endblock content %}

@@ -4,7 +4,9 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
-from .forms import ContactForm, ContactThreadForm
+from events.models import Event
+
+from .forms import ContactForm, ContactLinkToEventForm, ContactThreadForm
 from .models import Contact, ContactItem
 
 # Create your views here.
@@ -30,6 +32,11 @@ class ContactUpdate(UpdateView):
     def get_success_url(self):
         return reverse_lazy("contact:thread", kwargs={"pk": self.object.pk})
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["is_thread_update"] = True
+        return context
+
 
 class ContactList(ListView):
     """連絡一覧"""
@@ -37,6 +44,25 @@ class ContactList(ListView):
     template_name = "contact/contact_list.html"
     model = Contact
     paginate_by = 10
+
+
+class ContactLinkToEvent(UpdateView):
+    template_name = "contact/contact_form.html"
+    model = Contact
+    form_class = ContactLinkToEventForm
+
+    def get_success_url(self):
+        return reverse_lazy("contact:thread_update", kwargs={"pk": self.object.pk})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["is_link_to_event"] = True
+        return context
+
+    def get_form_kwargs(self):
+        kwargs = super(ContactLinkToEvent, self).get_form_kwargs()
+        kwargs["event_options"] = Event.objects.exclude(status="アーカイブ")
+        return kwargs
 
 
 class ContactThreadList(DetailView):
