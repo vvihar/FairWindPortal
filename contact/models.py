@@ -41,7 +41,9 @@ class ContactItem(models.Model):
 
     date = models.DateField("日時")
 
-    summary = models.CharField("要約", max_length=250, null=True, blank=True)
+    summary = models.TextField(
+        "要約", max_length=250, null=True, blank=True, help_text="Markdown形式を使うことができます。"
+    )
 
     text = models.TextField("内容")
 
