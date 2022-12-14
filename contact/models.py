@@ -29,6 +29,9 @@ class Contact(models.Model):
         verbose_name = "連絡"
         verbose_name_plural = "連絡"
 
+    def last_posted(self):
+        return self.items.last().date
+
 
 class ContactItem(models.Model):
     """連絡メッセージ"""

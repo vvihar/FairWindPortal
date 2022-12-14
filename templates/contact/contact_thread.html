@@ -36,7 +36,9 @@
         <h2 class="fs-5 border-bottom py-2 mb-3">
             {{ contact.date|date:"m/d" }}　{{ contact.sender }} → {{ contact.recipient }}
         </h2>
-        {{ contact.summary|md_to_html }}
+        {% if contact.summary %}
+            {{ contact.summary|md_to_html }}
+        {% endif %}
         <div class="bg-light border rounded p-2 message mb-1">{{ contact.text|linebreaks }}</div>
         <div class="d-flex justify-content-between">
             <div>
