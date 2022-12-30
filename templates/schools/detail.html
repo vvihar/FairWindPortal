@@ -8,6 +8,11 @@
 {% block head %}
     <link rel="stylesheet"
           href="{% static 'utils/css/markdown.css' %}"/>
+    <style>
+        #md-memo > *:last-child {
+            margin-bottom: 0;
+        }
+    </style>
 {% endblock head %}
 {% block breadcrumbs %}
     {{ block.super }}
@@ -31,7 +36,8 @@
     編集</a>
     {% if object.memo %}
         <div class="card mb-1">
-            <div class="card-body">{{ object.memo|md_to_html }}</div>
+            <div class="card-body"
+                 id="md-memo">{{ object.memo|md_to_html }}</div>
         </div>
         <p class="text-end text-muted mb-0">最終更新：{{ object.last_updated|date:"Y/n/j H:i" }}</p>
     {% endif %}
