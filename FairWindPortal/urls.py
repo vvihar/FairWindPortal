@@ -28,6 +28,8 @@ urlpatterns = (
         path("events/", include("events.urls")),  # 出欠掲示板, 請求書, 振り返りもこれで管理
         path("schools/", include("schools.urls")),
         path("s/", include("shortener.urls")),
+        path("calendar/", include("fw_calendar.urls")),
+        path("contact/", include("contact.urls")),
     ]
     + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

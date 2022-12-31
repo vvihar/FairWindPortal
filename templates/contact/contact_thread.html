@@ -1,0 +1,70 @@
+{% extends "contact/base.html" %}
+
+{% load md_to_html %}
+
+{% load static %}
+{% load django_bootstrap_breadcrumbs %}
+{% load django_bootstrap5 %}
+
+{% block head %}
+    <style>
+        .message {
+            overflow-y: auto;
+            max-height: 280px;
+        }
+        .message > p:last-child {
+            margin-bottom: 0;
+        }
+        #toc {
+            width: fit-content;
+        }
+    </style>
+{% endblock head %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    {% breadcrumb object.person "contact:thread" object.pk %}
+{% endblock breadcrumbs %}
+{% block content %}
+    <h1 class="fs-4">{{ object.person }}</h1>
+    {% if object.event %}
+        <svg xmlns="http://www.w3.org/2000/svg"
+             width="16"
+             height="16"
+             fill="currentColor"
+             class="bi bi-link-45deg"
+             viewBox="0 0 16 16">
+            <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z"/>
+            <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243L6.586 4.672z"/>
+        </svg>
+        <a href="{% url 'events:event_detail' object.event.pk %}">{{ object.event }}</a>
+    {% endif %}
+    <div class="my-3">
+        <a href="{% url "contact:message_post" object.pk %}"
+           class="btn btn-primary">新規メッセージ</a>
+        <a href="{% url 'contact:thread_update' object.pk %}"
+           class="btn btn-secondary">編集</a>
+    </div>
+    <div class="list-group mb-4"
+         id="toc">
+        {% for contact in contact_items %}
+            <a href="#contact-header-{{ contact.pk }}"
+               class="list-group-item list-group-item-action">{{ contact.date|date:"m/d" }}　{{ contact.sender }} → {{ contact.recipient }}</a>
+        {% endfor %}
+    </div>
+    {% for contact in contact_items %}
+        <h2 class="fs-5 border-bottom py-2 mb-3"
+            id="contact-header-{{ contact.pk }}">
+            {{ contact.date|date:"m/d" }}　{{ contact.sender }} → {{ contact.recipient }}
+        </h2>
+        {% if contact.summary %}{{ contact.summary|md_to_html }}{% endif %}
+        <div class="bg-light border rounded p-2 message mb-1">{{ contact.text|linebreaks }}</div>
+        <div class="d-flex justify-content-between">
+            <div>
+                <small><a href="{% url 'contact:message_update' object.pk contact.pk %}">編集</a></small>
+            </div>
+            <p class="text-end text-muted">
+                <small>{{ contact.updated_at|date:"Y/m/d H:i" }} {{ contact.person_updated }}</small>
+            </p>
+        </div>
+    {% endfor %}
+{% endblock content %}

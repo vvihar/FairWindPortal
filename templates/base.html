@@ -46,16 +46,6 @@
                      id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            {% if request.path == '/' %}
-                                <a class="nav-link active"
-                                   aria-current="page"
-                                   href="{% url 'home' %}">ホーム</a>
-                            {% else %}
-                                <a class="nav-link"
-                                   href="{% url 'home' %}">ホーム</a>
-                            {% endif %}
-                        </li>
-                        <li class="nav-item">
                             {% if request.path|startswith:'/events/' %}
                                 <a class="nav-link active"
                                    aria-current="page"
@@ -75,41 +65,35 @@
                                    href="{% url 'schools:' %}">学校</a>
                             {% endif %}
                         </li>
-                        <li class="nav-item">
-                            {% if request.path|startswith:'/accounts/' %}
-                                <a class="nav-link active"
-                                   aria-current="page"
-                                   href="{% url 'accounts:' %}">アカウント</a>
-                            {% else %}
-                                <a class="nav-link"
-                                   href="{% url 'accounts:' %}">アカウント</a>
-                            {% endif %}
-                        </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle"
-                               href="#"
-                               id="navbarDropdown"
-                               role="button"
-                               data-bs-toggle="dropdown"
-                               aria-expanded="false">
-                                Dropdown
-                            </a>
+                            {% if request.path|startswith:'/calendar/' %}
+                                <a class="nav-link dropdown-toggle active"
+                                   href="#"
+                                   id="navbarCalendar"
+                                   role="button"
+                                   data-bs-toggle="dropdown"
+                                   aria-expanded="false">
+                                    カレンダー
+                                </a>
+                            {% else %}
+                                <a class="nav-link dropdown-toggle"
+                                   href="#"
+                                   id="navbarCalendar"
+                                   role="button"
+                                   data-bs-toggle="dropdown"
+                                   aria-expanded="false">
+                                    カレンダー
+                                </a>
+                            {% endif %}
                             <ul class="dropdown-menu dropdown-menu-dark"
-                                aria-labelledby="navbarDropdown">
+                                aria-labelledby="navbarCalendar">
                                 <li>
                                     <a class="dropdown-item"
-                                       href="#">Action</a>
+                                       href="{% url 'calendar:mycalendar' %}">マイカレンダー</a>
                                 </li>
                                 <li>
                                     <a class="dropdown-item"
-                                       href="#">Another action</a>
-                                </li>
-                                <li>
-                                    <hr class="dropdown-divider"/>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item"
-                                       href="#">Something else here</a>
+                                       href="{% url 'calendar:integration' %}">カレンダー照会</a>
                                 </li>
                             </ul>
                         </li>
@@ -131,7 +115,7 @@
                                     さん
                                 {% else %}
                                     {{ user.username }}
-                                    さん
+                                    さ���
                                 {% endif %}
                             </a>
                         {% endif %}

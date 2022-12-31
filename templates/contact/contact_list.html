@@ -1,0 +1,43 @@
+{% extends "contact/base.html" %}
+
+{% load static %}
+
+{% load django_bootstrap_breadcrumbs %}
+{% load django_bootstrap5 %}
+
+{% block head %}
+{% endblock head %}
+{% block breadcrumbs %}
+    {{ block.super }}
+{% endblock breadcrumbs %}
+{% block content %}
+    <a class="btn btn-primary mb-3"
+       href="{% url 'contact:thread_create' %}">新規作成</a>
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>スレッド</th>
+                <th>最終投稿日時</th>
+            </tr>
+            {% for thread in object_list %}
+                <tr>
+                    <td>
+                        <a href="{% url 'contact:thread' thread.pk %}">{{ thread.person }}</a>
+                    </td>
+                    <td>
+                        {% if thread.items.all %}
+                            {{ thread.last_posted|date:"Y年m月d日" }}
+                        {% else %}
+                            投稿なし
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% if object_list|length > 10 %}
+
+        {% include "components/pagination.html" %}
+
+    {% endif %}
+{% endblock content %}

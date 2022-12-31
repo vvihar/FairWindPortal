@@ -8,6 +8,14 @@
 {% block head %}
     <link rel="stylesheet"
           href="{% static 'utils/css/markdown.css' %}"/>
+    <style>
+        #md-memo > *:last-child {
+            margin-bottom: 0;
+        }
+        .table-100 {
+            width: 100% !important;
+        }
+    </style>
 {% endblock head %}
 {% block breadcrumbs %}
     {{ block.super }}
@@ -31,8 +39,35 @@
     編集</a>
     {% if object.memo %}
         <div class="card mb-1">
-            <div class="card-body">{{ object.memo|md_to_html }}</div>
+            <div class="card-body"
+                 id="md-memo">{{ object.memo|md_to_html }}</div>
         </div>
         <p class="text-end text-muted mb-0">最終更新：{{ object.last_updated|date:"Y/n/j H:i" }}</p>
+    {% endif %}
+    {% if object.event.all %}
+        <h2 class="fs-5">企画実績</h2>
+        <table class="table table-100">
+            <tbody>
+                <tr>
+                    <th>日付</th>
+                    <th>企画</th>
+                    <th>統括</th>
+                </tr>
+                {% for event in object.event.all %}
+                    <tr>
+                        <td>
+                            {{ event.start_datetime|date:"Y/n/j" }}
+                            {% if event.start_datetime|date:"Y/n/j" != event.end_datetime|date:"Y/n/j" %}
+                                〜{{ event.end_datetime|date:"Y/n/j" }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'events:event_detail' event.pk %}">{{ event.name }}</a>
+                        </td>
+                        <td>{{ event.person_in_charge }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     {% endif %}
 {% endblock content %}

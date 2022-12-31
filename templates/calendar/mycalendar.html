@@ -1,0 +1,238 @@
+{% extends "calendar/base.html" %}
+
+{% load django_bootstrap5 %}
+
+{% block head %}
+    <style>
+        td {
+            min-height: 3rem;
+        }
+
+        td>a {
+            color: inherit;
+            text-decoration: none;
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+    <style>
+        .calendar>.calendar-header {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .calendar>.calendar-header>div {
+            flex: 0 0 calc(100% / 7);
+            text-align: center;
+            border-bottom: 1px solid var(--bs-border-color);
+            padding: 0.5rem;
+            font-weight: bold;
+        }
+
+        .calendar>.calendar-body {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+        }
+
+        .calendar-day {
+            padding: 0.5rem;
+            min-height: 6rem;
+            border-bottom: 1px solid var(--bs-border-color);
+        }
+
+        .calendar-day-link {
+            color: inherit;
+            text-align: right;
+            --bs-text-opacity: 1;
+            color: #6c757d !important;
+            font-size: 0.9rem;
+        }
+
+        .calendar-event-link {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .calendar-event-link:hover {
+            color: inherit;
+        }
+
+        .calendar-event {
+            background-color: #e9ecef;
+            border-radius: 0.25rem;
+            padding: 0.25rem;
+            margin-top: 0.25rem;
+            transition: background-color 0.2s ease-in-out;
+            font-size: 0.9rem;
+        }
+
+        .calendar-event:hover {
+            background-color: #dee2e6;
+        }
+
+        .calendar-day-link>div>div {
+            border-radius: 50%;
+            width: 2rem;
+            height: 2rem;
+            line-height: 2rem;
+            text-align: center;
+            font-weight: bold;
+            margin-left: auto;
+        }
+
+        .calendar-day-link>div>div.calendar-today {
+            background-color: var(--bs-danger);
+            color: #fff;
+            text-decoration: none;
+        }
+
+        #calendar-day-link-today {
+            text-decoration: none;
+        }
+    </style>
+{% endblock head %}
+{% block content %}
+    {{ block.super }}
+    <div class="row">
+        <div class="col-md-2">スペース</div>
+        <div class="col-md-10">
+            <div class="d-flex justify-content-between mb-3">
+                <h4 class="mb-0">{{ month_current | date:"Y年m月" }}</h4>
+                <div>
+                    <a href="{% url 'calendar:mycalendar' %}"
+                       class="btn btn-primary btn-sm me-2">今日</a>
+                    <div class="btn-group">
+                        <a href="{% url 'calendar:mycalendar' month_previous.year month_previous.month month_previous.day %}"
+                           class="btn btn-secondary btn-sm">前月</a>
+                        <a href="{% url 'calendar:mycalendar' month_next.year month_next.month month_next.day %}"
+                           class="btn btn-secondary btn-sm">次月</a>
+                    </div>
+                </div>
+            </div>
+            <div class="calendar">
+                <div class="calendar-header">
+                    {% for w in week_names %}<div>{{ w }}</div>{% endfor %}
+                </div>
+                <div class="calendar-body">
+                    {% for week_day_schedles in month_day_schedules %}
+                        {% for day, schedules in week_day_schedles.items %}
+                            <div class="calendar-day">
+                                <a class="calendar-day-link"
+                                   data-bs-toggle="modal"
+                                   href="#dayEventModal"
+                                   data-bs-day="{{ day | date:"Y/m/d" }}"
+                                   {% if now == day %}
+                                       id="calendar-day-link-today"
+                                   {% endif %}>
+                                    <div>
+                                        {% if month_current.month != day.month %}
+                                            <div>{{ day | date:"m/d" }}</div>
+                                        {% else %}
+                                            {% if now == day %}
+                                                <div class="calendar-today">{{ day.day }}</div>
+                                            {% else %}
+                                                <div>{{ day.day }}</div>
+                                            {% endif %}
+                                        {% endif %}
+                                    </div>
+                                </a>
+                                {% for schedule in schedules %}
+                                    <a href="#scheduleModal-{{ schedule.pk }}"
+                                       class="calendar-event-link"
+                                       data-bs-toggle="modal">
+                                        <div class="calendar-event">{{ schedule.summary }}</div>
+                                    </a>
+                                    <!-- Modal -->
+                                    <div class="modal fade"
+                                         id="scheduleModal-{{ schedule.pk }}"
+                                         tabindex="-1"
+                                         aria-labelledby="scheduleModal-{{ schedule.pk }}Label"
+                                         aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title"
+                                                        id="scheduleModal-{{ schedule.pk }}Label">{{ schedule.summary }}</h5>
+                                                    <button type="button"
+                                                            class="btn-close"
+                                                            data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <ul class="mb-0">
+                                                        <li>{{ schedule.start_time | date:"H:i" }} 〜 {{ schedule.end_time | date:"H:i" }}</li>
+                                                        {% if schedule.location %}<li>{{ schedule.location }}</li>{% endif %}
+                                                    </ul>
+                                                    <div>{{ schedule.description }}</div>
+                                                </div>
+                                                {% if not schedule.no_delete or schedule.model_type %}
+                                                    <div class="modal-footer">
+                                                        {% if schedule.model_type %}
+                                                            {% with type=schedule.model_type|stringformat:"s" %}
+                                                                {% if type == "event" %}
+                                                                    <a href="{% url 'events:event_detail' schedule.model_pk %}"
+                                                                       class="btn btn-secondary">企画詳細</a>
+                                                                {% endif %}
+                                                            {% endwith %}
+                                                            <!--TODO: 編集画面も実装する-->
+                                                        {% endif %}
+                                                        {% if not schedule.no_delete %}
+                                                            <a href="{% url 'calendar:delete' schedule.pk %}"
+                                                               class="btn btn-danger">削除</a>
+                                                        {% endif %}
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade"
+         id="dayEventModal"
+         tabindex="-1"
+         aria-labelledby="dayEventModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="post">
+                    <div class="modal-header">
+                        <h5 class="modal-title"
+                            id="dayEventModalLabel"></h5>
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        {% bootstrap_form form layout="floating" %}
+                        {% csrf_token %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="reset"
+                                class="btn btn-secondary"
+                                data-bs-dismiss="modal">閉じる</button>
+                        {% bootstrap_button "保存" button_type="submit" button_class="btn-primary btn-block" %}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        const dayEventModal = document.getElementById('dayEventModal')
+        dayEventModal.addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget
+            const day = button.getAttribute('data-bs-day')
+            const modalTitle = dayEventModal.querySelector('.modal-title')
+            const form = dayEventModal.querySelector('form')
+            modalTitle.textContent = day + 'の予定'
+            form.action = '{% url "calendar:mycalendar" %}' + day + '/'
+        })
+    </script>
+{% endblock content %}

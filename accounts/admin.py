@@ -45,6 +45,7 @@ class CustomUserAdmin(UserAdmin):
                 )
             },
         ),
+        ("管理用", {"fields": ("calendar_uuid",)}),
         ("ログ", {"fields": ("last_login", "date_joined")}),
     )
     # 新規作成時に表示するフィールド
