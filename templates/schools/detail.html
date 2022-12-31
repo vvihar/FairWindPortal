@@ -5,6 +5,9 @@
 {% load md_to_html %}
 {% load static %}
 
+{% block title %}
+    学校詳細 - {{ block.super }}
+{% endblock title %}
 {% block head %}
     <link rel="stylesheet"
           href="{% static 'utils/css/markdown.css' %}"/>

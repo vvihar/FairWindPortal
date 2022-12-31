@@ -6,6 +6,9 @@
 {% load django_bootstrap5 %}
 {% load django_bootstrap_breadcrumbs %}
 
+{% block title %}
+    振り返り - {{ block.super }}
+{% endblock title %}
 {% block head %}
     <link rel="stylesheet"
           href="{% static 'utils/css/markdown.css' %}"/>

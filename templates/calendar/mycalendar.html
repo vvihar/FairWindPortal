@@ -2,6 +2,9 @@
 
 {% load django_bootstrap5 %}
 
+{% block title %}
+    マイカレンダー - {{ block.super }}
+{% endblock title %}
 {% block head %}
     <style>
         td {

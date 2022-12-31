@@ -5,6 +5,9 @@
 {% load django_bootstrap5 %}
 {% load django_bootstrap_breadcrumbs %}
 
+{% block title %}
+    出欠掲示板 - {{ block.super }}
+{% endblock title %}
 {% block head %}
 {% endblock head %}
 {% block breadcrumbs %}

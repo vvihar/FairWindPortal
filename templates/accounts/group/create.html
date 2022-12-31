@@ -5,8 +5,9 @@
 {% load django_bootstrap_breadcrumbs %}
 {% load django_bootstrap5 %}
 
-{% block customcss %}
-{% endblock customcss %}
+{% block title %}
+    班の作成 - {{ block.super }}
+{% endblock title %}
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb "班" "accounts:group" %}

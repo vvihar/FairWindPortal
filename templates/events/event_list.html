@@ -4,6 +4,9 @@
 
 {% load static %}
 
+{% block title %}
+    すべての企画 - {{ block.super }}
+{% endblock title %}
 {% block head %}
     <link rel="stylesheet"
           href="{% static 'events/badge.css' %}"/>
