@@ -4,8 +4,9 @@
 
 {% load django_bootstrap_breadcrumbs %}
 
-{% block customcss %}
-{% endblock customcss %}
+{% block title %}
+    担当 - {{ block.super }}
+{% endblock title %}
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb "担当" "accounts:division" %}

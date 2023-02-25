@@ -6,6 +6,9 @@
 {% load django_bootstrap_breadcrumbs %}
 {% load django_bootstrap5 %}
 
+{% block title %}
+    連絡共有 - {{ block.super }}
+{% endblock title %}
 {% block head %}
     <style>
         .message {

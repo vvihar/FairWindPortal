@@ -5,8 +5,9 @@
 {% load django_bootstrap_breadcrumbs %}
 {% load django_bootstrap5 %}
 
-{% block customcss %}
-{% endblock customcss %}
+{% block title %}
+    打診に回答 - {{ block.super }}
+{% endblock title %}
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb object.event "events:event_detail" object.event.id %}

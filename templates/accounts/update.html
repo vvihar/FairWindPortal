@@ -5,8 +5,9 @@
 {% load django_bootstrap5 %}
 {% load static %}
 
-{% block customcss %}
-{% endblock customcss %}
+{% block title %}
+    ユーザー情報更新 - {{ block.super }}
+{% endblock title %}
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb "ユーザー情報更新" "accounts:update" %}

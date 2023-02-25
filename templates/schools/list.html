@@ -4,6 +4,9 @@
 
 {% load static %}
 
+{% block title %}
+    学校 - {{ block.super }}
+{% endblock title %}
 {% block head %}
 {% endblock head %}
 {% block breadcrumbs %}
@@ -15,7 +18,7 @@
            class="btn btn-danger mb-3">学校データベース更新</a>
     {% endif %}
 
-    {% include 'components/searchform.html' %}
+    {% include "components/searchform.html" %}
 
     <table class="table">
         <thead>
@@ -42,6 +45,6 @@
         </tbody>
     </table>
 
-    {% include 'components/pagination.html' %}
+    {% include "components/pagination.html" %}
 
 {% endblock content %}

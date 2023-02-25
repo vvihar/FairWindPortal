@@ -5,6 +5,9 @@
 {% load django_bootstrap5 %}
 {% load static %}
 
+{% block title %}
+    学校の編集 - {{ block.super }}
+{% endblock title %}
 {% block head %}
     <link rel="stylesheet"
           href="{% static 'utils/css/markdown.css' %}"/>

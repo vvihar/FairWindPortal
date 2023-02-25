@@ -4,8 +4,9 @@
 
 {% load static %}
 
-{% block customcss %}
-{% endblock customcss %}
+{% block title %}
+    ユーザー一覧 - {{ block.super }}
+{% endblock title %}
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb "ユーザー一覧" "accounts:users" %}

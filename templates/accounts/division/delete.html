@@ -1,9 +1,13 @@
 {% extends "accounts/base.html" %}
+
 {% load static %}
+
 {% load django_bootstrap_breadcrumbs %}
 {% load django_bootstrap5 %}
-{% block customcss %}
-{% endblock customcss %}
+
+{% block title %}
+    担当の削除 - {{ block.super }}
+{% endblock title %}
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb "担当" "accounts:division" %}
@@ -19,6 +23,8 @@
     <form method="post">
         {% csrf_token %}
         {% bootstrap_button "削除" button_type="submit" button_class="btn-danger" %}
+
         {% include 'components/cancel.html' %}
+
     </form>
 {% endblock content %}

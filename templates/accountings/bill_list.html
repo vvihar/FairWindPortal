@@ -6,6 +6,9 @@
 {% load django_bootstrap_breadcrumbs %}
 {% load django_bootstrap5 %}
 
+{% block title %}
+    請求書 - {{ block.super }}
+{% endblock title %}
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb event.name "events:event_detail" event.id %}
