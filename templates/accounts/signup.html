@@ -5,8 +5,9 @@
 {% load django_bootstrap5 %}
 {% load static %}
 
-{% block customcss %}
-{% endblock customcss %}
+{% block title %}
+    ユーザー新規登録 - {{ block.super }}
+{% endblock title %}
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb "ユーザー新規登録" "accounts:signup" %}

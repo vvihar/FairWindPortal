@@ -5,6 +5,9 @@
 {% load django_bootstrap5 %}
 {% load django_bootstrap_breadcrumbs %}
 
+{% block title %}
+    ログイン - {{ block.super }}
+{% endblock title %}
 {% block head %}
     <link rel="stylesheet"
           href="{% static 'login.css' %}"/>

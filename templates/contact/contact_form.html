@@ -5,8 +5,16 @@
 {% load django_bootstrap_breadcrumbs %}
 {% load django_bootstrap5 %}
 
-{% block head %}
-{% endblock head %}
+{% block title %}
+    {% if is_link_to_event %}
+        企画と紐付け
+    {% elif object %}
+        スレッドの編集
+    {% else %}
+        スレッドの新規作成
+    {% endif %}
+    - {{ block.super }}
+{% endblock title %}
 {% block breadcrumbs %}
     {{ block.super }}
     {% if is_link_to_event %}

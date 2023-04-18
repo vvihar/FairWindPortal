@@ -5,8 +5,14 @@
 {% load django_bootstrap_breadcrumbs %}
 {% load django_bootstrap5 %}
 
-{% block head %}
-{% endblock head %}
+{% block title %}
+    {% if object %}
+        メッセージを編集
+    {% else %}
+        新規メッセージ
+    {% endif %}
+    - {{ block.super }}
+{% endblock title %}
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb thread.person "contact:thread" thread.pk %}

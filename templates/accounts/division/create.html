@@ -1,9 +1,13 @@
 {% extends "accounts/base.html" %}
+
 {% load static %}
+
 {% load django_bootstrap_breadcrumbs %}
 {% load django_bootstrap5 %}
-{% block customcss %}
-{% endblock customcss %}
+
+{% block title %}
+    担当の登録 - {{ block.super }}
+{% endblock title %}
 {% block breadcrumbs %}
     {{ block.super }}
     {% breadcrumb "担当" "accounts:division" %}
@@ -14,6 +18,8 @@
         {% csrf_token %}
         {% bootstrap_form form layout="floating" %}
         {% bootstrap_button "登録" button_type="submit" %}
+
         {% include 'components/cancel.html' %}
+
     </form>
 {% endblock content %}

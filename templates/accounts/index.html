@@ -2,8 +2,9 @@
 
 {% load static %}
 
-{% block customcss %}
-{% endblock customcss %}
+{% block title %}
+    アカウント - {{ block.super }}
+{% endblock title %}
 {% block content %}
     <div class="row">
         <div class="col-sm-6">
