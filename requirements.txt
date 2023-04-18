@@ -24,7 +24,7 @@ isort==5.10.1
 jsbeautifier==1.14.7
 lazy-object-proxy==1.7.1
 Markdown==3.4.1
-markdown-link-attr-modifier==0.2.0
+markdown-link-attr-modifier==0.2.1
 mccabe==0.7.0
 mypy-extensions==0.4.3
 mysql-connector-python==8.0.32
